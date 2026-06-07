@@ -48,6 +48,25 @@ ngrok config add-authtoken TU_TOKEN
 El script intentara encontrar `ngrok.exe` en `PATH` o en rutas comunes de
 Windows. Si no lo encuentra, te dira exactamente que falta.
 
+### Variante Linux
+
+Si el servidor real corre en Linux y ya tiene `ngrok`, puedes usar:
+
+```bash
+chmod +x start-server-ngrok.sh stop-server-ngrok.sh server-status.sh
+./start-server-ngrok.sh
+./server-status.sh
+./stop-server-ngrok.sh
+```
+
+Variables utiles:
+
+```bash
+SERVER_PORT=25565
+JAVA_BIN=java
+NGROK_BIN=ngrok
+```
+
 ## Plugins base
 
 Con el servidor detenido, ejecuta:
