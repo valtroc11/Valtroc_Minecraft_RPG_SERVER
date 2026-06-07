@@ -1,0 +1,6 @@
+LlamarRefuerzos:
+  Cooldown: 20
+  Skills:
+  - message{m="&4El capitan llama refuerzos!"} @PlayersInRadius{r=18}
+  - summon{type=BandidoCorrompido;amount=2;radius=4} @self
+

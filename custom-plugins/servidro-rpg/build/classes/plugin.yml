@@ -1,0 +1,51 @@
+name: ServidroRpg
+version: 0.1.0
+main: mx.servidro.rpg.ServidroRpgPlugin
+api-version: '1.21'
+authors: [ServidroMX]
+description: Sistemas RPG propios para el prototipo de Servidro MX.
+softdepend: [Vault, EzEconomy]
+commands:
+  clase:
+    description: Consulta o elige tu clase base.
+    usage: /clase [lista|elegir <clase>|estado]
+  especializacion:
+    aliases: [spec]
+    description: Consulta o elige tu especializacion.
+    usage: /especializacion [lista|elegir <especializacion>]
+  profesion:
+    description: Consulta el progreso de tus profesiones.
+    usage: /profesion [lista|estado|<profesion>]
+  desbloqueos:
+    description: Consulta los desbloqueos actuales de progresion.
+    usage: /desbloqueos
+  guia:
+    aliases: [informacion, info]
+    description: Muestra la guia rapida del servidor.
+    usage: /guia
+  misiones:
+    aliases: [diarias]
+    description: Consulta tus encargos diarios rotativos.
+    usage: /misiones
+  servidro:
+    description: Herramientas administrativas del prototipo.
+    usage: /servidro <xp|profesionxp|resetclass|tumbar|levantar|invocar|aggro|kit|arena|cofre> ...
+    permission: servidro.admin
+  provocar:
+    description: Provoca al enemigo al que estas mirando.
+    usage: /provocar
+  rendirse:
+    description: Abandona el estado derribado y reaparece en tu cama.
+    usage: /rendirse
+  habilidades:
+    aliases: [skills]
+    description: Consulta las habilidades y el rol de tu clase.
+    usage: /habilidades [clase|especializacion]
+  estadisticas:
+    aliases: [stats]
+    description: Consulta tus estadisticas totales actuales.
+    usage: /estadisticas
+permissions:
+  servidro.admin:
+    description: Permite administrar el prototipo RPG.
+    default: op

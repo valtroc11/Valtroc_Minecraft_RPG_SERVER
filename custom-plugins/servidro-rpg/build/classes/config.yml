@@ -1,0 +1,824 @@
+specialization:
+  unlock-level: 10
+  change-cost: 250.0
+
+economy:
+  disable-villager-trading: true
+
+onboarding:
+  join-guide-delay-ticks: 30
+
+visuals:
+  health-bars:
+    radius: 8.0
+    combat-seconds: 4
+
+mob-scaling:
+  enabled: true
+  reference-range: 32.0
+  base-health-per-level: 0.08
+  base-damage-per-level: 0.04
+  mythic:
+    enabled: true
+    level-offset: 2
+    health-per-level: 0.06
+    damage-per-level: 0.03
+    boss-health-threshold: 70.0
+    crowns-base: 18
+    boss-crowns-base: 40
+    display-archetypes:
+      Bandido Corrompido: bandit
+      Capitan Corrompido: captain
+      Skeletal Knight: knight
+      Skeleton King: king
+      Skeletal Minion: minion
+      Statically Charged Sheep: stormbeast
+      Angry Sludge: sludge
+    archetypes:
+      default:
+        label: Botin Mythic
+        crowns-bonus: 0
+        combat-skill: ONDA_HELADA
+        secondary-combat-skill: ""
+        secondary-skill-chance: 0.0
+        cast-cooldown-multiplier: 1.0
+        aggression: 1.0
+        summon-limit: 2
+        movement-bias: hold
+        preferred-min-range: 0.0
+        preferred-max-range: 10.0
+        enrage:
+          enabled: true
+          label: Furia
+          entry-skill: ""
+          combat-skill: ""
+          health-threshold: 0.35
+          damage-multiplier: 1.15
+          speed-multiplier: 1.08
+          cooldown-multiplier: 0.9
+          entry-cooldown-ms: 900
+          rewards:
+            enabled: true
+            label: Trofeo de Furia
+            crowns-bonus: 8
+            materials:
+              apprentice: [STONE_SWORD, LEATHER_BOOTS]
+              iron: [IRON_SWORD, IRON_BOOTS]
+              gold: [GOLDEN_SWORD, IRON_BOOTS]
+              diamond: [DIAMOND_SWORD, DIAMOND_BOOTS]
+            bonus:
+              normal:
+                label: "+1 Dano"
+                amount: 1.0
+                attribute: ATTACK_DAMAGE
+              boss:
+                label: "+2 Dano"
+                amount: 2.0
+                attribute: ATTACK_DAMAGE
+        last-stand:
+          enabled: false
+          label: Ultima Resistencia
+          entry-skill: ""
+          combat-skill: ""
+          health-threshold: 0.18
+          damage-taken-multiplier: 0.78
+          cooldown-multiplier: 0.95
+          entry-cooldown-ms: 700
+          rewards:
+            enabled: true
+            label: Trofeo del Ultimo Aliento
+            crowns-bonus: 12
+            materials:
+              apprentice: [LEATHER_CHESTPLATE, SHIELD]
+              iron: [IRON_CHESTPLATE, SHIELD]
+              gold: [IRON_CHESTPLATE, SHIELD]
+              diamond: [DIAMOND_CHESTPLATE, SHIELD]
+            bonus:
+              normal:
+                label: "+2 Vida"
+                amount: 2.0
+                attribute: MAX_HEALTH
+              boss:
+                label: "+3 Vida"
+                amount: 3.0
+                attribute: MAX_HEALTH
+        bonus:
+          normal:
+            label: "+1 Dano"
+            amount: 1.0
+            attribute: ATTACK_DAMAGE
+          boss:
+            label: "+2 Dano"
+            amount: 2.0
+            attribute: ATTACK_DAMAGE
+        materials:
+          apprentice: [STONE_SWORD, LEATHER_BOOTS]
+          iron: [IRON_SWORD, IRON_BOOTS, SHIELD]
+          gold: [IRON_SWORD, GOLDEN_SWORD, IRON_BOOTS]
+          diamond: [DIAMOND_SWORD, DIAMOND_BOOTS, SHIELD]
+      bandit:
+        label: Botin de Bandido
+        crowns-bonus: 6
+        combat-skill: CARGA
+        secondary-combat-skill: RETROCESO_TACTICO
+        secondary-skill-chance: 0.25
+        cast-cooldown-multiplier: 0.9
+        aggression: 1.2
+        summon-limit: 2
+        movement-bias: kite
+        preferred-min-range: 3.0
+        preferred-max-range: 12.0
+        enrage:
+          enabled: true
+          label: Furia Bandida
+          entry-skill: RETROCESO_TACTICO
+          combat-skill: CARGA
+          health-threshold: 0.40
+          damage-multiplier: 1.18
+          speed-multiplier: 1.14
+          cooldown-multiplier: 0.85
+          entry-cooldown-ms: 700
+          rewards:
+            enabled: true
+            label: Botin de Asalto
+            crowns-bonus: 10
+            materials:
+              apprentice: [STONE_AXE, LEATHER_BOOTS]
+              iron: [IRON_AXE, IRON_BOOTS]
+              gold: [GOLDEN_AXE, IRON_BOOTS]
+              diamond: [DIAMOND_AXE, DIAMOND_BOOTS]
+            bonus:
+              normal:
+                label: "+0.02 Velocidad"
+                amount: 0.02
+                attribute: MOVEMENT_SPEED
+              boss:
+                label: "+1 Dano"
+                amount: 1.0
+                attribute: ATTACK_DAMAGE
+        last-stand:
+          enabled: false
+          label: Ultima Huida
+          entry-skill: RETROCESO_TACTICO
+          combat-skill: CARGA
+          health-threshold: 0.16
+          damage-taken-multiplier: 0.85
+          cooldown-multiplier: 0.9
+          entry-cooldown-ms: 600
+          rewards:
+            enabled: false
+            label: Ultima Huida
+            crowns-bonus: 6
+            materials:
+              apprentice: [LEATHER_BOOTS]
+              iron: [IRON_BOOTS]
+              gold: [GOLDEN_BOOTS]
+              diamond: [DIAMOND_BOOTS]
+            bonus:
+              normal:
+                label: "+0.02 Velocidad"
+                amount: 0.02
+                attribute: MOVEMENT_SPEED
+              boss:
+                label: "+0.03 Velocidad"
+                amount: 0.03
+                attribute: MOVEMENT_SPEED
+        bonus:
+          normal:
+            label: "+0.02 Velocidad"
+            amount: 0.02
+            attribute: MOVEMENT_SPEED
+          boss:
+            label: "+0.03 Velocidad"
+            amount: 0.03
+            attribute: MOVEMENT_SPEED
+        materials:
+          apprentice: [STONE_SWORD, STONE_AXE, LEATHER_BOOTS, LEATHER_LEGGINGS]
+          iron: [IRON_SWORD, IRON_AXE, IRON_BOOTS, IRON_LEGGINGS]
+          gold: [GOLDEN_SWORD, GOLDEN_AXE, IRON_BOOTS, IRON_LEGGINGS]
+          diamond: [DIAMOND_SWORD, DIAMOND_AXE, DIAMOND_BOOTS, DIAMOND_LEGGINGS]
+      captain:
+        label: Botin del Capitan
+        crowns-bonus: 18
+        combat-skill: LLAMADO_CORRUPTO
+        secondary-combat-skill: GOLPE_TERRITORIAL
+        secondary-skill-chance: 0.20
+        cast-cooldown-multiplier: 0.95
+        aggression: 1.1
+        summon-limit: 3
+        movement-bias: close
+        preferred-min-range: 0.0
+        preferred-max-range: 9.0
+        enrage:
+          enabled: true
+          label: Ultima Orden
+          entry-skill: LLAMADO_CORRUPTO
+          combat-skill: GOLPE_TERRITORIAL
+          health-threshold: 0.32
+          damage-multiplier: 1.20
+          speed-multiplier: 1.08
+          cooldown-multiplier: 0.88
+          entry-cooldown-ms: 900
+          rewards:
+            enabled: true
+            label: Trofeo del Capitan
+            crowns-bonus: 14
+            materials:
+              apprentice: [LEATHER_CHESTPLATE, SHIELD]
+              iron: [IRON_CHESTPLATE, SHIELD]
+              gold: [IRON_CHESTPLATE, SHIELD]
+              diamond: [DIAMOND_CHESTPLATE, SHIELD]
+            bonus:
+              normal:
+                label: "+1 Armadura"
+                amount: 1.0
+                attribute: ARMOR
+              boss:
+                label: "+2 Armadura"
+                amount: 2.0
+                attribute: ARMOR
+        last-stand:
+          enabled: true
+          label: Muro Final
+          entry-skill: GOLPE_TERRITORIAL
+          combat-skill: GOLPE_TERRITORIAL
+          health-threshold: 0.18
+          damage-taken-multiplier: 0.65
+          cooldown-multiplier: 0.9
+          entry-cooldown-ms: 800
+          rewards:
+            enabled: true
+            label: Muro del Capitan
+            crowns-bonus: 18
+            materials:
+              apprentice: [SHIELD, LEATHER_CHESTPLATE]
+              iron: [SHIELD, IRON_CHESTPLATE]
+              gold: [SHIELD, IRON_CHESTPLATE]
+              diamond: [SHIELD, DIAMOND_CHESTPLATE]
+            bonus:
+              normal:
+                label: "+2 Vida"
+                amount: 2.0
+                attribute: MAX_HEALTH
+              boss:
+                label: "+1 Armadura"
+                amount: 1.0
+                attribute: ARMOR
+        bonus:
+          normal:
+            label: "+2 Vida"
+            amount: 2.0
+            attribute: MAX_HEALTH
+          boss:
+            label: "+3 Vida"
+            amount: 3.0
+            attribute: MAX_HEALTH
+        materials:
+          apprentice: [LEATHER_HELMET, LEATHER_CHESTPLATE, LEATHER_LEGGINGS, SHIELD]
+          iron: [IRON_HELMET, IRON_CHESTPLATE, IRON_LEGGINGS, SHIELD]
+          gold: [GOLDEN_HELMET, IRON_CHESTPLATE, IRON_LEGGINGS, SHIELD]
+          diamond: [DIAMOND_HELMET, DIAMOND_CHESTPLATE, DIAMOND_LEGGINGS, SHIELD]
+      knight:
+        label: Botin de Caballero
+        crowns-bonus: 10
+        combat-skill: GOLPE_TERRITORIAL
+        secondary-combat-skill: CARGA
+        secondary-skill-chance: 0.20
+        cast-cooldown-multiplier: 0.9
+        aggression: 1.15
+        summon-limit: 2
+        movement-bias: close
+        preferred-min-range: 0.0
+        preferred-max-range: 7.0
+        enrage:
+          enabled: true
+          label: Juramento Final
+          entry-skill: GOLPE_TERRITORIAL
+          combat-skill: CARGA
+          health-threshold: 0.30
+          damage-multiplier: 1.22
+          speed-multiplier: 1.06
+          cooldown-multiplier: 0.9
+          entry-cooldown-ms: 850
+        last-stand:
+          enabled: true
+          label: Ultimo Bastion
+          entry-skill: GOLPE_TERRITORIAL
+          combat-skill: GOLPE_TERRITORIAL
+          health-threshold: 0.16
+          damage-taken-multiplier: 0.62
+          cooldown-multiplier: 0.92
+          entry-cooldown-ms: 750
+        bonus:
+          normal:
+            label: "+2 Vida"
+            amount: 2.0
+            attribute: MAX_HEALTH
+          boss:
+            label: "+3 Vida"
+            amount: 3.0
+            attribute: MAX_HEALTH
+        materials:
+          apprentice: [STONE_SWORD, CHAINMAIL_HELMET, CHAINMAIL_CHESTPLATE, SHIELD]
+          iron: [IRON_SWORD, IRON_HELMET, IRON_CHESTPLATE, SHIELD]
+          gold: [GOLDEN_SWORD, IRON_HELMET, IRON_CHESTPLATE, SHIELD]
+          diamond: [DIAMOND_SWORD, DIAMOND_HELMET, DIAMOND_CHESTPLATE, SHIELD]
+      king:
+        label: Botin del Rey Esqueletico
+        crowns-bonus: 30
+        combat-skill: LLAMADO_CORRUPTO
+        secondary-combat-skill: ONDA_HELADA
+        secondary-skill-chance: 0.35
+        cast-cooldown-multiplier: 0.8
+        aggression: 1.25
+        summon-limit: 4
+        movement-bias: hold
+        preferred-min-range: 2.0
+        preferred-max-range: 14.0
+        enrage:
+          enabled: true
+          label: Ira Real
+          entry-skill: LLAMADO_CORRUPTO
+          combat-skill: ONDA_HELADA
+          health-threshold: 0.45
+          damage-multiplier: 1.25
+          speed-multiplier: 1.10
+          cooldown-multiplier: 0.75
+          entry-cooldown-ms: 600
+          rewards:
+            enabled: true
+            label: Ira del Rey
+            crowns-bonus: 20
+            materials:
+              apprentice: [GOLDEN_SWORD, GOLDEN_HELMET]
+              iron: [IRON_SWORD, IRON_HELMET]
+              gold: [GOLDEN_SWORD, GOLDEN_HELMET]
+              diamond: [DIAMOND_SWORD, DIAMOND_HELMET]
+            bonus:
+              normal:
+                label: "+1 Dano"
+                amount: 1.0
+                attribute: ATTACK_DAMAGE
+              boss:
+                label: "+3 Dano"
+                amount: 3.0
+                attribute: ATTACK_DAMAGE
+        last-stand:
+          enabled: true
+          label: Trono de Hueso
+          entry-skill: ONDA_HELADA
+          combat-skill: LLAMADO_CORRUPTO
+          health-threshold: 0.20
+          damage-taken-multiplier: 0.68
+          cooldown-multiplier: 0.82
+          entry-cooldown-ms: 650
+          rewards:
+            enabled: true
+            label: Trono Quebrado
+            crowns-bonus: 24
+            materials:
+              apprentice: [GOLDEN_CHESTPLATE, GOLDEN_LEGGINGS]
+              iron: [IRON_CHESTPLATE, IRON_LEGGINGS]
+              gold: [GOLDEN_CHESTPLATE, GOLDEN_LEGGINGS]
+              diamond: [DIAMOND_CHESTPLATE, DIAMOND_LEGGINGS]
+            bonus:
+              normal:
+                label: "+2 Vida"
+                amount: 2.0
+                attribute: MAX_HEALTH
+              boss:
+                label: "+1 Armadura"
+                amount: 1.0
+                attribute: ARMOR
+        bonus:
+          normal:
+            label: "+2 Dano"
+            amount: 2.0
+            attribute: ATTACK_DAMAGE
+          boss:
+            label: "+3 Dano"
+            amount: 3.0
+            attribute: ATTACK_DAMAGE
+        materials:
+          apprentice: [GOLDEN_SWORD, GOLDEN_HELMET, GOLDEN_CHESTPLATE, GOLDEN_LEGGINGS]
+          iron: [IRON_SWORD, IRON_HELMET, IRON_CHESTPLATE, IRON_LEGGINGS]
+          gold: [GOLDEN_SWORD, GOLDEN_HELMET, GOLDEN_CHESTPLATE, GOLDEN_LEGGINGS]
+          diamond: [DIAMOND_SWORD, DIAMOND_HELMET, DIAMOND_CHESTPLATE, DIAMOND_LEGGINGS]
+      minion:
+        label: Botin de Esbirro
+        crowns-bonus: 2
+        combat-skill: RETROCESO_TACTICO
+        secondary-combat-skill: ""
+        secondary-skill-chance: 0.0
+        cast-cooldown-multiplier: 1.1
+        aggression: 0.95
+        summon-limit: 1
+        movement-bias: kite
+        preferred-min-range: 2.0
+        preferred-max-range: 10.0
+        enrage:
+          enabled: false
+          label: Furia
+          entry-skill: ""
+          combat-skill: ""
+          health-threshold: 0.35
+          damage-multiplier: 1.10
+          speed-multiplier: 1.06
+          cooldown-multiplier: 0.95
+          entry-cooldown-ms: 900
+        last-stand:
+          enabled: false
+          label: Ultima Resistencia
+          entry-skill: ""
+          combat-skill: ""
+          health-threshold: 0.18
+          damage-taken-multiplier: 0.9
+          cooldown-multiplier: 0.98
+          entry-cooldown-ms: 700
+        bonus:
+          normal:
+            label: "+0.02 Velocidad"
+            amount: 0.02
+            attribute: MOVEMENT_SPEED
+          boss:
+            label: "+0.03 Velocidad"
+            amount: 0.03
+            attribute: MOVEMENT_SPEED
+        materials:
+          apprentice: [STONE_SWORD, BONE, LEATHER_BOOTS]
+          iron: [IRON_SWORD, BONE, CHAINMAIL_BOOTS]
+          gold: [GOLDEN_SWORD, BONE, CHAINMAIL_BOOTS]
+          diamond: [DIAMOND_SWORD, BONE, DIAMOND_BOOTS]
+      stormbeast:
+        label: Botin de Bestia de Tormenta
+        crowns-bonus: 12
+        combat-skill: ONDA_HELADA
+        secondary-combat-skill: RETROCESO_TACTICO
+        secondary-skill-chance: 0.20
+        cast-cooldown-multiplier: 0.9
+        aggression: 1.05
+        summon-limit: 2
+        movement-bias: kite
+        preferred-min-range: 4.0
+        preferred-max-range: 12.0
+        enrage:
+          enabled: true
+          label: Sobrecarga
+          entry-skill: ONDA_HELADA
+          combat-skill: ONDA_HELADA
+          health-threshold: 0.38
+          damage-multiplier: 1.16
+          speed-multiplier: 1.16
+          cooldown-multiplier: 0.82
+          entry-cooldown-ms: 650
+        last-stand:
+          enabled: true
+          label: Ojo de la Tormenta
+          entry-skill: ONDA_HELADA
+          combat-skill: ONDA_HELADA
+          health-threshold: 0.17
+          damage-taken-multiplier: 0.72
+          cooldown-multiplier: 0.8
+          entry-cooldown-ms: 600
+        bonus:
+          normal:
+            label: "+0.02 Velocidad"
+            amount: 0.02
+            attribute: MOVEMENT_SPEED
+          boss:
+            label: "+0.03 Velocidad"
+            amount: 0.03
+            attribute: MOVEMENT_SPEED
+        materials:
+          apprentice: [LEATHER_BOOTS, COPPER_INGOT, AMETHYST_SHARD]
+          iron: [IRON_BOOTS, IRON_HELMET, AMETHYST_SHARD]
+          gold: [GOLDEN_BOOTS, IRON_HELMET, AMETHYST_SHARD]
+          diamond: [DIAMOND_BOOTS, DIAMOND_HELMET, AMETHYST_SHARD]
+      sludge:
+        label: Botin de Lodo
+        crowns-bonus: 14
+        combat-skill: GOLPE_TERRITORIAL
+        secondary-combat-skill: LLAMADO_CORRUPTO
+        secondary-skill-chance: 0.15
+        cast-cooldown-multiplier: 1.05
+        aggression: 1.0
+        summon-limit: 3
+        movement-bias: close
+        preferred-min-range: 0.0
+        preferred-max-range: 6.0
+        enrage:
+          enabled: true
+          label: Marea Negra
+          entry-skill: GOLPE_TERRITORIAL
+          combat-skill: LLAMADO_CORRUPTO
+          health-threshold: 0.33
+          damage-multiplier: 1.18
+          speed-multiplier: 1.05
+          cooldown-multiplier: 0.87
+          entry-cooldown-ms: 850
+        last-stand:
+          enabled: true
+          label: Pozo Vivo
+          entry-skill: GOLPE_TERRITORIAL
+          combat-skill: LLAMADO_CORRUPTO
+          health-threshold: 0.15
+          damage-taken-multiplier: 0.7
+          cooldown-multiplier: 0.88
+          entry-cooldown-ms: 750
+        bonus:
+          normal:
+            label: "+2 Vida"
+            amount: 2.0
+            attribute: MAX_HEALTH
+          boss:
+            label: "+3 Vida"
+            amount: 3.0
+            attribute: MAX_HEALTH
+        materials:
+          apprentice: [LEATHER_BOOTS, SLIME_BALL, WOODEN_SHOVEL]
+          iron: [IRON_BOOTS, SLIME_BALL, SHIELD]
+          gold: [GOLDEN_BOOTS, SLIME_BALL, SHIELD]
+          diamond: [DIAMOND_BOOTS, SLIME_BALL, SHIELD]
+  eligible-neutrals:
+    - POLAR_BEAR
+    - WOLF
+    - BEE
+    - ENDERMAN
+    - PIGLIN
+    - ZOMBIFIED_PIGLIN
+    - IRON_GOLEM
+    - LLAMA
+    - TRADER_LLAMA
+  level-ranges:
+    normal:
+      min-offset: -1
+      max-offset: 2
+    rare:
+      min-offset: 1
+      max-offset: 4
+    elite:
+      min-offset: 3
+      max-offset: 6
+    miniboss:
+      min-offset: 4
+      max-offset: 8
+  rarities:
+    normal:
+      chance: 0.805
+      health-multiplier: 1.0
+      damage-multiplier: 1.0
+      speed-multiplier: 1.0
+      affix-chance: 0.0
+      equipment-drop-chance: 0.08
+    rare:
+      chance: 0.16
+      health-multiplier: 1.4
+      damage-multiplier: 1.15
+      speed-multiplier: 1.03
+      affix-chance: 0.75
+      skill-chance: 0.0
+      skill-cooldown-multiplier: 1.0
+      equipment-drop-chance: 0.24
+    elite:
+      chance: 0.015
+      health-multiplier: 2.0
+      damage-multiplier: 1.35
+      speed-multiplier: 1.06
+      affix-chance: 1.0
+      skill-chance: 1.0
+      skill-cooldown-multiplier: 0.95
+      equipment-drop-chance: 0.45
+    miniboss:
+      chance: 0.005
+      health-multiplier: 4.0
+      damage-multiplier: 1.6
+      speed-multiplier: 1.10
+      affix-chance: 1.0
+      skill-chance: 1.0
+      skill-cooldown-multiplier: 0.85
+      equipment-drop-chance: 1.0
+  affixes:
+    brutal:
+      damage-multiplier: 1.2
+    robusto:
+      health-multiplier: 1.3
+    veloz:
+      speed-multiplier: 1.18
+    congelante:
+      slow-ticks: 50
+    vampirico:
+      heal-ratio: 0.25
+  skills:
+    charge:
+      cooldown-seconds: 10
+      velocity: 1.2
+      telegraph-ticks: 12
+    frost-wave:
+      cooldown-seconds: 12
+      damage: 3.0
+      slow-ticks: 70
+      telegraph-ticks: 16
+    corrupt-call:
+      cooldown-seconds: 10
+      max-minions: 15
+      same-type-only: true
+      rare-minion-chance: 0.25
+      type-rolls:
+        creeper: 0.03
+      telegraph-ticks: 18
+    tactical-retreat:
+      cooldown-seconds: 9
+      velocity: 0.9
+      damage: 2.0
+      telegraph-ticks: 10
+    territorial-slam:
+      cooldown-seconds: 13
+      radius: 4.5
+      damage: 4.0
+      slow-ticks: 50
+      telegraph-ticks: 14
+  equipment:
+    weapon-chances:
+      rare: 0.45
+      elite: 0.8
+      miniboss: 1.0
+      minion-normal: 0.35
+      minion-rare: 0.65
+    axe-chance: 0.3
+    ranged-bow-chance: 0.85
+  spawn-cooldowns:
+    elite-seconds: 300
+    miniboss-seconds: 600
+
+progression-caps:
+  class-level: 30
+  specialization-level: 20
+  profession-level: 20
+
+class-xp:
+  base-required-per-level: 120
+  kill-base: 8
+  rarity-bonus:
+    normal: 0
+    rare: 4
+    elite: 10
+    miniboss: 22
+  higher-level-multiplier-per-level: 0.12
+  lower-level-penalty-per-level: 0.06
+  lower-level-min-multiplier: 0.45
+
+class-scaling:
+  max-health-per-level: 1.0
+  attack-damage-per-level: 0.08
+  movement-speed-per-level: 0.002
+
+downed:
+  auto-revive-seconds: 20
+  assisted-revive-seconds: 5
+  surrender-cooldown-seconds: 45
+  revived-health: 1.0
+  weakness-seconds: 45
+
+threat:
+  damage-multiplier: 1.0
+  healing-multiplier: 0.5
+  taunt-highlight-seconds: 4
+  guardian-taunt:
+    radius: 8.0
+    cooldown-seconds: 12
+    bonus-threat: 100.0
+  paladin-challenge:
+    range: 12
+    cooldown-seconds: 18
+    bonus-threat: 60.0
+
+cleric:
+  minor-heal:
+    amount: 6.0
+    range: 12
+    cooldown-seconds: 8
+  assisted-revive-seconds: 3
+
+specialization-abilities:
+  berserker-whirlwind:
+    radius: 4.0
+    main-hand-multiplier: 1.7
+    offhand-multiplier: 0.7
+    offhand-heal-ratio: 0.7
+    animation-ticks: 10
+    visual-radius: 3.0
+    particles-per-ring: 12
+  hunter-mark:
+    range: 18
+    duration-seconds: 10
+    damage-bonus: 0.15
+    cooldown-seconds: 14
+  rogue-vanish:
+    threat-reduction: 0.80
+    invisibility-seconds: 3
+    cooldown-seconds: 16
+  pyromancer-fireball:
+    range: 18
+    radius: 3.0
+    damage: 6.0
+    fire-seconds: 4
+    cooldown-seconds: 9
+  arcanist-link:
+    radius: 12.0
+    transfer-ratio: 0.70
+    cooldown-seconds: 14
+  druid-bloom:
+    radius: 8.0
+    regeneration-seconds: 6
+    cooldown-seconds: 14
+
+base-class-abilities:
+  warrior-dash:
+    max-range: 7
+    velocity: 1.45
+    cooldown-seconds: 8
+  warrior-overwhelming-strike:
+    range: 5
+    cooldown-seconds: 15
+    warrior-damage-multiplier: 1.7
+    guardian-damage-multiplier: 1.5
+    guardian-heal-ratio: 0.2
+    slow-ticks: 70
+  warrior-desolating-leap:
+    radius: 5.0
+    cooldown-seconds: 6
+    slow-ticks: 70
+    guardian-bonus-threat: 100.0
+  explorer-roll:
+    velocity: 1.1
+    cooldown-seconds: 6
+  mage-barrier:
+    absorption-hearts: 4
+    duration-seconds: 8
+    cooldown-seconds: 16
+  cleric-blessing:
+    range: 12
+    duration-seconds: 10
+    cooldown-seconds: 14
+
+tab:
+  header: "Servidro MX | Reino Corrompido"
+  footer: "Temporada Alfa | play.servidro.mx"
+
+progression-gates:
+  class-equipment:
+    iron: 5
+    gold: 8
+    diamond: 15
+  profession-crafting:
+    herrero:
+      iron: 5
+      gold: 10
+      diamond: 15
+    alquimista:
+      advanced-consumables: 8
+    agricultor:
+      advanced-crops: 8
+  profession-use:
+    minero:
+      iron-blocks: 5
+      gold-blocks: 10
+      diamond-blocks: 15
+    explorador:
+      expedition-utilities: 8
+
+profession-xp:
+  base-required-per-level: 180
+  minero:
+    stone: 1
+    coal: 4
+    copper: 6
+    iron: 10
+    gold: 15
+    redstone: 9
+    lapis: 12
+    diamond: 30
+    emerald: 36
+  agricultor:
+    harvest: 4
+  alquimista:
+    brew: 18
+  herrero:
+    wood: 4
+    stone: 8
+    iron: 18
+    gold: 28
+    diamond: 48
+    netherite: 80
+    heavy-piece-bonus: 10
+
+personal-chests:
+  common:
+    cooldown-hours: 24
+    explorer-xp: 20
+  rare:
+    cooldown-hours: 48
+    explorer-xp: 45
+  corrupted:
+    cooldown-hours: 72
+    explorer-xp: 80

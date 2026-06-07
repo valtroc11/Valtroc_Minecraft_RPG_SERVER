@@ -1,0 +1,35 @@
+BandidoCorrompido:
+  Type: ZOMBIE
+  Display: '&cBandido Corrompido'
+  Health: 30
+  Damage: 5
+  Options:
+    MovementSpeed: 0.27
+    PreventOtherDrops: true
+    FollowRange: 24
+  Equipment:
+  - IRON_SWORD HAND
+  Drops:
+  - GOLD_NUGGET 2-5 1
+  - ROTTEN_FLESH 1-3 0.75
+
+CapitanCorrompido:
+  Type: ZOMBIE
+  Display: '&4Capitan Corrompido'
+  Health: 90
+  Damage: 8
+  Options:
+    MovementSpeed: 0.29
+    PreventOtherDrops: true
+    FollowRange: 28
+    AlwaysShowName: true
+  Equipment:
+  - IRON_SWORD HAND
+  - IRON_HELMET HEAD
+  - IRON_CHESTPLATE CHEST
+  Skills:
+  - skill{s=LlamarRefuerzos} @self ~onDamaged 0.15
+  Drops:
+  - GOLD_INGOT 1-3 1
+  - EMERALD 1 0.25
+
