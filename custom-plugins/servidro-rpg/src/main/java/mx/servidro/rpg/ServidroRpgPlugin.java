@@ -137,6 +137,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     private NamespacedKey mobVillageCorruptedKey;
     private NamespacedKey mobWaveAnnouncedKey;
     private NamespacedKey classXpFlaskTierKey;
+    private NamespacedKey customMaterialKey;
 
     @Override
     public void onEnable() {
@@ -155,6 +156,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         mobVillageCorruptedKey = new NamespacedKey(this, "mob-village-corrupted");
         mobWaveAnnouncedKey = new NamespacedKey(this, "mob-wave-announced");
         classXpFlaskTierKey = new NamespacedKey(this, "class-xp-flask-tier");
+        customMaterialKey = new NamespacedKey(this, "custom-material-id");
         profiles = new ProfileStore(
                 getDataFolder(),
                 classMaxLevel(),
@@ -987,6 +989,41 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    private ConfigurationSection customMaterialSection(String id) {
+        return getConfig().getConfigurationSection("custom-materials.items." + id);
+    }
+
+    private List<String> customMaterialIds() {
+        ConfigurationSection section = getConfig().getConfigurationSection("custom-materials.items");
+        return section == null ? List.of() : new ArrayList<>(section.getKeys(false));
+    }
+
+    private ItemStack createCustomMaterialItem(String id, int amount) {
+        ConfigurationSection section = customMaterialSection(id);
+        if (section == null) {
+            return null;
+        }
+        Material material;
+        try {
+            material = Material.valueOf(section.getString("material", "PAPER").toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ignored) {
+            material = Material.PAPER;
+        }
+        ItemStack stack = new ItemStack(material, Math.max(1, amount));
+        ItemMeta meta = stack.getItemMeta();
+        String displayName = section.getString("display-name", id);
+        String tierId = section.getString("tier", "wood");
+        String source = section.getString("source", "Material especial del reino.");
+        meta.displayName(Component.text(displayName, NamedTextColor.GOLD));
+        meta.lore(List.of(
+                Component.text("Tier: " + displayTier(tierId), NamedTextColor.YELLOW),
+                Component.text(source, NamedTextColor.GRAY),
+                Component.text("Material custom del servidor.", NamedTextColor.DARK_GRAY)));
+        meta.getPersistentDataContainer().set(customMaterialKey, PersistentDataType.STRING, id);
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
     private boolean tryActivateShieldGuard(Player player, EquipmentSlot hand) {
         ItemStack shield = heldShield(player, hand);
         if (shield == null || shield.getType() != Material.SHIELD) {
@@ -1216,6 +1253,39 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             mob.setCustomNameVisible(true);
             threatManager.markManaged(mob);
             sender.sendMessage("Bandido Corrompido invocado.");
+            return true;
+        }
+        if (args.length == 1 && args[0].equalsIgnoreCase("materiales")) {
+            List<String> ids = customMaterialIds();
+            if (ids.isEmpty()) {
+                sender.sendMessage("No hay materiales custom configurados.");
+                return true;
+            }
+            sender.sendMessage("Materiales custom: " + String.join(", ", ids));
+            return true;
+        }
+        if (args.length >= 2 && args[0].equalsIgnoreCase("spawnmaterial")) {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("Ejecuta este comando dentro del juego.");
+                return true;
+            }
+            String id = args[1].toLowerCase(Locale.ROOT);
+            int amount = 1;
+            if (args.length >= 3) {
+                try {
+                    amount = Math.max(1, Integer.parseInt(args[2]));
+                } catch (NumberFormatException ignored) {
+                    sender.sendMessage("La cantidad debe ser un numero entero.");
+                    return true;
+                }
+            }
+            ItemStack stack = createCustomMaterialItem(id, amount);
+            if (stack == null) {
+                sender.sendMessage("Material desconocido. Usa /servidro materiales.");
+                return true;
+            }
+            giveItemOrDrop(player, stack);
+            sender.sendMessage("Has recibido " + amount + "x " + id + ".");
             return true;
         }
         if (args.length >= 4 && args[0].equalsIgnoreCase("spawnmob")) {

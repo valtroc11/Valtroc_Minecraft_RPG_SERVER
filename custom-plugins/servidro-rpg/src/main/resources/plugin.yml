@@ -29,7 +29,7 @@ commands:
     usage: /misiones
   servidro:
     description: Herramientas administrativas del prototipo.
-    usage: /servidro <xp|profesionxp|resetclass|tumbar|levantar|invocar|aggro|kit|arena|cofre> ...
+    usage: /servidro <xp|profesionxp|resetclass|tumbar|levantar|invocar|spawnmaterial|materiales|aggro|kit|arena|cofre> ...
     permission: servidro.admin
   provocar:
     description: Provoca al enemigo al que estas mirando.

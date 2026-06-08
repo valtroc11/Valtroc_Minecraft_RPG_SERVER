@@ -150,3 +150,246 @@ copper_staff:
     parent_model: "item/handheld"
     textures:
       - servidorpg/copper_staff
+
+tin_chunk:
+  displayname: "<#d8d8d1>Trozo de Estano"
+  material: RAW_IRON
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/tin_chunk
+
+tin_ingot:
+  displayname: "<#efefea>Lingote de Estano"
+  material: IRON_INGOT
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/tin_ingot
+
+bronze_nugget:
+  displayname: "<#cf8a44>Pepita de Bronce"
+  material: GOLD_NUGGET
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/bronze_nugget
+
+bronze_ingot:
+  displayname: "<#c9853f>Lingote de Bronce"
+  material: COPPER_INGOT
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/bronze_ingot
+
+silver_chunk:
+  displayname: "<#f1f4f8>Trozo de Plata"
+  material: RAW_GOLD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/silver_chunk
+
+silver_ingot:
+  displayname: "<#f8fbff>Lingote de Plata"
+  material: GOLD_INGOT
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/silver_ingot
+
+oricalco_fragment:
+  displayname: "<#ffbd4a>Fragmento de Oricalco"
+  material: BLAZE_POWDER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/oricalco_fragment
+
+oricalco_ingot:
+  displayname: "<#ffbf53>Lingote de Oricalco"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/oricalco_ingot
+
+mithril_shard:
+  displayname: "<#8ed1ff>Esquirla de Mithril"
+  material: PRISMARINE_CRYSTALS
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/mithril_shard
+
+mithril_ingot:
+  displayname: "<#9cdcff>Lingote de Mithril"
+  material: PRISMARINE_SHARD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/mithril_ingot
+
+legendary_core:
+  displayname: "<#ffd56a>Nucleo Legendario"
+  material: NETHER_STAR
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/legendary_core
+
+tin_block:
+  displayname: "<#d7d8d3>Bloque de Estano"
+  material: IRON_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/blocks/tin_block
+
+bronze_block:
+  displayname: "<#bf7d39>Bloque de Bronce"
+  material: CUT_COPPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/blocks/bronze_block
+
+silver_block:
+  displayname: "<#edf2f7>Bloque de Plata"
+  material: QUARTZ_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/blocks/silver_block
+
+oricalco_block:
+  displayname: "<#e5ab48>Bloque de Oricalco"
+  material: GLOWSTONE
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/blocks/oricalco_block
+
+mithril_block:
+  displayname: "<#7dcfff>Bloque de Mithril"
+  material: DIAMOND_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/blocks/mithril_block
+
+tin_ore:
+  displayname: "<#d8d8d0>Mena de Estano"
+  material: IRON_ORE
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/ores/tin_ore
+
+silver_ore:
+  displayname: "<#f0f4fa>Mena de Plata"
+  material: DEEPSLATE_GOLD_ORE
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/ores/silver_ore
+
+oricalco_ore:
+  displayname: "<#ffb54b>Mena de Oricalco"
+  material: NETHER_GOLD_ORE
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/ores/oricalco_ore
+
+mithril_ore:
+  displayname: "<#8cd6ff>Mena de Mithril"
+  material: DIAMOND_ORE
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/ores/mithril_ore
+
+summoner_hood:
+  displayname: "<#9f68d7>Capucha del Invocador"
+  material: LEATHER_HELMET
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/mobs/summoner_hood
+
+summoner_staff:
+  displayname: "<#b06ae0>Staff del Invocador"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/mobs/summoner_staff
+
+brutal_helm:
+  displayname: "<#c74e4e>Yelmo Brutal"
+  material: IRON_HELMET
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/mobs/brutal_helm
+
+brutal_axe:
+  displayname: "<#cf4b45>Hacha Brutal"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/mobs/brutal_axe
+
+bastion_shield:
+  displayname: "<#c8d0d8>Escudo Bastion"
+  material: SHIELD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/mobs/bastion_shield
+
+frost_focus:
+  displayname: "<#8fd7ff>Foco Escarchado"
+  material: AMETHYST_SHARD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/mobs/frost_focus
+
+blood_mask:
+  displayname: "<#d94b5c>Mascara Sanguinea"
+  material: GOLDEN_HELMET
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/mobs/blood_mask

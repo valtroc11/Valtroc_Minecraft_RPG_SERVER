@@ -1035,6 +1035,89 @@ class-xp-flasks:
       alchemy-craft-xp: 32
       recipe: [GLASS_BOTTLE, NETHER_STAR, DRAGON_BREATH, TOTEM_OF_UNDYING]
 
+custom-materials:
+  items:
+    tin_chunk:
+      display-name: "Trozo de Estano"
+      material: RAW_IRON
+      tier: bronze
+      source: "Mineral temprano para la aleacion de bronce."
+    tin_ingot:
+      display-name: "Lingote de Estano"
+      material: IRON_INGOT
+      tier: bronze
+      source: "Refinado de estano para aleaciones."
+    bronze_ingot:
+      display-name: "Lingote de Bronce"
+      material: COPPER_INGOT
+      tier: bronze
+      source: "Aleacion de cobre y estano."
+    silver_chunk:
+      display-name: "Trozo de Plata"
+      material: RAW_GOLD
+      tier: silver
+      source: "Mineral raro hallado cerca del diamante."
+    silver_ingot:
+      display-name: "Lingote de Plata"
+      material: GOLD_INGOT
+      tier: silver
+      source: "Metal noble para equipo refinado."
+    oricalco_fragment:
+      display-name: "Fragmento de Oricalco"
+      material: BLAZE_POWDER
+      tier: oricalco
+      source: "Residuo metalico del Nether corrompido."
+    oricalco_ingot:
+      display-name: "Lingote de Oricalco"
+      material: BLAZE_ROD
+      tier: oricalco
+      source: "Metal magico refinado del Nether."
+    mithril_shard:
+      display-name: "Esquirla de Mithril"
+      material: PRISMARINE_CRYSTALS
+      tier: mithril
+      source: "Cristal metalico hallado en rutas finales."
+    mithril_ingot:
+      display-name: "Lingote de Mithril"
+      material: PRISMARINE_SHARD
+      tier: mithril
+      source: "Metal ligero y resistente del late game."
+    legendary_core:
+      display-name: "Nucleo Legendario"
+      material: NETHER_STAR
+      tier: legendary
+      source: "Catalizador unico obtenido de jefes y contenido final."
+
+custom-ores:
+  tin:
+    tier: bronze
+    world: overworld
+    y-min: 32
+    y-max: 72
+    note: "Primera mena nueva real del servidor. Recomendada como futuro mineral de estano."
+    temporary-standin: "Sin stand-in activo aun. Espera recurso visual o worldgen dedicado."
+  silver:
+    tier: silver
+    world: overworld
+    y-min: -32
+    y-max: 16
+    note: "Mena rara cercana al diamante."
+    temporary-standin: "Candidata temporal: emerald ore/deepslate emerald ore si decidimos reutilizarla."
+  oricalco:
+    tier: oricalco
+    world: nether
+    y-min: 8
+    y-max: 48
+    note: "Metal magico del Nether. Mejor tratarlo como contenido custom o de corrupcion."
+    temporary-standin: "Candidata temporal: nether quartz ore o ancient debris, segun balance."
+  mithril:
+    tier: mithril
+    world: end
+    y-min: 0
+    y-max: 80
+    note: "Metal de contenido final para End y dungeons avanzadas."
+    temporary-standin: "Sin stand-in activo. Recomendado dejarlo para Oraxen/worldgen dedicado."
+
 tier-roadmap:
   note: "Hoja de ruta de tiers. Los tiers no-vanilla requieren items custom o stand-ins hasta integrar Oraxen."
   tiers:
