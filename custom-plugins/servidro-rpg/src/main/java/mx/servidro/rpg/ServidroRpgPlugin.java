@@ -434,6 +434,11 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                         + " | Nivel: " + profile.professionLevel(selected.id())
                         + " | XP: " + profile.professionExperience(selected.id())
                         + "/" + profile.requiredExperience(selected.id(), professionXpBase()), NamedTextColor.GOLD));
+                if ("alquimista".equals(selected.id())) {
+                    player.sendMessage(Component.text("La alquimia sube al completar cocciones en Brewing Stand y al fabricar Frascos de Experiencia por tier.",
+                            NamedTextColor.LIGHT_PURPLE));
+                    player.sendMessage(Component.text("Ruta de frascos: " + alchemyProgressionSummary(), NamedTextColor.GRAY));
+                }
                 return true;
             }
         }
@@ -496,8 +501,9 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 + tierProgression("equip-level", "wood", "stone", "copper", "bronze"), NamedTextColor.YELLOW));
         player.sendMessage(Component.text("Paso 4 | /profesion estado y /desbloqueos para seguir herrero, minero y alquimista.",
                 NamedTextColor.YELLOW));
-        player.sendMessage(Component.text("Paso 5 | Sube alquimista para desbloquear frascos de XP de clase y recibe libros por tier.",
+        player.sendMessage(Component.text("Paso 5 | Sube alquimista con Brewing Stand (+18 XP por coccion) y craftea frascos de XP por tier.",
                 NamedTextColor.YELLOW));
+        player.sendMessage(Component.text("Ruta alquimista: " + alchemyProgressionSummary(), NamedTextColor.GRAY));
         player.sendMessage(Component.text("Paso 6 | /misiones para coronas y /auction para comerciar.", NamedTextColor.YELLOW));
         player.sendMessage(Component.text("/spec lista", NamedTextColor.YELLOW)
                 .append(Component.text(" | Especializaciones desde nivel 10.", NamedTextColor.GRAY)));
@@ -717,6 +723,10 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         return "guide:" + profession + ":" + tierId;
     }
 
+    private String alchemyProgressionSummary() {
+        return "Madera 1, Piedra 3, Cobre 5, Bronce 10, Hierro 16, Plata 26, Diamante 40, Oricalco 54, Mithril 72, Legendario 88";
+    }
+
     private ItemStack createProfessionGuideBook(String profession, String tierId) {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
@@ -731,6 +741,8 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                         "Efecto:\nXP de clase x" + String.format(Locale.US, "%.2f", classXpFlaskMultiplier(tierId))
                                 + "\nDuracion: " + (classXpFlaskDurationSeconds(tierId) / 60)
                                 + " min\nAfecta mobs de " + displayTier(tierId) + " y " + displayTier(nextTier(tierId)),
+                        "Como subir Alquimista:\n1) Completa cocciones en Brewing Stand.\n2) Cada coccion da 18 XP.\n3) Craftear este frasco tambien da XP de alquimista.",
+                        "Ruta de frascos:\n" + alchemyProgressionSummary(),
                         "Receta:\n" + String.join("\n", classXpFlaskRecipeIngredients(tierId).stream()
                                 .map(this::displayMaterial)
                                 .toList()),
@@ -967,6 +979,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 "Tu tier inicial es " + displayTier(tierId) + ".\n\nCamino temprano:\nMadera 1\nPiedra 3\nCobre 5\nBronce 10",
                 "Comandos utiles:\n/clase estado\n/habilidades\n/estadisticas\n/profesion estado\n/desbloqueos\n/misiones",
                 starterBookClassPage(baseClass),
+                "Alquimia:\nSube completando cocciones en Brewing Stand.\nCada coccion da 18 XP.\nLos frascos por tier se abren en:\n" + alchemyProgressionSummary(),
                 "Consejo:\nGuarda coronas, mira cofres personales y usa /auction para mover equipo entre jugadores.\n\nLas profesiones entregan libros por tier cuando desbloqueas nuevas rutas.");
         book.setItemMeta(meta);
         return book;
