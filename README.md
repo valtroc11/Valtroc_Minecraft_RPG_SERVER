@@ -511,9 +511,13 @@ economicos.
 
 | Progresion | Nivel maximo |
 | --- | ---: |
-| Clase del personaje | 30 |
+| Clase del personaje | 100 |
 | Especializacion | 20 |
-| Cada profesion | 20 |
+| Cada profesion | 100 |
+
+Los tiers superiores aun no estan cableados como items custom definitivos. La
+hoja de ruta actual de tiers, progresion y spawns esta documentada en
+`docs/tier-progression.md`.
 
 ## Misiones diarias
 

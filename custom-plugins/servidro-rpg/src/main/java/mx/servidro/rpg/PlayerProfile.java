@@ -9,6 +9,7 @@ final class PlayerProfile {
     private int level = 1;
     private int classExperience;
     private int specializationLevel;
+    private boolean starterKitClaimed;
     private final Map<String, Integer> professionLevels = new LinkedHashMap<>();
     private final Map<String, Integer> professionExperience = new LinkedHashMap<>();
 
@@ -77,6 +78,14 @@ final class PlayerProfile {
         return specializationLevel;
     }
 
+    boolean starterKitClaimed() {
+        return starterKitClaimed;
+    }
+
+    void setStarterKitClaimed(boolean starterKitClaimed) {
+        this.starterKitClaimed = starterKitClaimed;
+    }
+
     void resetSpecializationLevel() {
         specializationLevel = 0;
     }
@@ -87,6 +96,7 @@ final class PlayerProfile {
         level = 1;
         classExperience = 0;
         specializationLevel = 0;
+        starterKitClaimed = false;
     }
 
     int professionLevel(String profession) {
@@ -149,11 +159,12 @@ final class PlayerProfile {
     }
 
     void setLoadedValues(String baseClass, String specialization, int level, int classExperience, int specializationLevel,
-            int maxLevel, int maxSpecializationLevel) {
+            boolean starterKitClaimed, int maxLevel, int maxSpecializationLevel) {
         this.baseClass = baseClass;
         this.specialization = specialization;
         this.level = Math.min(maxLevel, Math.max(1, level));
         this.classExperience = this.level >= maxLevel ? 0 : Math.max(0, classExperience);
         this.specializationLevel = Math.min(maxSpecializationLevel, Math.max(0, specializationLevel));
+        this.starterKitClaimed = starterKitClaimed;
     }
 }

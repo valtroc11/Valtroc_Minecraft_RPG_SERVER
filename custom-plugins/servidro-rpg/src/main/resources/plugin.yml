@@ -20,7 +20,7 @@ commands:
     description: Consulta los desbloqueos actuales de progresion.
     usage: /desbloqueos
   guia:
-    aliases: [informacion, info]
+    aliases: [informacion, info, tutorial]
     description: Muestra la guia rapida del servidor.
     usage: /guia
   misiones:

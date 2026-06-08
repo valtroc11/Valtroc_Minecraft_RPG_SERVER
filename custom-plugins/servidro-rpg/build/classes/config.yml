@@ -7,6 +7,13 @@ economy:
 
 onboarding:
   join-guide-delay-ticks: 30
+  starter-tier: wood
+  starter-crowns: 30.0
+  starter-food: 16
+  starter-arrows: 32
+  starter-kit-on-class-choice: true
+  backfill-starter-kit-on-join: true
+  tutorial-book: true
 
 visuals:
   health-bars:
@@ -651,9 +658,9 @@ mob-scaling:
     miniboss-seconds: 600
 
 progression-caps:
-  class-level: 30
+  class-level: 100
   specialization-level: 20
-  profession-level: 20
+  profession-level: 100
 
 class-xp:
   base-required-per-level: 120
@@ -671,6 +678,108 @@ class-scaling:
   max-health-per-level: 1.0
   attack-damage-per-level: 0.08
   movement-speed-per-level: 0.002
+
+class-identity:
+  guerrero:
+    primary-attribute: fuerza
+    secondary-attribute: agilidad
+    tertiary-attribute: inteligencia
+    current-weapon-families:
+      - sword
+      - axe
+      - shield
+    future-weapon-families:
+      - spear
+      - greatsword
+  explorador:
+    primary-attribute: agilidad
+    secondary-attribute: fuerza
+    tertiary-attribute: inteligencia
+    current-weapon-families:
+      - bow
+      - crossbow
+      - sword
+    future-weapon-families:
+      - dagger
+      - shortspear
+  mago:
+    primary-attribute: inteligencia
+    secondary-attribute: agilidad
+    tertiary-attribute: fuerza
+    current-weapon-families:
+      - wand
+      - staff
+    future-weapon-families:
+      - spellbook
+      - orb
+  clerigo:
+    primary-attribute: inteligencia
+    secondary-attribute: fuerza
+    tertiary-attribute: agilidad
+    current-weapon-families:
+      - staff
+      - shield
+      - mace
+    future-weapon-families:
+      - relic
+      - censer
+
+attribute-system:
+  note: "Sistema objetivo. Aun no esta conectado a runtime, UI ni formulas de dano."
+  level-gains:
+    guerrero:
+      fuerza-per-level: 3.0
+      agilidad-per-level: 1.0
+      inteligencia-per-level: 0.5
+    explorador:
+      fuerza-per-level: 1.2
+      agilidad-per-level: 3.0
+      inteligencia-per-level: 0.8
+    mago:
+      fuerza-per-level: 0.5
+      agilidad-per-level: 1.0
+      inteligencia-per-level: 3.0
+    clerigo:
+      fuerza-per-level: 1.0
+      agilidad-per-level: 0.8
+      inteligencia-per-level: 3.0
+  starting-bonus:
+    guerrero:
+      vida-plana: 8.0
+      dano-plano: 1.0
+      armadura-plana: 1.0
+    explorador:
+      dano-plano: 0.6
+      velocidad-ataque-plana: 0.12
+      critico-plano: 3.0
+      velocidad-plana: 0.01
+    mago:
+      dano-plano: 0.8
+      mana-plana: 30.0
+    clerigo:
+      vida-plana: 4.0
+      dano-plano: 0.6
+      mana-plana: 24.0
+      armadura-plana: 0.5
+  per-point:
+    fuerza:
+      vida: 1.6
+      dano: 0.18
+      penetracion: 0.03
+    inteligencia:
+      dano: 0.16
+      mana: 4.0
+    agilidad:
+      dano: 0.10
+      velocidad-ataque: 0.012
+      velocidad-movimiento: 0.0008
+      critico: 0.05
+  flat-stat-guidance:
+    critico-soft-cap: 35.0
+    penetracion-soft-cap: 30.0
+    movement-soft-cap: 0.18
+    attack-speed-soft-cap: 1.6
+    note: "Los soft caps son para evitar escalado roto en late game."
 
 downed:
   auto-revive-seconds: 20
@@ -806,11 +915,121 @@ profession-xp:
   herrero:
     wood: 4
     stone: 8
+    copper: 12
+    bronze: 16
     iron: 18
+    silver: 24
     gold: 28
     diamond: 48
+    oricalco: 64
+    mithril: 80
+    legendary: 120
     netherite: 80
     heavy-piece-bonus: 10
+
+tier-roadmap:
+  note: "Hoja de ruta de tiers. Los tiers no-vanilla requieren items custom o stand-ins hasta integrar Oraxen."
+  tiers:
+    wood:
+      equip-level: 1
+      smith-level: 1
+      miner-level: 1
+      source: "Superficie y bosques; tutorial del mundo"
+      stand-in-armor: "LEATHER"
+      stand-in-shield: "SHIELD"
+      stand-in-ranged: "BOW"
+      stand-in-wand: "STICK"
+      stand-in-cleric-staff: "STICK"
+    stone:
+      equip-level: 3
+      smith-level: 3
+      miner-level: 3
+      source: "Montanas y cuevas tempranas"
+      stand-in-armor: "LEATHER"
+      stand-in-shield: "SHIELD"
+      stand-in-ranged: "BOW"
+      stand-in-wand: "STICK"
+      stand-in-cleric-staff: "STICK"
+    copper:
+      equip-level: 5
+      smith-level: 5
+      miner-level: 5
+      source: "Overworld alto; vetas amplias. Usa cobre vanilla para armaduras y herramientas base."
+      uses-vanilla-armor-and-tools: true
+      stand-in-shield: "SHIELD"
+      stand-in-ranged: "BOW"
+      stand-in-wand: "BLAZE_ROD"
+      stand-in-cleric-staff: "BLAZE_ROD"
+    bronze:
+      equip-level: 10
+      smith-level: 10
+      miner-level: 10
+      source: "Idealmente aleacion cobre + estano; si no, mineral custom de estano en capa de hierro"
+      stand-in-armor: "CHAINMAIL"
+      stand-in-shield: "SHIELD"
+      stand-in-ranged: "BOW"
+      stand-in-wand: "BLAZE_ROD"
+      stand-in-cleric-staff: "BLAZE_ROD"
+    iron:
+      equip-level: 18
+      smith-level: 16
+      miner-level: 16
+      source: "Overworld medio"
+      stand-in-armor: "IRON"
+      stand-in-shield: "SHIELD"
+      stand-in-ranged: "BOW"
+      stand-in-wand: "BLAZE_ROD"
+      stand-in-cleric-staff: "BLAZE_ROD"
+    silver:
+      equip-level: 30
+      smith-level: 26
+      miner-level: 26
+      source: "Overworld profundo, cerca de diamante"
+      stand-in-armor: "IRON"
+      stand-in-shield: "SHIELD"
+      stand-in-ranged: "BOW"
+      stand-in-wand: "BLAZE_ROD"
+      stand-in-cleric-staff: "BLAZE_ROD"
+    diamond:
+      equip-level: 45
+      smith-level: 40
+      miner-level: 40
+      source: "Overworld profundo"
+      stand-in-armor: "DIAMOND"
+      stand-in-shield: "SHIELD"
+      stand-in-ranged: "BOW"
+      stand-in-wand: "BLAZE_ROD"
+      stand-in-cleric-staff: "BLAZE_ROD"
+    oricalco:
+      equip-level: 60
+      smith-level: 54
+      miner-level: 54
+      source: "Nether, fortalezas y zonas corrompidas"
+      stand-in-armor: "DIAMOND"
+      stand-in-shield: "SHIELD"
+      stand-in-ranged: "BOW"
+      stand-in-wand: "BLAZE_ROD"
+      stand-in-cleric-staff: "BLAZE_ROD"
+    mithril:
+      equip-level: 78
+      smith-level: 72
+      miner-level: 72
+      source: "End, cuevas celestes o dungeons finales"
+      stand-in-armor: "NETHERITE"
+      stand-in-shield: "SHIELD"
+      stand-in-ranged: "BOW"
+      stand-in-wand: "BLAZE_ROD"
+      stand-in-cleric-staff: "BLAZE_ROD"
+    legendary:
+      equip-level: 94
+      smith-level: 88
+      miner-level: 88
+      source: "Solo bosses, raids y materiales unicos"
+      stand-in-armor: "NETHERITE"
+      stand-in-shield: "SHIELD"
+      stand-in-ranged: "BOW"
+      stand-in-wand: "BLAZE_ROD"
+      stand-in-cleric-staff: "BLAZE_ROD"
 
 personal-chests:
   common:

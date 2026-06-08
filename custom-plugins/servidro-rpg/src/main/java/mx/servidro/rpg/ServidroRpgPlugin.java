@@ -84,6 +84,7 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantInventory;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -321,10 +322,14 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 return true;
             }
             profile.setBaseClass(selected.id());
-            saveProfiles();
             refreshPlayerBaseStats(player);
             updateTab(player);
             player.sendMessage(Component.text("Has elegido la clase " + selected.id() + ".", NamedTextColor.GREEN));
+            if (getConfig().getBoolean("onboarding.starter-kit-on-class-choice", true)) {
+                ensureStarterKit(player, profile, true);
+            }
+            saveProfiles();
+            sendGuide(player);
             return true;
         }
         return false;
@@ -422,12 +427,16 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             return true;
         }
         PlayerProfile profile = profiles.get(player.getUniqueId());
-        player.sendMessage(Component.text("Nivel de clase: " + profile.level()
-                + " | Equipo: hierro 5, oro 8, diamante 15.", NamedTextColor.GOLD));
+        player.sendMessage(Component.text("Tier inicial regalado: " + displayTier(onboardingStarterTier())
+                + " | Nivel de clase: " + profile.level(), NamedTextColor.GOLD));
+        player.sendMessage(Component.text("Equipo por nivel: " + tierProgression("equip-level",
+                "wood", "stone", "copper", "bronze", "iron", "silver", "diamond"), NamedTextColor.YELLOW));
         player.sendMessage(Component.text("Herrero " + profile.professionLevel("herrero")
-                + " | Crafteo: hierro 5, oro 10, diamante 15.", NamedTextColor.YELLOW));
+                + " | Crafteo por tier: " + tierProgression("smith-level",
+                "wood", "stone", "copper", "bronze", "iron", "silver", "diamond"), NamedTextColor.YELLOW));
         player.sendMessage(Component.text("Minero " + profile.professionLevel("minero")
-                + " | Bloques minerales: hierro 5, oro 10, diamante 15.", NamedTextColor.YELLOW));
+                + " | Recoleccion por tier: " + tierProgression("miner-level",
+                "wood", "stone", "copper", "bronze", "iron", "silver", "diamond"), NamedTextColor.YELLOW));
         player.sendMessage(Component.text("Alquimista " + profile.professionLevel("alquimista")
                 + " | Consumibles avanzados: 8.", NamedTextColor.YELLOW));
         player.sendMessage(Component.text("Agricultor " + profile.professionLevel("agricultor")
@@ -449,20 +458,33 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void sendGuide(Player player) {
-        player.sendMessage(Component.text("===== Servidro MX | Reino Corrompido =====", NamedTextColor.GOLD));
-        player.sendMessage(Component.text("/clase lista", NamedTextColor.YELLOW)
-                .append(Component.text(" | Elige una clase rigida para la temporada.", NamedTextColor.GRAY)));
+        PlayerProfile profile = profiles.get(player.getUniqueId());
+        player.sendMessage(Component.text("===== Servidro MX | Guia del Recien Llegado =====", NamedTextColor.GOLD));
+        if (profile.baseClass() == null) {
+            player.sendMessage(Component.text("Paso 1 | /clase lista y /clase elegir <clase>", NamedTextColor.YELLOW)
+                    .append(Component.text(" para fijar tu clase de temporada.", NamedTextColor.GRAY)));
+            player.sendMessage(Component.text("Paso 2 | Al elegir clase recibes un kit inicial de tier "
+                    + displayTier(onboardingStarterTier()) + ".", NamedTextColor.YELLOW));
+        } else {
+            player.sendMessage(Component.text("Paso 1 | Ya eres " + displayClass(profile.baseClass())
+                    + " nivel " + profile.level() + ".", classColor(profile.baseClass())));
+            player.sendMessage(Component.text("Usa /habilidades y /estadisticas para revisar tu kit de combate.",
+                    NamedTextColor.GRAY));
+        }
+        player.sendMessage(Component.text("Paso 3 | Early game: "
+                + tierProgression("equip-level", "wood", "stone", "copper", "bronze"), NamedTextColor.YELLOW));
+        player.sendMessage(Component.text("Paso 4 | /profesion estado y /desbloqueos para seguir herrero y minero.",
+                NamedTextColor.YELLOW));
+        player.sendMessage(Component.text("Paso 5 | /misiones para coronas y /auction para comerciar.", NamedTextColor.YELLOW));
         player.sendMessage(Component.text("/spec lista", NamedTextColor.YELLOW)
-                .append(Component.text(" | Consulta especializaciones al alcanzar nivel 10.", NamedTextColor.GRAY)));
-        player.sendMessage(Component.text("/profesion estado", NamedTextColor.YELLOW)
-                .append(Component.text(" | Revisa tus cinco profesiones.", NamedTextColor.GRAY)));
-        player.sendMessage(Component.text("/desbloqueos", NamedTextColor.YELLOW)
-                .append(Component.text(" | Consulta que puedes fabricar, colocar y usar.", NamedTextColor.GRAY)));
-        player.sendMessage(Component.text("/auction", NamedTextColor.YELLOW)
-                .append(Component.text(" | Compra y vende con otros jugadores.", NamedTextColor.GRAY)));
-        player.sendMessage(Component.text("/misiones", NamedTextColor.YELLOW)
-                .append(Component.text(" | Consulta tus encargos diarios rotativos.", NamedTextColor.GRAY)));
+                .append(Component.text(" | Especializaciones desde nivel 10.", NamedTextColor.GRAY)));
         player.sendMessage(Component.text("Los aldeanos no comercian. La economia depende de los jugadores.", NamedTextColor.AQUA));
+        if (profile.baseClass() != null) {
+            sendBaseClassInfo(player, profile.baseClass());
+            if (profile.specialization() != null) {
+                sendSpecializationInfo(player, profile.specialization());
+            }
+        }
     }
 
     private boolean handleMissions(CommandSender sender) {
@@ -489,6 +511,154 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             summary.append(profession.id()).append(" ").append(profile.professionLevel(profession.id()));
         }
         return summary.toString();
+    }
+
+    private String onboardingStarterTier() {
+        return getConfig().getString("onboarding.starter-tier", "wood").toLowerCase(Locale.ROOT);
+    }
+
+    private String displayTier(String tierId) {
+        if (tierId == null || tierId.isBlank()) {
+            return "Desconocido";
+        }
+        String normalized = tierId.toLowerCase(Locale.ROOT);
+        return switch (normalized) {
+            case "wood" -> "Madera";
+            case "stone" -> "Piedra";
+            case "copper" -> "Cobre";
+            case "bronze" -> "Bronce";
+            case "iron" -> "Hierro";
+            case "silver" -> "Plata";
+            case "diamond" -> "Diamante";
+            case "oricalco" -> "Oricalco";
+            case "mithril" -> "Mithril";
+            case "legendary" -> "Legendario";
+            default -> normalized;
+        };
+    }
+
+    private int tierRequirement(String tierId, String requirementKey, int fallback) {
+        return getConfig().getInt("tier-roadmap.tiers." + tierId + "." + requirementKey, fallback);
+    }
+
+    private String tierProgression(String requirementKey, String... tierIds) {
+        List<String> entries = new ArrayList<>();
+        for (String tierId : tierIds) {
+            entries.add(displayTier(tierId) + " " + tierRequirement(tierId, requirementKey, 1));
+        }
+        return String.join(" -> ", entries);
+    }
+
+    private boolean ensureStarterKit(Player player, PlayerProfile profile, boolean announce) {
+        if (profile.baseClass() == null || profile.starterKitClaimed()) {
+            return false;
+        }
+        String starterTier = onboardingStarterTier();
+        for (ItemStack stack : createStarterKit(profile.baseClass(), starterTier)) {
+            giveItemOrDrop(player, stack);
+        }
+        int food = getConfig().getInt("onboarding.starter-food", 16);
+        if (food > 0) {
+            giveItemOrDrop(player, new ItemStack(Material.COOKED_BEEF, food));
+        }
+        double crowns = getConfig().getDouble("onboarding.starter-crowns", 30.0);
+        if (crowns > 0.0) {
+            depositCrowns(player, crowns);
+        }
+        if (getConfig().getBoolean("onboarding.tutorial-book", true)) {
+            giveItemOrDrop(player, createStarterGuideBook(profile.baseClass(), starterTier));
+        }
+        profile.setStarterKitClaimed(true);
+        if (announce) {
+            player.sendMessage(Component.text("Has recibido tu kit inicial de tier " + displayTier(starterTier)
+                    + " y " + (int) crowns + " coronas.", NamedTextColor.GREEN));
+            player.sendMessage(Component.text("Revisa el libro de inicio y usa /guia cuando quieras repasarlo.",
+                    NamedTextColor.GRAY));
+        }
+        return true;
+    }
+
+    private List<ItemStack> createStarterKit(String baseClass, String tierId) {
+        List<ItemStack> items = new ArrayList<>();
+        items.add(createStarterArmorPiece(Material.LEATHER_HELMET, "Casco de " + displayTier(tierId), tierId));
+        items.add(createStarterArmorPiece(Material.LEATHER_CHESTPLATE, "Pechera de " + displayTier(tierId), tierId));
+        items.add(createStarterArmorPiece(Material.LEATHER_LEGGINGS, "Grebas de " + displayTier(tierId), tierId));
+        items.add(createStarterArmorPiece(Material.LEATHER_BOOTS, "Botas de " + displayTier(tierId), tierId));
+        switch (baseClass) {
+            case "guerrero" -> {
+                items.add(createStarterTool(Material.WOODEN_SWORD, "Espada de " + displayTier(tierId), tierId,
+                        "Golpe Abrumador: Shift + clic izquierdo"));
+                items.add(createStarterTool(Material.WOODEN_AXE, "Hacha de " + displayTier(tierId), tierId,
+                        "Dash: F al sprintar | Salto: saltar + Shift"));
+                items.add(createStarterTool(Material.SHIELD, "Escudo Ligero de " + displayTier(tierId), tierId,
+                        "Provocar: clic derecho"));
+            }
+            case "explorador" -> {
+                items.add(createStarterTool(Material.BOW, "Arco de " + displayTier(tierId), tierId,
+                        "Rodar: Shift + clic izquierdo"));
+                items.add(new ItemStack(Material.ARROW, getConfig().getInt("onboarding.starter-arrows", 32)));
+                items.add(createStarterTool(Material.WOODEN_SWORD, "Hoja de Campo", tierId,
+                        "Apoya tu juego de distancia"));
+            }
+            case "mago" -> items.add(createStarterTool(Material.STICK, "Varita de " + displayTier(tierId), tierId,
+                    "Barrera: Shift + clic izquierdo"));
+            case "clerigo" -> {
+                items.add(createStarterTool(Material.BLAZE_ROD, "Staff de " + displayTier(tierId), tierId,
+                        "Bendicion: Shift + clic izquierdo | Curacion: clic derecho"));
+                items.add(createStarterTool(Material.SHIELD, "Escudo de Peregrino", tierId,
+                        "Soporte cercano y supervivencia"));
+            }
+            default -> {
+            }
+        }
+        return items;
+    }
+
+    private ItemStack createStarterArmorPiece(Material material, String label, String tierId) {
+        return createStarterTool(material, label, tierId, "Equipo inicial del reino");
+    }
+
+    private ItemStack createStarterTool(Material material, String label, String tierId, String hint) {
+        ItemStack stack = new ItemStack(material);
+        ItemMeta meta = stack.getItemMeta();
+        meta.displayName(Component.text(label, NamedTextColor.YELLOW));
+        meta.lore(List.of(
+                Component.text("Tier inicial: " + displayTier(tierId), NamedTextColor.GREEN),
+                Component.text(hint, NamedTextColor.GRAY)));
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
+    private ItemStack createStarterGuideBook(String baseClass, String tierId) {
+        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+        BookMeta meta = (BookMeta) book.getItemMeta();
+        meta.setTitle("Guia del Recluta");
+        meta.setAuthor("Servidro MX");
+        meta.addPage(
+                "Bienvenido a Servidro MX.\n\n1) Elige clase.\n2) Aprende tu control base.\n3) Sube profesiones.\n4) Sobrevive y comercia.",
+                "Tu tier inicial es " + displayTier(tierId) + ".\n\nCamino temprano:\nMadera 1\nPiedra 3\nCobre 5\nBronce 10",
+                "Comandos utiles:\n/clase estado\n/habilidades\n/estadisticas\n/profesion estado\n/desbloqueos\n/misiones",
+                starterBookClassPage(baseClass),
+                "Consejo:\nGuarda coronas, mira cofres personales y usa /auction para mover equipo entre jugadores.");
+        book.setItemMeta(meta);
+        return book;
+    }
+
+    private String starterBookClassPage(String baseClass) {
+        return switch (baseClass) {
+            case "guerrero" -> "Guerrero:\nEspada, hacha y escudo.\nDash: F al sprintar.\nGolpe: Shift + clic izquierdo.\nProvocar: clic derecho.";
+            case "explorador" -> "Explorador:\nArco y movilidad.\nRodar: Shift + clic izquierdo con arco.\nMantente a distancia y reposicionate.";
+            case "mago" -> "Mago:\nVarita de madera.\nBarrera: Shift + clic izquierdo.\nJuega seguro mientras subes de tier.";
+            case "clerigo" -> "Clerigo:\nStaff y escudo.\nBendicion: Shift + clic izquierdo.\nCuracion Menor: clic derecho.";
+            default -> "Explora, sube profesiones y consulta /guia cuando necesites repasar controles.";
+        };
+    }
+
+    private void giveItemOrDrop(Player player, ItemStack stack) {
+        Map<Integer, ItemStack> leftovers = player.getInventory().addItem(stack);
+        for (ItemStack leftover : leftovers.values()) {
+            player.getWorld().dropItemNaturally(player.getLocation(), leftover);
+        }
     }
 
     private boolean handleAdmin(CommandSender sender, String[] args) {
@@ -4859,6 +5029,11 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             if (!player.isOnline()) {
                 return;
             }
+            PlayerProfile profile = profiles.get(player.getUniqueId());
+            if (getConfig().getBoolean("onboarding.backfill-starter-kit-on-join", true)
+                    && ensureStarterKit(player, profile, true)) {
+                saveProfiles();
+            }
             player.showTitle(net.kyori.adventure.title.Title.title(
                     Component.text("Servidro MX", NamedTextColor.GOLD),
                     Component.text("Reino Corrompido", NamedTextColor.DARK_RED)));
@@ -5113,20 +5288,24 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         switch (classId) {
             case "guerrero" -> {
                 player.sendMessage(Component.text("Guerrero | Rol: frente de combate y presion.", NamedTextColor.GOLD));
-                player.sendMessage(Component.text("Dash: F | Golpe Abrumador: Shift + clic izquierdo | Salto Desolador: saltar + Shift", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Armas base: espada, hacha y escudo.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Dash: F al sprintar | Golpe Abrumador: Shift + clic izquierdo | Salto Desolador: saltar + Shift", NamedTextColor.YELLOW));
                 player.sendMessage(Component.text("Provocar: clic derecho con escudo.", NamedTextColor.YELLOW));
             }
             case "explorador" -> {
                 player.sendMessage(Component.text("Explorador | Rol: movilidad, persecucion y precision.", NamedTextColor.GREEN));
-                player.sendMessage(Component.text("Rodar: doble Shift | juego de distancia y reposicion.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Armas base: arco y hoja ligera.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Rodar: Shift + clic izquierdo con arco | juego de distancia y reposicion.", NamedTextColor.YELLOW));
             }
             case "mago" -> {
                 player.sendMessage(Component.text("Mago | Rol: dano magico y control.", NamedTextColor.LIGHT_PURPLE));
-                player.sendMessage(Component.text("Barrera: F con foco. Especializaciones: Piromante y Arcanista.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Arma base: varita.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Barrera: Shift + clic izquierdo con varita. Especializaciones: Piromante y Arcanista.", NamedTextColor.YELLOW));
             }
             case "clerigo" -> {
                 player.sendMessage(Component.text("Clerigo | Rol: apoyo, curacion y utilidad.", NamedTextColor.YELLOW));
-                player.sendMessage(Component.text("Bendicion y Curacion Menor para sostener al grupo.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Armas base: staff y escudo.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Bendicion: Shift + clic izquierdo con staff | Curacion Menor: clic derecho con staff.", NamedTextColor.YELLOW));
             }
             default -> player.sendMessage(Component.text("No tienes una clase base elegida todavia.", NamedTextColor.RED));
         }

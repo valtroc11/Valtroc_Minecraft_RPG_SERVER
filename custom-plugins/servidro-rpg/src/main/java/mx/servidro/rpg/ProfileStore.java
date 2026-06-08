@@ -38,6 +38,7 @@ final class ProfileStore {
                     yaml.getInt(key + ".level", 1),
                     yaml.getInt(key + ".class-experience", 0),
                     yaml.getInt(key + ".specialization-level", 0),
+                    yaml.getBoolean(key + ".starter-kit-claimed", false),
                     maxClassLevel,
                     maxSpecializationLevel);
             for (Profession profession : Profession.values()) {
@@ -76,6 +77,7 @@ final class ProfileStore {
             yaml.set(path + ".level", profile.level());
             yaml.set(path + ".class-experience", profile.classExperience());
             yaml.set(path + ".specialization-level", profile.specializationLevel());
+            yaml.set(path + ".starter-kit-claimed", profile.starterKitClaimed());
             for (Map.Entry<String, Integer> profession : profile.professionLevels().entrySet()) {
                 yaml.set(path + ".profession-levels." + profession.getKey(), profession.getValue());
                 yaml.set(path + ".profession-experience." + profession.getKey(),
