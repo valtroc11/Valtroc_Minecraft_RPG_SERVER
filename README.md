@@ -2,6 +2,27 @@
 
 Entorno local de Paper para probar el survival RPG medieval.
 
+## Capa visual del proyecto
+
+Servidro MX usa dos capas distintas:
+
+- **Pack del servidor (Oraxen)** para items, materiales y visuales RPG custom
+- **Pack recomendado del jugador** para que el mundo se vea medieval
+
+La guia recomendada para jugadores esta en:
+
+- [docs/visual-setup.md](</C:/Users/Valtroc/Documents/Proyecto Servidro MX/docs/visual-setup.md>)
+
+Por ahora, el pack recomendado para el mundo es:
+
+- [Excalibur en Modrinth](https://modrinth.com/resourcepack/excal)
+
+Y el pack custom del servidor se puede reenviar con:
+
+```text
+/oraxen pack send
+```
+
 ## Requisitos
 
 - Java 21
