@@ -67,6 +67,107 @@ JAVA_BIN=java
 NGROK_BIN=ngrok
 ```
 
+La version Linux ahora:
+
+- espera a que Paper llegue a `Done (...)!`
+- levanta `ngrok` despues del arranque real del server
+- guarda la IP publica en `server/ngrok-public.txt`
+- muestra el ultimo `Done (...)!` en `./server-status.sh`
+
+### Variante Linux con playit.gg
+
+Este ya es el camino recomendado para el servidor 24/7:
+
+```bash
+chmod +x start-server-playit.sh stop-server-playit.sh server-status-playit.sh
+./start-server-playit.sh
+./server-status-playit.sh
+./stop-server-playit.sh
+```
+
+Supone que:
+
+- `playit` esta instalado en Linux
+- el agente ya fue reclamado
+- existe un tunel `Minecraft Java` apuntando a `127.0.0.1:25565`
+
+El servicio `playit` corre con `systemd`, asi que estos scripts:
+
+- arrancan o detienen Paper
+- arrancan o detienen `playit`
+- muestran si el puerto `25565` esta escuchando
+- intentan leer el dominio publico desde los logs de `playit`
+
+Para sincronizar cambios desde GitHub en la maquina Linux:
+
+```bash
+./update-linux-runtime.sh
+```
+
+Ese script hace:
+
+- `git pull --ff-only`
+- copia `custom-plugins/servidro-rpg/build/ServidroRpg.jar` a `server/plugins/ServidroRpg.jar`
+- reaplica permisos de ejecucion a los scripts Linux
+
+## Flujo Git recomendado
+
+Queremos separar dos tipos de cosas:
+
+- **Versionable en Git**:
+  - codigo
+  - scripts
+  - datapacks y configuracion
+  - estructuras personalizadas exportadas
+  - snapshots de metricas
+- **No versionable en Git**:
+  - `server/world/`
+  - logs del servidor
+  - caches
+  - runtime 24/7
+
+El mundo vivo sigue fuera del repo. Si haces estructuras o mediciones que
+quieres conservar, exportalas a:
+
+- `content/structures/`
+- `content/metrics/`
+
+### Publicar cambios desde Linux
+
+```bash
+./publish-linux-changes.sh "mensaje del cambio"
+```
+
+Hace:
+
+- `git pull --rebase --autostash origin main`
+- commit de los cambios versionables
+- `git push origin main`
+
+### Sincronizar la maquina local desde GitHub
+
+```powershell
+.\sync-local-from-origin.ps1
+```
+
+### Publicar cambios desde local
+
+```powershell
+.\publish-local-changes.ps1 "mensaje del cambio"
+```
+
+### Orden recomendado de trabajo
+
+Cuando el cambio nace o madura en la Linux:
+
+1. Exportar estructuras o metricas al repo
+2. `./publish-linux-changes.sh "..."`
+3. En local: `.\sync-local-from-origin.ps1`
+4. Seguir trabajando localmente
+5. Publicar local cuando toque
+
+Asi evitamos que Linux y local se pisen entre si.
+
 ## Plugins base
 
 Con el servidor detenido, ejecuta:
@@ -174,6 +275,43 @@ Habilidades de tanque disponibles en el prototipo:
 - Paladin: clic derecho con escudo desafia al enemigo seleccionado.
 - `/provocar`: comando equivalente para diagnostico y pruebas.
 - Los enemigos provocados quedan resaltados en rojo durante 4 segundos.
+
+## Oraxen
+
+Queremos usar Oraxen para generar items, crafteos y resource pack del proyecto.
+
+Base preparada en:
+
+- [content/oraxen/items](</C:/Users/Valtroc/Documents/Proyecto Servidro MX/content/oraxen/items>)
+- [content/oraxen/recipes](</C:/Users/Valtroc/Documents/Proyecto Servidro MX/content/oraxen/recipes>)
+- [content/oraxen/pack](</C:/Users/Valtroc/Documents/Proyecto Servidro MX/content/oraxen/pack>)
+
+Sincronizacion al servidor:
+
+```powershell
+.\sync-oraxen-content.ps1
+```
+
+En Linux:
+
+```bash
+chmod +x sync-oraxen-content.sh
+./sync-oraxen-content.sh
+```
+
+La idea del proyecto sera:
+
+- Oraxen genera items, modelos, recipes y pack
+- ServidroRpg controla stats, rarezas, requisitos y progresion
+
+Primeros ejemplos preparados:
+
+- `apprentice_sword`
+- `guardian_tower_shield`
+- `berserker_war_axe`
+- `iron_hunter_bow`
+- `mage_focus`
+- `cleric_relic`
 
 Habilidades del Clerigo disponibles en el prototipo:
 

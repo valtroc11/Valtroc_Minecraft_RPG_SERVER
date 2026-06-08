@@ -1,0 +1,55 @@
+apprentice_sword_recipe:
+  result:
+    oraxen_item: apprentice_sword
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: STICK
+  shape:
+    - " A "
+    - " A "
+    - " B "
+
+guardian_tower_shield_recipe:
+  result:
+    oraxen_item: guardian_tower_shield
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: OAK_PLANKS
+  shape:
+    - "ABA"
+    - "BBB"
+    - " B "
+
+berserker_war_axe_recipe:
+  result:
+    oraxen_item: berserker_war_axe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: STICK
+  shape:
+    - "AA "
+    - "AB "
+    - " B "
+
+mage_focus_recipe:
+  result:
+    oraxen_item: mage_focus
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: AMETHYST_SHARD
+    B:
+      minecraft_type: GOLD_INGOT
+  shape:
+    - " A "
+    - " B "
+    - "   "

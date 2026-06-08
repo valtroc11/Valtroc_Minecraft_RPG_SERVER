@@ -1532,6 +1532,9 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 || !"guerrero".equals(profiles.get(player.getUniqueId()).baseClass())) {
             return;
         }
+        if (!player.isSprinting()) {
+            return;
+        }
         event.setCancelled(true);
         useWarriorDash(player);
     }
@@ -4000,12 +4003,17 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         PlayerProfile profile = profiles.get(player.getUniqueId());
         int classLevel = profile.level();
         int smithLevel = profile.professionLevel("herrero");
+        int baseTier = guaranteedSmithBonusTier(crafted.getType(), classLevel, smithLevel);
         double chance = Math.min(0.9,
                 getConfig().getDouble("profession-xp.herrero.bonus-item-base-chance", 0.12)
                         + classLevel * getConfig().getDouble("profession-xp.herrero.bonus-item-chance-per-class-level", 0.02)
                         + smithLevel * getConfig().getDouble("profession-xp.herrero.bonus-item-chance-per-smith-level", 0.01));
+        int effectiveTier = baseTier;
         if (ThreadLocalRandom.current().nextDouble() < chance) {
-            applySmithBonus(meta, crafted.getType(), classLevel, smithLevel);
+            effectiveTier++;
+        }
+        if (effectiveTier > 0) {
+            applySmithBonus(meta, crafted.getType(), effectiveTier);
         }
         crafted.setItemMeta(meta);
         event.setCurrentItem(crafted);
@@ -4015,6 +4023,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         ItemStack crafted = new ItemStack(material);
         ItemMeta meta = crafted.getItemMeta();
         applyBaseCombatAttributes(material, meta);
+        int baseTier = guaranteedSmithBonusTier(material, classLevel, smithLevel);
         double chance = Math.min(0.95,
                 getConfig().getDouble("profession-xp.herrero.bonus-item-base-chance", 0.12)
                         + classLevel * getConfig().getDouble("profession-xp.herrero.bonus-item-chance-per-class-level", 0.02)
@@ -4023,8 +4032,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         lore.add(Component.text("Simulacion de forja", NamedTextColor.GOLD));
         lore.add(Component.text("Herrero " + smithLevel + " | Clase " + classLevel, NamedTextColor.GRAY));
         meta.lore(lore);
+        int effectiveTier = baseTier;
         if (ThreadLocalRandom.current().nextDouble() < chance) {
-            applySmithBonus(meta, material, classLevel, smithLevel);
+            effectiveTier++;
+        }
+        if (effectiveTier > 0) {
+            applySmithBonus(meta, material, effectiveTier);
         } else {
             lore.add(Component.text("Sin mejora adicional.", NamedTextColor.DARK_GRAY));
             meta.lore(lore);
@@ -4033,12 +4046,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         return crafted;
     }
 
-    private void applySmithBonus(ItemMeta meta, Material material, int classLevel) {
-        applySmithBonus(meta, material, classLevel, 1);
-    }
-
-    private void applySmithBonus(ItemMeta meta, Material material, int classLevel, int smithLevel) {
-        int tier = Math.max(1, Math.min(6, 1 + ((classLevel + smithLevel) / 6)));
+    private void applySmithBonus(ItemMeta meta, Material material, int tier) {
         List<Component> lore = meta.hasLore() ? new ArrayList<>(meta.lore()) : new ArrayList<>();
         EquipmentSlotGroup slotGroup = equipmentSlotGroupForMaterial(material);
         if (isArmorPiece(material) || material == Material.SHIELD) {
@@ -4079,6 +4087,31 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             }
         }
         meta.lore(lore);
+    }
+
+    private int guaranteedSmithBonusTier(Material material, int classLevel, int smithLevel) {
+        if (classLevel < 3 || smithLevel < 3) {
+            return 0;
+        }
+        int score = classLevel + smithLevel + smithMaterialWeight(material) * 2;
+        return Math.max(0, Math.min(5, (score - 6) / 6));
+    }
+
+    private int smithMaterialWeight(Material material) {
+        String name = material.name();
+        if (name.startsWith("NETHERITE_")) {
+            return 4;
+        }
+        if (name.startsWith("DIAMOND_")) {
+            return 3;
+        }
+        if (name.startsWith("IRON_") || name.startsWith("CHAINMAIL_") || material == Material.SHIELD || material == Material.BOW) {
+            return 2;
+        }
+        if (name.startsWith("GOLDEN_") || name.startsWith("STONE_") || material == Material.CROSSBOW) {
+            return 1;
+        }
+        return 0;
     }
 
     private MaterialCost craftingMaterialCost(Material material) {

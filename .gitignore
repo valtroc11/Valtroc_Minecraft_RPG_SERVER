@@ -1,3 +1,5 @@
 # Runtime files
 server/
-
+.deploy-stage/
+deploy-servidro-linux.tar.gz
+deploy-servidro-linux.zip

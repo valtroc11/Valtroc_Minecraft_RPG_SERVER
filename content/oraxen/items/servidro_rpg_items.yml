@@ -1,0 +1,53 @@
+apprentice_sword:
+  displayname: "<#c9c9c9>Espada de Aprendiz"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/apprentice_sword
+
+guardian_tower_shield:
+  displayname: "<#4f76d9>Escudo del Guardian"
+  material: SHIELD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/guardian_tower_shield
+
+berserker_war_axe:
+  displayname: "<#d94f4f>Hacha de Guerra Berserker"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/berserker_war_axe
+
+iron_hunter_bow:
+  displayname: "<#7ca55a>Arco del Cazador"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/iron_hunter_bow
+
+mage_focus:
+  displayname: "<#9d68d4>Foco Arcano"
+  material: AMETHYST_SHARD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/mage_focus
+
+cleric_relic:
+  displayname: "<#f0d77b>Reliquia del Clerigo"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/cleric_relic
