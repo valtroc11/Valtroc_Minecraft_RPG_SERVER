@@ -51,3 +51,102 @@ cleric_relic:
     parent_model: "item/handheld"
     textures:
       - servidorpg/cleric_relic
+
+wood_shield:
+  displayname: "<#9a6a3a>Escudo de Madera"
+  material: SHIELD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/wood_shield
+
+stone_shield:
+  displayname: "<#8b8b93>Escudo de Piedra"
+  material: SHIELD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/stone_shield
+
+copper_shield:
+  displayname: "<#c77743>Escudo de Cobre"
+  material: SHIELD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/copper_shield
+
+bronze_shield:
+  displayname: "<#9f6f33>Escudo de Bronce"
+  material: SHIELD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/bronze_shield
+
+iron_shield:
+  displayname: "<#c7ccd1>Escudo de Hierro"
+  material: SHIELD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/iron_shield
+
+wood_wand:
+  displayname: "<#b9864f>Varita de Madera"
+  material: STICK
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/wood_wand
+
+stone_wand:
+  displayname: "<#b6bcc3>Varita de Piedra"
+  material: STICK
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/stone_wand
+
+copper_wand:
+  displayname: "<#dd8b4d>Varita de Cobre"
+  material: STICK
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/copper_wand
+
+wood_staff:
+  displayname: "<#c59c63>Staff de Madera"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/wood_staff
+
+stone_staff:
+  displayname: "<#c6cbd3>Staff de Piedra"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/stone_staff
+
+copper_staff:
+  displayname: "<#dc8b4b>Staff de Cobre"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/copper_staff

@@ -801,6 +801,35 @@ threat:
     cooldown-seconds: 18
     bonus-threat: 60.0
 
+shield-guard:
+  duration-seconds: 5
+  release-cooldown-seconds: 10
+  raise-grace-millis: 250
+  block-value-reduction-per-point: 0.04
+  max-total-reduction: 1.0
+  tier-base-reduction:
+    wood: 0.18
+    stone: 0.24
+    copper: 0.30
+    bronze: 0.36
+    iron: 0.42
+    silver: 0.50
+    diamond: 0.58
+    oricalco: 0.66
+    mithril: 0.74
+    legendary: 0.82
+  tier-max-reduction:
+    wood: 0.22
+    stone: 0.28
+    copper: 0.34
+    bronze: 0.40
+    iron: 0.48
+    silver: 0.56
+    diamond: 0.64
+    oricalco: 0.72
+    mithril: 0.80
+    legendary: 1.00
+
 cleric:
   minor-heal:
     amount: 6.0
@@ -926,6 +955,85 @@ profession-xp:
     legendary: 120
     netherite: 80
     heavy-piece-bonus: 10
+
+class-xp-flasks:
+  result-material: POTION
+  rarity-multipliers:
+    normal: 1.0
+    rare: 1.05
+    elite: 1.12
+    miniboss: 1.20
+  tiers:
+    wood:
+      class-level: 1
+      alchemist-level: 1
+      duration-seconds: 900
+      xp-multiplier: 1.20
+      alchemy-craft-xp: 6
+      recipe: [GLASS_BOTTLE, OAK_PLANKS, SWEET_BERRIES, ROTTEN_FLESH]
+    stone:
+      class-level: 3
+      alchemist-level: 3
+      duration-seconds: 900
+      xp-multiplier: 1.25
+      alchemy-craft-xp: 8
+      recipe: [GLASS_BOTTLE, COBBLESTONE, REDSTONE, BONE]
+    copper:
+      class-level: 5
+      alchemist-level: 5
+      duration-seconds: 960
+      xp-multiplier: 1.30
+      alchemy-craft-xp: 10
+      recipe: [GLASS_BOTTLE, COPPER_INGOT, GLOWSTONE_DUST, SPIDER_EYE]
+    bronze:
+      class-level: 10
+      alchemist-level: 10
+      duration-seconds: 1080
+      xp-multiplier: 1.35
+      alchemy-craft-xp: 12
+      recipe: [GLASS_BOTTLE, COPPER_INGOT, IRON_NUGGET, FERMENTED_SPIDER_EYE]
+    iron:
+      class-level: 18
+      alchemist-level: 16
+      duration-seconds: 1200
+      xp-multiplier: 1.45
+      alchemy-craft-xp: 14
+      recipe: [GLASS_BOTTLE, IRON_INGOT, REDSTONE_BLOCK, MAGMA_CREAM]
+    silver:
+      class-level: 30
+      alchemist-level: 26
+      duration-seconds: 1320
+      xp-multiplier: 1.55
+      alchemy-craft-xp: 16
+      recipe: [GLASS_BOTTLE, AMETHYST_SHARD, QUARTZ, GHAST_TEAR]
+    diamond:
+      class-level: 45
+      alchemist-level: 40
+      duration-seconds: 1500
+      xp-multiplier: 1.65
+      alchemy-craft-xp: 20
+      recipe: [GLASS_BOTTLE, DIAMOND, LAPIS_LAZULI, ENDER_PEARL]
+    oricalco:
+      class-level: 60
+      alchemist-level: 54
+      duration-seconds: 1680
+      xp-multiplier: 1.75
+      alchemy-craft-xp: 24
+      recipe: [GLASS_BOTTLE, BLAZE_ROD, FIRE_CHARGE, DIAMOND]
+    mithril:
+      class-level: 78
+      alchemist-level: 72
+      duration-seconds: 1800
+      xp-multiplier: 1.90
+      alchemy-craft-xp: 28
+      recipe: [GLASS_BOTTLE, SHULKER_SHELL, END_ROD, PHANTOM_MEMBRANE]
+    legendary:
+      class-level: 94
+      alchemist-level: 88
+      duration-seconds: 1800
+      xp-multiplier: 2.00
+      alchemy-craft-xp: 32
+      recipe: [GLASS_BOTTLE, NETHER_STAR, DRAGON_BREATH, TOTEM_OF_UNDYING]
 
 tier-roadmap:
   note: "Hoja de ruta de tiers. Los tiers no-vanilla requieren items custom o stand-ins hasta integrar Oraxen."

@@ -53,3 +53,171 @@ mage_focus_recipe:
     - " A "
     - " B "
     - "   "
+
+wood_shield_recipe:
+  result:
+    oraxen_item: wood_shield
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: OAK_PLANKS
+    B:
+      minecraft_type: LEATHER
+  shape:
+    - "ABA"
+    - "AAA"
+    - " A "
+
+stone_shield_recipe:
+  result:
+    oraxen_item: stone_shield
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COBBLESTONE
+    B:
+      minecraft_type: LEATHER
+  shape:
+    - "ABA"
+    - "AAA"
+    - " A "
+
+copper_shield_recipe:
+  result:
+    oraxen_item: copper_shield
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: LEATHER
+  shape:
+    - "ABA"
+    - "AAA"
+    - " A "
+
+bronze_shield_recipe:
+  result:
+    oraxen_item: bronze_shield
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: IRON_NUGGET
+    C:
+      minecraft_type: LEATHER
+  shape:
+    - "ACA"
+    - "ABA"
+    - " A "
+
+iron_shield_recipe:
+  result:
+    oraxen_item: iron_shield
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: LEATHER
+  shape:
+    - "ABA"
+    - "AAA"
+    - " A "
+
+wood_wand_recipe:
+  result:
+    oraxen_item: wood_wand
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: OAK_PLANKS
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: GLOWSTONE_DUST
+  shape:
+    - "  C"
+    - " A "
+    - "B  "
+
+stone_wand_recipe:
+  result:
+    oraxen_item: stone_wand
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COBBLESTONE
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: AMETHYST_SHARD
+  shape:
+    - "  C"
+    - " A "
+    - "B  "
+
+copper_wand_recipe:
+  result:
+    oraxen_item: copper_wand
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: AMETHYST_SHARD
+  shape:
+    - "  C"
+    - " A "
+    - "B  "
+
+wood_staff_recipe:
+  result:
+    oraxen_item: wood_staff
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: OAK_PLANKS
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: GLOWSTONE_DUST
+  shape:
+    - " C "
+    - " A "
+    - " B "
+
+stone_staff_recipe:
+  result:
+    oraxen_item: stone_staff
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COBBLESTONE
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: QUARTZ
+  shape:
+    - " C "
+    - " A "
+    - " B "
+
+copper_staff_recipe:
+  result:
+    oraxen_item: copper_staff
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: AMETHYST_SHARD
+  shape:
+    - " C "
+    - " A "
+    - " B "

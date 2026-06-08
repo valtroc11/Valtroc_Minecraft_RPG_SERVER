@@ -3,6 +3,8 @@ package mx.servidro.rpg;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -41,6 +43,10 @@ final class ProfileStore {
                     yaml.getBoolean(key + ".starter-kit-claimed", false),
                     maxClassLevel,
                     maxSpecializationLevel);
+            profile.setLoadedClaimedGuides(new LinkedHashSet<>(yaml.getStringList(key + ".claimed-guides")));
+            profile.setLoadedClassXpFlask(
+                    yaml.getString(key + ".active-class-xp-flask.tier"),
+                    yaml.getLong(key + ".active-class-xp-flask.expires-at", 0L));
             for (Profession profession : Profession.values()) {
                 profile.setLoadedProfessionLevel(
                         profession.id(),
@@ -78,6 +84,9 @@ final class ProfileStore {
             yaml.set(path + ".class-experience", profile.classExperience());
             yaml.set(path + ".specialization-level", profile.specializationLevel());
             yaml.set(path + ".starter-kit-claimed", profile.starterKitClaimed());
+            yaml.set(path + ".claimed-guides", List.copyOf(profile.claimedGuides()));
+            yaml.set(path + ".active-class-xp-flask.tier", profile.activeClassXpFlaskTier());
+            yaml.set(path + ".active-class-xp-flask.expires-at", profile.activeClassXpFlaskExpiresAt());
             for (Map.Entry<String, Integer> profession : profile.professionLevels().entrySet()) {
                 yaml.set(path + ".profession-levels." + profession.getKey(), profession.getValue());
                 yaml.set(path + ".profession-experience." + profession.getKey(),

@@ -76,14 +76,18 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantInventory;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -94,6 +98,8 @@ import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
+    private static final List<String> PROGRESSION_TIER_ORDER = List.of(
+            "wood", "stone", "copper", "bronze", "iron", "silver", "diamond", "oricalco", "mithril", "legendary");
     private final Map<UUID, DownedState> downed = new HashMap<>();
     private final Map<UUID, Location> lastSafeLocations = new HashMap<>();
     private final Map<String, Long> abilityCooldowns = new HashMap<>();
@@ -102,6 +108,8 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     private final Map<UUID, Long> slowHighlights = new HashMap<>();
     private final Map<UUID, Long> combatHealthBarUntil = new HashMap<>();
     private final Map<UUID, Long> surrenderCooldowns = new HashMap<>();
+    private final Map<UUID, ShieldGuardState> activeShieldGuards = new HashMap<>();
+    private final Map<UUID, Long> shieldGuardCooldowns = new HashMap<>();
     private final Map<MobRarity, Long> rareSpawnCooldowns = new HashMap<>();
     private final Map<UUID, Component> trackedNameplates = new HashMap<>();
     private final Map<UUID, Boolean> trackedNameplateVisibility = new HashMap<>();
@@ -114,6 +122,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     private DailyMissionStore dailyMissions;
     private BukkitTask healthBarTask;
     private BukkitTask scaledMobSkillTask;
+    private BukkitTask shieldGuardTask;
     private NamespacedKey mobLevelKey;
     private NamespacedKey mobRarityKey;
     private NamespacedKey mobAffixKey;
@@ -127,6 +136,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     private NamespacedKey mobHuntActiveKey;
     private NamespacedKey mobVillageCorruptedKey;
     private NamespacedKey mobWaveAnnouncedKey;
+    private NamespacedKey classXpFlaskTierKey;
 
     @Override
     public void onEnable() {
@@ -144,6 +154,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         mobHuntActiveKey = new NamespacedKey(this, "mob-hunt-active");
         mobVillageCorruptedKey = new NamespacedKey(this, "mob-village-corrupted");
         mobWaveAnnouncedKey = new NamespacedKey(this, "mob-wave-announced");
+        classXpFlaskTierKey = new NamespacedKey(this, "class-xp-flask-tier");
         profiles = new ProfileStore(
                 getDataFolder(),
                 classMaxLevel(),
@@ -152,6 +163,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         profiles.load();
         threatManager = new ThreatManager(this);
         progressionGate = new ProgressionGate(getConfig());
+        registerClassXpFlaskRecipes();
         personalChests = new PersonalChestStore(getDataFolder());
         personalChests.load();
         dailyMissions = new DailyMissionStore(getDataFolder());
@@ -160,6 +172,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         healthBarTask = Bukkit.getScheduler().runTaskTimer(this, this::updateNearbyHealthBars, 10L, 10L);
         scaledMobSkillTask = Bukkit.getScheduler().runTaskTimer(this, this::runScaledMobSkills, 40L, 20L);
+        shieldGuardTask = Bukkit.getScheduler().runTaskTimer(this, this::tickShieldGuards, 1L, 1L);
         getLogger().info("ServidroRpg habilitado. Economia Vault: " + (economy != null ? "activa" : "no disponible"));
     }
 
@@ -179,6 +192,11 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (scaledMobSkillTask != null) {
             scaledMobSkillTask.cancel();
         }
+        if (shieldGuardTask != null) {
+            shieldGuardTask.cancel();
+        }
+        activeShieldGuards.clear();
+        shieldGuardCooldowns.clear();
         restoreTrackedNameplates();
         saveProfiles();
         savePersonalChests();
@@ -438,13 +456,14 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 + " | Recoleccion por tier: " + tierProgression("miner-level",
                 "wood", "stone", "copper", "bronze", "iron", "silver", "diamond"), NamedTextColor.YELLOW));
         player.sendMessage(Component.text("Alquimista " + profile.professionLevel("alquimista")
-                + " | Consumibles avanzados: 8.", NamedTextColor.YELLOW));
+                + " | Frascos XP por tier y formulas del gremio.", NamedTextColor.YELLOW));
         player.sendMessage(Component.text("Agricultor " + profile.professionLevel("agricultor")
                 + " | Cultivos avanzados: 8.", NamedTextColor.YELLOW));
         player.sendMessage(Component.text("Explorador " + profile.professionLevel("explorador")
                 + " | Utilidades de expedicion: 8.", NamedTextColor.YELLOW));
         player.sendMessage(Component.text("La piedra natural y los minerales otorgan XP de Minero. "
-                + "Las herramientas, armas, escudos y armaduras otorgan XP de Herrero.", NamedTextColor.GRAY));
+                + "Las herramientas, armas, escudos y armaduras otorgan XP de Herrero. "
+                + "Los frascos de experiencia mejoran la XP de clase y solo puedes tener uno activo.", NamedTextColor.GRAY));
         return true;
     }
 
@@ -473,9 +492,11 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         }
         player.sendMessage(Component.text("Paso 3 | Early game: "
                 + tierProgression("equip-level", "wood", "stone", "copper", "bronze"), NamedTextColor.YELLOW));
-        player.sendMessage(Component.text("Paso 4 | /profesion estado y /desbloqueos para seguir herrero y minero.",
+        player.sendMessage(Component.text("Paso 4 | /profesion estado y /desbloqueos para seguir herrero, minero y alquimista.",
                 NamedTextColor.YELLOW));
-        player.sendMessage(Component.text("Paso 5 | /misiones para coronas y /auction para comerciar.", NamedTextColor.YELLOW));
+        player.sendMessage(Component.text("Paso 5 | Sube alquimista para desbloquear frascos de XP de clase y recibe libros por tier.",
+                NamedTextColor.YELLOW));
+        player.sendMessage(Component.text("Paso 6 | /misiones para coronas y /auction para comerciar.", NamedTextColor.YELLOW));
         player.sendMessage(Component.text("/spec lista", NamedTextColor.YELLOW)
                 .append(Component.text(" | Especializaciones desde nivel 10.", NamedTextColor.GRAY)));
         player.sendMessage(Component.text("Los aldeanos no comercian. La economia depende de los jugadores.", NamedTextColor.AQUA));
@@ -549,6 +570,311 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         return String.join(" -> ", entries);
     }
 
+    private List<String> tierOrder() {
+        return PROGRESSION_TIER_ORDER;
+    }
+
+    private int tierIndex(String tierId) {
+        return tierOrder().indexOf(tierId == null ? "" : tierId.toLowerCase(Locale.ROOT));
+    }
+
+    private String nextTier(String tierId) {
+        int index = tierIndex(tierId);
+        return index >= 0 && index + 1 < tierOrder().size() ? tierOrder().get(index + 1) : tierId;
+    }
+
+    private ConfigurationSection classXpFlaskSection(String tierId) {
+        return getConfig().getConfigurationSection("class-xp-flasks.tiers." + tierId);
+    }
+
+    private int classXpFlaskClassRequirement(String tierId) {
+        return getConfig().getInt("class-xp-flasks.tiers." + tierId + ".class-level",
+                tierRequirement(tierId, "equip-level", 1));
+    }
+
+    private int classXpFlaskAlchemistRequirement(String tierId) {
+        return getConfig().getInt("class-xp-flasks.tiers." + tierId + ".alchemist-level",
+                tierRequirement(tierId, "smith-level", 1));
+    }
+
+    private int classXpFlaskDurationSeconds(String tierId) {
+        return getConfig().getInt("class-xp-flasks.tiers." + tierId + ".duration-seconds", 1200);
+    }
+
+    private double classXpFlaskMultiplier(String tierId) {
+        return getConfig().getDouble("class-xp-flasks.tiers." + tierId + ".xp-multiplier", 1.2);
+    }
+
+    private int classXpFlaskAlchemyCraftXp(String tierId) {
+        return getConfig().getInt("class-xp-flasks.tiers." + tierId + ".alchemy-craft-xp", 0);
+    }
+
+    private Material classXpFlaskBottleMaterial() {
+        Material material = Material.matchMaterial(getConfig().getString("class-xp-flasks.result-material", "POTION"));
+        return material == null ? Material.POTION : material;
+    }
+
+    private List<Material> classXpFlaskRecipeIngredients(String tierId) {
+        List<String> configured = getConfig().getStringList("class-xp-flasks.tiers." + tierId + ".recipe");
+        List<Material> materials = new ArrayList<>();
+        for (String entry : configured) {
+            Material material = Material.matchMaterial(entry);
+            if (material != null) {
+                materials.add(material);
+            }
+        }
+        return materials;
+    }
+
+    private NamespacedKey classXpFlaskRecipeKey(String tierId) {
+        return new NamespacedKey(this, "class_xp_flask_" + tierId);
+    }
+
+    private String customFlaskTier(ItemStack stack) {
+        if (stack == null) {
+            return null;
+        }
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) {
+            return null;
+        }
+        return meta.getPersistentDataContainer().get(classXpFlaskTierKey, PersistentDataType.STRING);
+    }
+
+    private boolean isClassXpFlask(ItemStack stack) {
+        return customFlaskTier(stack) != null;
+    }
+
+    private String tierForLevel(int level) {
+        String result = "wood";
+        for (String tierId : tierOrder()) {
+            if (level >= tierRequirement(tierId, "equip-level", 1)) {
+                result = tierId;
+            } else {
+                break;
+            }
+        }
+        return result;
+    }
+
+    private boolean classXpFlaskAppliesToMob(String flaskTier, LivingEntity mob) {
+        if (flaskTier == null) {
+            return false;
+        }
+        String mobTier = tierForLevel(Math.max(1, scaledMobLevel(mob)));
+        int flaskIndex = tierIndex(flaskTier);
+        int mobIndex = tierIndex(mobTier);
+        return flaskIndex >= 0 && mobIndex >= flaskIndex && mobIndex <= flaskIndex + 1;
+    }
+
+    private double classXpFlaskRarityMultiplier(MobRarity rarity) {
+        return getConfig().getDouble("class-xp-flasks.rarity-multipliers." + rarity.id(), switch (rarity) {
+            case NORMAL -> 1.0;
+            case RARE -> 1.05;
+            case ELITE -> 1.12;
+            case MINIBOSS -> 1.20;
+        });
+    }
+
+    private ItemStack createClassXpFlaskItem(String tierId) {
+        ItemStack stack = new ItemStack(classXpFlaskBottleMaterial());
+        ItemMeta meta = stack.getItemMeta();
+        meta.displayName(Component.text("Frasco de Experiencia " + displayTier(tierId), NamedTextColor.LIGHT_PURPLE));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("XP de clase x" + String.format(Locale.US, "%.2f", classXpFlaskMultiplier(tierId)), NamedTextColor.AQUA));
+        lore.add(Component.text("Duracion: " + (classXpFlaskDurationSeconds(tierId) / 60) + " min", NamedTextColor.GREEN));
+        lore.add(Component.text("Afecta: " + displayTier(tierId) + " y " + displayTier(nextTier(tierId)), NamedTextColor.YELLOW));
+        lore.add(Component.text("Req. clase: " + classXpFlaskClassRequirement(tierId)
+                + " | Alquimista: " + classXpFlaskAlchemistRequirement(tierId), NamedTextColor.GRAY));
+        lore.add(Component.text("Solo 1 frasco activo a la vez.", NamedTextColor.DARK_GRAY));
+        meta.lore(lore);
+        meta.getPersistentDataContainer().set(classXpFlaskTierKey, PersistentDataType.STRING, tierId);
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
+    private void registerClassXpFlaskRecipes() {
+        ConfigurationSection tiers = getConfig().getConfigurationSection("class-xp-flasks.tiers");
+        if (tiers == null) {
+            return;
+        }
+        for (String tierId : tiers.getKeys(false)) {
+            List<Material> ingredients = classXpFlaskRecipeIngredients(tierId);
+            if (ingredients.isEmpty()) {
+                continue;
+            }
+            NamespacedKey key = classXpFlaskRecipeKey(tierId);
+            Bukkit.removeRecipe(key);
+            ShapelessRecipe recipe = new ShapelessRecipe(key, createClassXpFlaskItem(tierId));
+            ingredients.forEach(recipe::addIngredient);
+            Bukkit.addRecipe(recipe);
+        }
+    }
+
+    private String professionGuideId(String profession, String tierId) {
+        return "guide:" + profession + ":" + tierId;
+    }
+
+    private ItemStack createProfessionGuideBook(String profession, String tierId) {
+        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+        BookMeta meta = (BookMeta) book.getItemMeta();
+        switch (profession) {
+            case "alquimista" -> {
+                meta.setTitle("Formula " + displayTier(tierId));
+                meta.setAuthor("Gremio de Alquimistas");
+                meta.addPage(
+                        "Frasco de Experiencia " + displayTier(tierId)
+                                + "\n\nClase requerida: " + classXpFlaskClassRequirement(tierId)
+                                + "\nAlquimista requerido: " + classXpFlaskAlchemistRequirement(tierId),
+                        "Efecto:\nXP de clase x" + String.format(Locale.US, "%.2f", classXpFlaskMultiplier(tierId))
+                                + "\nDuracion: " + (classXpFlaskDurationSeconds(tierId) / 60)
+                                + " min\nAfecta mobs de " + displayTier(tierId) + " y " + displayTier(nextTier(tierId)),
+                        "Receta:\n" + String.join("\n", classXpFlaskRecipeIngredients(tierId).stream()
+                                .map(this::displayMaterial)
+                                .toList()),
+                        "Regla:\nSolo puedes tener 1 frasco activo a la vez. Si uno sigue corriendo, no podras beber otro.");
+            }
+            case "herrero" -> {
+                meta.setTitle("Manual del Herrero " + displayTier(tierId));
+                meta.setAuthor("Forja Real");
+                meta.addPage(
+                        "Tier " + displayTier(tierId) + "\n\nHerrero requerido: " + tierRequirement(tierId, "smith-level", 1)
+                                + "\nClase sugerida: " + tierRequirement(tierId, "equip-level", 1),
+                        "Equipo:\nArmas, herramientas, armaduras y escudos del tier "
+                                + displayTier(tierId) + ".",
+                        "Consejo:\nLas piezas pesadas y escudos dan mas XP de Herrero. La mejor forja del tier no supera el tier siguiente.");
+            }
+            case "minero" -> {
+                meta.setTitle("Carta de Vetas " + displayTier(tierId));
+                meta.setAuthor("Liga de Mineros");
+                meta.addPage(
+                        "Tier " + displayTier(tierId) + "\n\nMinero requerido: " + tierRequirement(tierId, "miner-level", 1),
+                        "Fuente:\n" + getConfig().getString("tier-roadmap.tiers." + tierId + ".source", "Sin registrar."),
+                        "Consejo:\nMina vetas naturales para ganar XP. Los bloques puestos por jugadores no cuentan.");
+            }
+            default -> {
+                meta.setTitle("Guia " + displayTier(tierId));
+                meta.setAuthor("Servidro MX");
+                meta.addPage("Tier " + displayTier(tierId));
+            }
+        }
+        book.setItemMeta(meta);
+        return book;
+    }
+
+    private String displayMaterial(Material material) {
+        String[] parts = material.name().toLowerCase(Locale.ROOT).split("_");
+        List<String> words = new ArrayList<>();
+        for (String part : parts) {
+            words.add(capitalize(part));
+        }
+        return String.join(" ", words);
+    }
+
+    private boolean ensureProfessionGuides(Player player, PlayerProfile profile) {
+        boolean changed = false;
+        for (String tierId : tierOrder()) {
+            if (profile.professionLevel("herrero") >= tierRequirement(tierId, "smith-level", 999)
+                    && profile.claimGuide(professionGuideId("herrero", tierId))) {
+                giveItemOrDrop(player, createProfessionGuideBook("herrero", tierId));
+                player.sendMessage(Component.text("Has recibido el manual de Herrero: " + displayTier(tierId) + ".", NamedTextColor.GOLD));
+                changed = true;
+            }
+            if (profile.professionLevel("minero") >= tierRequirement(tierId, "miner-level", 999)
+                    && profile.claimGuide(professionGuideId("minero", tierId))) {
+                giveItemOrDrop(player, createProfessionGuideBook("minero", tierId));
+                player.sendMessage(Component.text("Has recibido la carta de Minero: " + displayTier(tierId) + ".", NamedTextColor.GOLD));
+                changed = true;
+            }
+            if (classXpFlaskSection(tierId) != null
+                    && profile.professionLevel("alquimista") >= classXpFlaskAlchemistRequirement(tierId)
+                    && profile.claimGuide(professionGuideId("alquimista", tierId))) {
+                giveItemOrDrop(player, createProfessionGuideBook("alquimista", tierId));
+                player.sendMessage(Component.text("Has recibido la formula de Alquimista: " + displayTier(tierId) + ".", NamedTextColor.LIGHT_PURPLE));
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+    private void discoverUnlockedFlaskRecipes(Player player, PlayerProfile profile) {
+        ConfigurationSection tiers = getConfig().getConfigurationSection("class-xp-flasks.tiers");
+        if (tiers == null) {
+            return;
+        }
+        for (String tierId : tiers.getKeys(false)) {
+            if (profile.professionLevel("alquimista") >= classXpFlaskAlchemistRequirement(tierId)) {
+                player.discoverRecipe(classXpFlaskRecipeKey(tierId));
+            }
+        }
+    }
+
+    private boolean canCraftClassXpFlask(Player player, String tierId, boolean notify) {
+        PlayerProfile profile = profiles.get(player.getUniqueId());
+        int requiredClass = classXpFlaskClassRequirement(tierId);
+        int requiredAlchemy = classXpFlaskAlchemistRequirement(tierId);
+        if (profile.level() < requiredClass) {
+            if (notify) {
+                player.sendActionBar(Component.text("Frasco " + displayTier(tierId) + ": requiere clase "
+                        + requiredClass + ". Tienes " + profile.level(), NamedTextColor.RED));
+            }
+            return false;
+        }
+        if (profile.professionLevel("alquimista") < requiredAlchemy) {
+            if (notify) {
+                player.sendActionBar(Component.text("Frasco " + displayTier(tierId) + ": requiere alquimista "
+                        + requiredAlchemy + ". Tienes " + profile.professionLevel("alquimista"), NamedTextColor.RED));
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private boolean tryActivateClassXpFlask(Player player, ItemStack item) {
+        String tierId = customFlaskTier(item);
+        if (tierId == null) {
+            return false;
+        }
+        PlayerProfile profile = profiles.get(player.getUniqueId());
+        long now = System.currentTimeMillis();
+        if (profile.hasActiveClassXpFlask(now)) {
+            long remaining = Math.max(1L, (profile.activeClassXpFlaskExpiresAt() - now + 59999L) / 60000L);
+            player.sendMessage(Component.text("Ya tienes un frasco de experiencia activo. Espera "
+                    + remaining + " min para usar otro.", NamedTextColor.RED));
+            return false;
+        }
+        profile.clearActiveClassXpFlask();
+        if (!canCraftClassXpFlask(player, tierId, true)) {
+            return false;
+        }
+        long expiresAt = now + classXpFlaskDurationSeconds(tierId) * 1000L;
+        profile.activateClassXpFlask(tierId, expiresAt);
+        saveProfiles();
+        player.sendMessage(Component.text("Has activado el Frasco de Experiencia " + displayTier(tierId)
+                + " durante " + (classXpFlaskDurationSeconds(tierId) / 60) + " min.", NamedTextColor.LIGHT_PURPLE));
+        player.sendActionBar(Component.text("XP de clase x"
+                + String.format(Locale.US, "%.2f", classXpFlaskMultiplier(tierId))
+                + " | " + displayTier(tierId) + " y " + displayTier(nextTier(tierId)), NamedTextColor.AQUA));
+        return true;
+    }
+
+    private double activeClassXpFlaskMultiplier(Player player, LivingEntity mob, MobRarity rarity) {
+        PlayerProfile profile = profiles.get(player.getUniqueId());
+        long now = System.currentTimeMillis();
+        if (!profile.hasActiveClassXpFlask(now)) {
+            if (profile.activeClassXpFlaskTier() != null) {
+                profile.clearActiveClassXpFlask();
+                saveProfiles();
+            }
+            return 1.0;
+        }
+        String tierId = profile.activeClassXpFlaskTier();
+        if (!classXpFlaskAppliesToMob(tierId, mob)) {
+            return 1.0;
+        }
+        return classXpFlaskMultiplier(tierId) * classXpFlaskRarityMultiplier(rarity);
+    }
+
     private boolean ensureStarterKit(Player player, PlayerProfile profile, boolean announce) {
         if (profile.baseClass() == null || profile.starterKitClaimed()) {
             return false;
@@ -591,7 +917,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 items.add(createStarterTool(Material.WOODEN_AXE, "Hacha de " + displayTier(tierId), tierId,
                         "Dash: F al sprintar | Salto: saltar + Shift"));
                 items.add(createStarterTool(Material.SHIELD, "Escudo Ligero de " + displayTier(tierId), tierId,
-                        "Provocar: clic derecho"));
+                        "Guardia 5 s | CD 10 s | Provocar: Shift + clic derecho"));
             }
             case "explorador" -> {
                 items.add(createStarterTool(Material.BOW, "Arco de " + displayTier(tierId), tierId,
@@ -606,7 +932,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 items.add(createStarterTool(Material.BLAZE_ROD, "Staff de " + displayTier(tierId), tierId,
                         "Bendicion: Shift + clic izquierdo | Curacion: clic derecho"));
                 items.add(createStarterTool(Material.SHIELD, "Escudo de Peregrino", tierId,
-                        "Soporte cercano y supervivencia"));
+                        "Guardia 5 s | CD 10 s | Supervivencia"));
             }
             default -> {
             }
@@ -639,17 +965,17 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 "Tu tier inicial es " + displayTier(tierId) + ".\n\nCamino temprano:\nMadera 1\nPiedra 3\nCobre 5\nBronce 10",
                 "Comandos utiles:\n/clase estado\n/habilidades\n/estadisticas\n/profesion estado\n/desbloqueos\n/misiones",
                 starterBookClassPage(baseClass),
-                "Consejo:\nGuarda coronas, mira cofres personales y usa /auction para mover equipo entre jugadores.");
+                "Consejo:\nGuarda coronas, mira cofres personales y usa /auction para mover equipo entre jugadores.\n\nLas profesiones entregan libros por tier cuando desbloqueas nuevas rutas.");
         book.setItemMeta(meta);
         return book;
     }
 
     private String starterBookClassPage(String baseClass) {
         return switch (baseClass) {
-            case "guerrero" -> "Guerrero:\nEspada, hacha y escudo.\nDash: F al sprintar.\nGolpe: Shift + clic izquierdo.\nProvocar: clic derecho.";
+            case "guerrero" -> "Guerrero:\nEspada, hacha y escudo.\nGuardia: 5 s, CD 10 s.\nDash: F al sprintar.\nGolpe: Shift + clic izquierdo.\nProvocar: Shift + clic derecho.";
             case "explorador" -> "Explorador:\nArco y movilidad.\nRodar: Shift + clic izquierdo con arco.\nMantente a distancia y reposicionate.";
             case "mago" -> "Mago:\nVarita de madera.\nBarrera: Shift + clic izquierdo.\nJuega seguro mientras subes de tier.";
-            case "clerigo" -> "Clerigo:\nStaff y escudo.\nBendicion: Shift + clic izquierdo.\nCuracion Menor: clic derecho.";
+            case "clerigo" -> "Clerigo:\nStaff y escudo.\nGuardia: 5 s, CD 10 s.\nBendicion: Shift + clic izquierdo.\nCuracion Menor: clic derecho.";
             default -> "Explora, sube profesiones y consulta /guia cuando necesites repasar controles.";
         };
     }
@@ -659,6 +985,137 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         for (ItemStack leftover : leftovers.values()) {
             player.getWorld().dropItemNaturally(player.getLocation(), leftover);
         }
+    }
+
+    private boolean tryActivateShieldGuard(Player player, EquipmentSlot hand) {
+        ItemStack shield = heldShield(player, hand);
+        if (shield == null || shield.getType() != Material.SHIELD) {
+            return false;
+        }
+        if (activeShieldGuards.containsKey(player.getUniqueId())) {
+            return true;
+        }
+        long now = System.currentTimeMillis();
+        long cooldownUntil = shieldGuardCooldowns.getOrDefault(player.getUniqueId(), 0L);
+        if (cooldownUntil > now) {
+            long remaining = Math.max(1L, (cooldownUntil - now + 999L) / 1000L);
+            player.sendActionBar(Component.text("Escudo en enfriamiento: " + remaining + " s", NamedTextColor.YELLOW));
+            return false;
+        }
+        long durationMs = getConfig().getLong("shield-guard.duration-seconds", 5L) * 1000L;
+        long graceMs = getConfig().getLong("shield-guard.raise-grace-millis", 250L);
+        activeShieldGuards.put(player.getUniqueId(), new ShieldGuardState(
+                player,
+                hand,
+                now,
+                now + durationMs,
+                now + graceMs));
+        player.sendActionBar(Component.text("Guardia activa: 5 s", NamedTextColor.AQUA));
+        return true;
+    }
+
+    private void finishShieldGuard(Player player, boolean applyCooldown, boolean exhausted) {
+        ShieldGuardState removed = activeShieldGuards.remove(player.getUniqueId());
+        if (removed == null) {
+            return;
+        }
+        if (!applyCooldown) {
+            return;
+        }
+        long cooldownSeconds = getConfig().getLong("shield-guard.release-cooldown-seconds", 10L);
+        long cooldownUntil = System.currentTimeMillis() + cooldownSeconds * 1000L;
+        shieldGuardCooldowns.put(player.getUniqueId(), cooldownUntil);
+        player.setCooldown(Material.SHIELD, Math.toIntExact(cooldownSeconds * 20L));
+        if (exhausted) {
+            player.sendActionBar(Component.text("Guardia agotada: " + cooldownSeconds + " s de enfriamiento",
+                    NamedTextColor.RED));
+        } else {
+            player.sendActionBar(Component.text("Escudo liberado: " + cooldownSeconds + " s de enfriamiento",
+                    NamedTextColor.YELLOW));
+        }
+    }
+
+    private boolean shieldGuardCanMitigate(Player player, ShieldGuardState state) {
+        return player.isHandRaised() && player.isBlocking() && isShieldStillRaised(player, state.hand());
+    }
+
+    private boolean isShieldStillRaised(Player player, EquipmentSlot hand) {
+        if (!player.isHandRaised()) {
+            return false;
+        }
+        EquipmentSlot raisedHand = player.getHandRaised();
+        return raisedHand == hand && heldShield(player, hand) != null;
+    }
+
+    private ItemStack heldShield(Player player, EquipmentSlot hand) {
+        return switch (hand) {
+            case OFF_HAND -> {
+                ItemStack offHand = player.getInventory().getItemInOffHand();
+                yield offHand != null && offHand.getType() == Material.SHIELD ? offHand : null;
+            }
+            case HAND -> {
+                ItemStack mainHand = player.getInventory().getItemInMainHand();
+                yield mainHand != null && mainHand.getType() == Material.SHIELD ? mainHand : null;
+            }
+            default -> null;
+        };
+    }
+
+    private double shieldReduction(ItemStack shield) {
+        String tierId = shieldTierId(shield);
+        double base = getConfig().getDouble("shield-guard.tier-base-reduction." + tierId,
+                getConfig().getDouble("shield-guard.tier-base-reduction.iron", 0.42));
+        double blockValue = shieldBlockValue(shield);
+        double perBlock = getConfig().getDouble("shield-guard.block-value-reduction-per-point", 0.04);
+        double maxReduction = getConfig().getDouble("shield-guard.tier-max-reduction." + tierId,
+                getConfig().getDouble("shield-guard.max-total-reduction",
+                        getConfig().getDouble("shield-guard.tier-max-reduction.iron", 0.48)));
+        return Math.max(0.0, Math.min(Math.max(base, maxReduction), base + blockValue * perBlock));
+    }
+
+    private double shieldBlockValue(ItemStack shield) {
+        ItemMeta meta = shield.getItemMeta();
+        if (meta == null) {
+            return 0.0;
+        }
+        Collection<AttributeModifier> modifiers = meta.getAttributeModifiers(Attribute.ARMOR);
+        if (modifiers == null) {
+            return 0.0;
+        }
+        return modifiers.stream()
+                .filter(modifier -> modifier.getOperation() == AttributeModifier.Operation.ADD_NUMBER)
+                .mapToDouble(AttributeModifier::getAmount)
+                .sum();
+    }
+
+    private String shieldTierId(ItemStack shield) {
+        ItemMeta meta = shield.getItemMeta();
+        if (meta == null) {
+            return "iron";
+        }
+        List<String> candidates = new ArrayList<>();
+        if (meta.hasDisplayName()) {
+            candidates.add(PlainTextComponentSerializer.plainText().serialize(meta.displayName()));
+        }
+        if (meta.hasLore()) {
+            for (Component line : meta.lore()) {
+                candidates.add(PlainTextComponentSerializer.plainText().serialize(line));
+            }
+        }
+        for (String candidate : candidates) {
+            String normalized = candidate.toLowerCase(Locale.ROOT);
+            if (normalized.contains("legendario")) return "legendary";
+            if (normalized.contains("mithril")) return "mithril";
+            if (normalized.contains("oricalco")) return "oricalco";
+            if (normalized.contains("diamante")) return "diamond";
+            if (normalized.contains("plata")) return "silver";
+            if (normalized.contains("hierro")) return "iron";
+            if (normalized.contains("bronce")) return "bronze";
+            if (normalized.contains("cobre")) return "copper";
+            if (normalized.contains("piedra")) return "stone";
+            if (normalized.contains("madera") || normalized.contains("aprendiz")) return "wood";
+        }
+        return "iron";
     }
 
     private boolean handleAdmin(CommandSender sender, String[] args) {
@@ -1213,6 +1670,26 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         knockDown(player);
     }
 
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onShieldGuardMitigation(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player player)
+                || !event.isApplicable(EntityDamageEvent.DamageModifier.BLOCKING)) {
+            return;
+        }
+        ShieldGuardState state = activeShieldGuards.get(player.getUniqueId());
+        if (state == null || !shieldGuardCanMitigate(player, state)) {
+            return;
+        }
+        ItemStack shield = heldShield(player, state.hand());
+        if (shield == null || shield.getType() != Material.SHIELD) {
+            finishShieldGuard(player, true, false);
+            return;
+        }
+        double reduction = shieldReduction(shield);
+        double reductionAmount = Math.min(event.getDamage(), event.getDamage() * reduction);
+        event.setDamage(EntityDamageEvent.DamageModifier.BLOCKING, -reductionAmount);
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamageByDownedPlayer(EntityDamageByEntityEvent event) {
         Player attacker = null;
@@ -1425,6 +1902,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void knockDown(Player player) {
+        finishShieldGuard(player, false, false);
         player.setHealth(1.0);
         threatManager.removeThreat(player);
         player.sendMessage(Component.text("Has caido. Un aliado puede reanimarte con clic derecho.", NamedTextColor.RED));
@@ -1508,6 +1986,39 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         return Component.text("Derribado | Te levantaras en " + remaining + " s", NamedTextColor.RED);
     }
 
+    private void tickShieldGuards() {
+        long now = System.currentTimeMillis();
+        List<UUID> expiredCooldowns = new ArrayList<>();
+        for (Map.Entry<UUID, Long> entry : shieldGuardCooldowns.entrySet()) {
+            if (entry.getValue() <= now) {
+                expiredCooldowns.add(entry.getKey());
+            }
+        }
+        expiredCooldowns.forEach(shieldGuardCooldowns::remove);
+
+        List<UUID> staleGuards = new ArrayList<>();
+        for (Map.Entry<UUID, ShieldGuardState> entry : activeShieldGuards.entrySet()) {
+            UUID uuid = entry.getKey();
+            ShieldGuardState state = entry.getValue();
+            Player player = state.player();
+            if (!player.isOnline() || downed.containsKey(uuid)) {
+                staleGuards.add(uuid);
+                continue;
+            }
+            if (now >= state.expiresAtMillis()) {
+                finishShieldGuard(player, true, true);
+                continue;
+            }
+            if (now < state.releaseDetectionAtMillis()) {
+                continue;
+            }
+            if (!player.isHandRaised() || !player.isBlocking() || !isShieldStillRaised(player, state.hand())) {
+                finishShieldGuard(player, true, false);
+            }
+        }
+        staleGuards.forEach(activeShieldGuards::remove);
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMobTargetsDownedPlayer(EntityTargetLivingEntityEvent event) {
         if (event.getTarget() instanceof Player player && downed.containsKey(player.getUniqueId())) {
@@ -1575,6 +2086,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void revive(Player player, String message) {
+        finishShieldGuard(player, false, false);
         DownedState state = downed.remove(player.getUniqueId());
         if (state == null) {
             return;
@@ -1593,6 +2105,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void surrender(Player player) {
+        finishShieldGuard(player, false, false);
         DownedState state = downed.remove(player.getUniqueId());
         if (state == null) {
             return;
@@ -1649,9 +2162,14 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 && event.getItem() != null
                 && event.getItem().getType() == Material.SHIELD) {
             PlayerProfile profile = profiles.get(event.getPlayer().getUniqueId());
-            if (canTaunt(profile)) {
+            if (canTaunt(profile) && event.getPlayer().isSneaking()) {
                 event.setCancelled(true);
                 useTauntAbility(event.getPlayer());
+                return;
+            }
+            EquipmentSlot hand = event.getHand();
+            if (hand != null && !tryActivateShieldGuard(event.getPlayer(), hand)) {
+                event.setCancelled(true);
             }
             return;
         }
@@ -1775,9 +2293,28 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        Material result = event.getRecipe().getResult().getType();
+        ItemStack resultItem = event.getRecipe().getResult();
+        Material result = resultItem.getType();
+        if (isClassXpFlask(resultItem)) {
+            String tierId = customFlaskTier(resultItem);
+            if (!canCraftClassXpFlask(player, tierId, true)) {
+                event.setCancelled(true);
+                return;
+            }
+            if (!isSmithCraftRewardEligible(event)) {
+                return;
+            }
+            int alchemyXp = classXpFlaskAlchemyCraftXp(tierId);
+            if (alchemyXp > 0) {
+                grantProfessionExperience(player, "alquimista", alchemyXp);
+            }
+            return;
+        }
         if (deny(player, result, ProgressionGate.Action.CRAFT)) {
             event.setCancelled(true);
+            return;
+        }
+        if (!isSmithCraftRewardEligible(event)) {
             return;
         }
         if (isSmithEquipment(result)) {
@@ -4076,7 +4613,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (profile.baseClass() == null || profile.level() >= classMaxLevel()) {
             return 0;
         }
-        int amount = classExperienceForKill(profile, mob, rarity);
+        int amount = classExperienceForKill(player, profile, mob, rarity);
         if (amount <= 0) {
             return 0;
         }
@@ -4105,7 +4642,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         return amount;
     }
 
-    private int classExperienceForKill(PlayerProfile profile, LivingEntity mob, MobRarity rarity) {
+    private int classExperienceForKill(Player player, PlayerProfile profile, LivingEntity mob, MobRarity rarity) {
         int base = getConfig().getInt("class-xp.kill-base", 8);
         int rarityBonus = getConfig().getInt("class-xp.rarity-bonus." + rarity.id(), switch (rarity) {
             case NORMAL -> 0;
@@ -4123,7 +4660,8 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                     getConfig().getDouble("class-xp.lower-level-min-multiplier", 0.45),
                     1.0 + levelDelta * getConfig().getDouble("class-xp.lower-level-penalty-per-level", 0.06));
         }
-        return Math.max(1, (int) Math.round((base + rarityBonus) * multiplier));
+        double flaskMultiplier = activeClassXpFlaskMultiplier(player, mob, rarity);
+        return Math.max(1, (int) Math.round((base + rarityBonus) * multiplier * flaskMultiplier));
     }
 
     private int classXpBase() {
@@ -4187,6 +4725,15 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         }
         crafted.setItemMeta(meta);
         event.setCurrentItem(crafted);
+    }
+
+    private boolean isSmithCraftRewardEligible(CraftItemEvent event) {
+        InventoryAction action = event.getAction();
+        if (action == InventoryAction.DROP_ALL_SLOT || action == InventoryAction.DROP_ONE_SLOT) {
+            return false;
+        }
+        ClickType click = event.getClick();
+        return click != ClickType.DROP && click != ClickType.CONTROL_DROP;
     }
 
     private ItemStack createSimulatedSmithItem(Material material, int smithLevel, int classLevel) {
@@ -4443,17 +4990,29 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.8f, 1.2f);
             }
         }
+        PlayerProfile profile = profiles.get(player.getUniqueId());
+        boolean updated = ensureProfessionGuides(player, profile);
+        if ("alquimista".equals(profession)) {
+            discoverUnlockedFlaskRecipes(player, profile);
+        }
+        if (updated) {
+            saveProfiles();
+        }
     }
 
     private String professionUnlock(String profession, int level) {
+        for (String tierId : tierOrder()) {
+            if ("herrero".equals(profession) && level == tierRequirement(tierId, "smith-level", -1)) {
+                return "fabricar equipo de tier " + displayTier(tierId);
+            }
+            if ("minero".equals(profession) && level == tierRequirement(tierId, "miner-level", -1)) {
+                return "extraer y trabajar rutas de " + displayTier(tierId);
+            }
+            if ("alquimista".equals(profession) && level == classXpFlaskAlchemistRequirement(tierId)) {
+                return "formular el Frasco de Experiencia " + displayTier(tierId);
+            }
+        }
         return switch (profession + ":" + level) {
-            case "herrero:5" -> "fabricar herramientas, armas, escudos y armaduras de hierro";
-            case "herrero:10" -> "fabricar herramientas, armas y armaduras de oro";
-            case "herrero:15" -> "fabricar herramientas, armas y armaduras de diamante";
-            case "minero:5" -> "colocar bloques minerales de hierro";
-            case "minero:10" -> "colocar bloques minerales de oro";
-            case "minero:15" -> "colocar bloques minerales de diamante";
-            case "alquimista:8" -> "fabricar consumibles avanzados";
             case "agricultor:8" -> "trabajar cultivos avanzados";
             case "explorador:8" -> "usar utilidades de expedicion";
             default -> null;
@@ -4977,7 +5536,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onConsume(PlayerItemConsumeEvent event) {
-        if (downed.containsKey(event.getPlayer().getUniqueId())) {
+        Player player = event.getPlayer();
+        if (downed.containsKey(player.getUniqueId())) {
+            event.setCancelled(true);
+            return;
+        }
+        if (isClassXpFlask(event.getItem()) && !tryActivateClassXpFlask(player, event.getItem())) {
             event.setCancelled(true);
         }
     }
@@ -5008,6 +5572,8 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+        activeShieldGuards.remove(event.getPlayer().getUniqueId());
+        shieldGuardCooldowns.remove(event.getPlayer().getUniqueId());
         DownedState state = downed.remove(event.getPlayer().getUniqueId());
         if (state != null) {
             state.cancel();
@@ -5032,6 +5598,15 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             PlayerProfile profile = profiles.get(player.getUniqueId());
             if (getConfig().getBoolean("onboarding.backfill-starter-kit-on-join", true)
                     && ensureStarterKit(player, profile, true)) {
+                saveProfiles();
+            }
+            if (!profile.hasActiveClassXpFlask(System.currentTimeMillis()) && profile.activeClassXpFlaskTier() != null) {
+                profile.clearActiveClassXpFlask();
+                saveProfiles();
+            }
+            boolean updated = ensureProfessionGuides(player, profile);
+            discoverUnlockedFlaskRecipes(player, profile);
+            if (updated) {
                 saveProfiles();
             }
             player.showTitle(net.kyori.adventure.title.Title.title(
@@ -5290,7 +5865,8 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                 player.sendMessage(Component.text("Guerrero | Rol: frente de combate y presion.", NamedTextColor.GOLD));
                 player.sendMessage(Component.text("Armas base: espada, hacha y escudo.", NamedTextColor.YELLOW));
                 player.sendMessage(Component.text("Dash: F al sprintar | Golpe Abrumador: Shift + clic izquierdo | Salto Desolador: saltar + Shift", NamedTextColor.YELLOW));
-                player.sendMessage(Component.text("Provocar: clic derecho con escudo.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Guardia de escudo: 5 s activos | 10 s de enfriamiento al soltar.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Provocar: Shift + clic derecho con escudo.", NamedTextColor.YELLOW));
             }
             case "explorador" -> {
                 player.sendMessage(Component.text("Explorador | Rol: movilidad, persecucion y precision.", NamedTextColor.GREEN));
@@ -5305,6 +5881,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             case "clerigo" -> {
                 player.sendMessage(Component.text("Clerigo | Rol: apoyo, curacion y utilidad.", NamedTextColor.YELLOW));
                 player.sendMessage(Component.text("Armas base: staff y escudo.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Guardia de escudo: 5 s activos | 10 s de enfriamiento al soltar.", NamedTextColor.YELLOW));
                 player.sendMessage(Component.text("Bendicion: Shift + clic izquierdo con staff | Curacion Menor: clic derecho con staff.", NamedTextColor.YELLOW));
             }
             default -> player.sendMessage(Component.text("No tienes una clase base elegida todavia.", NamedTextColor.RED));
@@ -5393,6 +5970,14 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private record MythicRewardStat(String label, double amount, Attribute attribute) {
+    }
+
+    private record ShieldGuardState(
+            Player player,
+            EquipmentSlot hand,
+            long startedAtMillis,
+            long expiresAtMillis,
+            long releaseDetectionAtMillis) {
     }
 
     private static final class DownedState {

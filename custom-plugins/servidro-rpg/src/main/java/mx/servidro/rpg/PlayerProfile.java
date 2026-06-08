@@ -1,7 +1,9 @@
 package mx.servidro.rpg;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 final class PlayerProfile {
     private String baseClass;
@@ -12,6 +14,9 @@ final class PlayerProfile {
     private boolean starterKitClaimed;
     private final Map<String, Integer> professionLevels = new LinkedHashMap<>();
     private final Map<String, Integer> professionExperience = new LinkedHashMap<>();
+    private final Set<String> claimedGuides = new LinkedHashSet<>();
+    private String activeClassXpFlaskTier;
+    private long activeClassXpFlaskExpiresAt;
 
     PlayerProfile() {
         for (Profession profession : Profession.values()) {
@@ -97,6 +102,9 @@ final class PlayerProfile {
         classExperience = 0;
         specializationLevel = 0;
         starterKitClaimed = false;
+        claimedGuides.clear();
+        activeClassXpFlaskTier = null;
+        activeClassXpFlaskExpiresAt = 0L;
     }
 
     int professionLevel(String profession) {
@@ -109,6 +117,50 @@ final class PlayerProfile {
 
     int professionExperience(String profession) {
         return professionExperience.getOrDefault(profession, 0);
+    }
+
+    boolean hasClaimedGuide(String guideId) {
+        return claimedGuides.contains(guideId);
+    }
+
+    boolean claimGuide(String guideId) {
+        return claimedGuides.add(guideId);
+    }
+
+    Set<String> claimedGuides() {
+        return Set.copyOf(claimedGuides);
+    }
+
+    void setLoadedClaimedGuides(Set<String> guideIds) {
+        claimedGuides.clear();
+        claimedGuides.addAll(guideIds);
+    }
+
+    String activeClassXpFlaskTier() {
+        return activeClassXpFlaskTier;
+    }
+
+    long activeClassXpFlaskExpiresAt() {
+        return activeClassXpFlaskExpiresAt;
+    }
+
+    boolean hasActiveClassXpFlask(long now) {
+        return activeClassXpFlaskTier != null && activeClassXpFlaskExpiresAt > now;
+    }
+
+    void activateClassXpFlask(String tierId, long expiresAt) {
+        activeClassXpFlaskTier = tierId;
+        activeClassXpFlaskExpiresAt = expiresAt;
+    }
+
+    void clearActiveClassXpFlask() {
+        activeClassXpFlaskTier = null;
+        activeClassXpFlaskExpiresAt = 0L;
+    }
+
+    void setLoadedClassXpFlask(String tierId, long expiresAt) {
+        activeClassXpFlaskTier = tierId;
+        activeClassXpFlaskExpiresAt = expiresAt;
     }
 
     void addProfessionLevels(String profession, int amount, int maxLevel) {
