@@ -299,6 +299,14 @@ chmod +x sync-oraxen-content.sh
 ./sync-oraxen-content.sh
 ```
 
+Estos scripts ahora:
+
+- crean `server/plugins/Oraxen/` si todavia no existe
+- copian `items`, `recipes` y `pack`
+- avisan si `Oraxen.jar` aun no esta instalado
+
+Eso nos permite dejar el runtime preparado antes de tener el plugin.
+
 La idea del proyecto sera:
 
 - Oraxen genera items, modelos, recipes y pack

@@ -11,10 +11,6 @@ if (-not (Test-Path $source)) {
     throw "No existe la carpeta de contenido Oraxen en $source"
 }
 
-if (-not (Test-Path $target)) {
-    throw "No existe Oraxen en $target. Instala el plugin primero."
-}
-
 $folders = @("items", "recipes", "pack")
 foreach ($folder in $folders) {
     $src = Join-Path $source $folder
@@ -24,3 +20,11 @@ foreach ($folder in $folders) {
 }
 
 Write-Host "Contenido Oraxen sincronizado en $target" -ForegroundColor Green
+
+$jar = Join-Path $ServerDir "plugins\\Oraxen.jar"
+if (Test-Path $jar) {
+    Write-Host "Oraxen.jar detectado. El contenido ya puede ser consumido por el plugin." -ForegroundColor Green
+} else {
+    Write-Host "No encontre Oraxen.jar en $($ServerDir)\\plugins." -ForegroundColor Yellow
+    Write-Host "El runtime quedo preparado, pero las texturas/items no se activaran hasta instalar el plugin." -ForegroundColor Yellow
+}

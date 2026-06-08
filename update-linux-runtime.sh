@@ -18,6 +18,11 @@ else
   echo "Si el cambio toco el plugin Java, compila primero o sube tambien el jar."
 fi
 
+if [[ -d "$PROJECT_ROOT/content/oraxen" ]]; then
+  echo "Sincronizando contenido Oraxen..."
+  "$PROJECT_ROOT/sync-oraxen-content.sh" "$PROJECT_ROOT/server"
+fi
+
 chmod +x start-server-ngrok.sh stop-server-ngrok.sh server-status.sh || true
 chmod +x start-server-playit.sh stop-server-playit.sh server-status-playit.sh || true
 

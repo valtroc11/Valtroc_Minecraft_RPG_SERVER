@@ -11,14 +11,16 @@ if [[ ! -d "$SOURCE_DIR" ]]; then
   exit 1
 fi
 
-if [[ ! -d "$TARGET_DIR" ]]; then
-  echo "No existe Oraxen en $TARGET_DIR. Instala el plugin primero."
-  exit 1
-fi
-
 mkdir -p "$TARGET_DIR/items" "$TARGET_DIR/recipes" "$TARGET_DIR/pack"
 cp -r "$SOURCE_DIR/items/." "$TARGET_DIR/items/"
 cp -r "$SOURCE_DIR/recipes/." "$TARGET_DIR/recipes/"
 cp -r "$SOURCE_DIR/pack/." "$TARGET_DIR/pack/"
 
 echo "Contenido Oraxen sincronizado en $TARGET_DIR"
+
+if [[ -f "$SERVER_DIR/plugins/Oraxen.jar" ]]; then
+  echo "Oraxen.jar detectado. El contenido ya puede ser consumido por el plugin."
+else
+  echo "No encontre Oraxen.jar en $SERVER_DIR/plugins."
+  echo "Deje el runtime preparado, pero las texturas/items no se activaran hasta instalar el plugin."
+fi
