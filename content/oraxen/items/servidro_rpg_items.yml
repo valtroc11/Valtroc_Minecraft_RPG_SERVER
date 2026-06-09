@@ -11,10 +11,10 @@ guardian_tower_shield:
   displayname: "<#4f76d9>Escudo del Guardian"
   material: SHIELD
   Pack:
-    generate_model: true
-    parent_model: "item/generated"
-    textures:
-      - servidorpg/guardian_tower_shield
+    generate_model: false
+    model: "servidorpg/guardian_tower_shield"
+    blocking_model: "servidorpg/guardian_tower_shield_blocking"
+    oversized_in_gui: true
 
 berserker_war_axe:
   displayname: "<#d94f4f>Hacha de Guerra Berserker"
@@ -56,46 +56,46 @@ wood_shield:
   displayname: "<#9a6a3a>Escudo de Madera"
   material: SHIELD
   Pack:
-    generate_model: true
-    parent_model: "item/generated"
-    textures:
-      - servidorpg/wood_shield
+    generate_model: false
+    model: "servidorpg/wood_shield"
+    blocking_model: "servidorpg/wood_shield_blocking"
+    oversized_in_gui: true
 
 stone_shield:
   displayname: "<#8b8b93>Escudo de Piedra"
   material: SHIELD
   Pack:
-    generate_model: true
-    parent_model: "item/generated"
-    textures:
-      - servidorpg/stone_shield
+    generate_model: false
+    model: "servidorpg/stone_shield"
+    blocking_model: "servidorpg/stone_shield_blocking"
+    oversized_in_gui: true
 
 copper_shield:
   displayname: "<#c77743>Escudo de Cobre"
   material: SHIELD
   Pack:
-    generate_model: true
-    parent_model: "item/generated"
-    textures:
-      - servidorpg/copper_shield
+    generate_model: false
+    model: "servidorpg/copper_shield"
+    blocking_model: "servidorpg/copper_shield_blocking"
+    oversized_in_gui: true
 
 bronze_shield:
   displayname: "<#9f6f33>Escudo de Bronce"
   material: SHIELD
   Pack:
-    generate_model: true
-    parent_model: "item/generated"
-    textures:
-      - servidorpg/bronze_shield
+    generate_model: false
+    model: "servidorpg/bronze_shield"
+    blocking_model: "servidorpg/bronze_shield_blocking"
+    oversized_in_gui: true
 
 iron_shield:
   displayname: "<#c7ccd1>Escudo de Hierro"
   material: SHIELD
   Pack:
-    generate_model: true
-    parent_model: "item/generated"
-    textures:
-      - servidorpg/iron_shield
+    generate_model: false
+    model: "servidorpg/iron_shield"
+    blocking_model: "servidorpg/iron_shield_blocking"
+    oversized_in_gui: true
 
 wood_wand:
   displayname: "<#b9864f>Varita de Madera"
@@ -128,28 +128,25 @@ wood_staff:
   displayname: "<#c59c63>Staff de Madera"
   material: BLAZE_ROD
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/wood_staff
+    generate_model: false
+    model: "servidorpg/wood_staff"
+    oversized_in_gui: true
 
 stone_staff:
   displayname: "<#c6cbd3>Staff de Piedra"
   material: BLAZE_ROD
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/stone_staff
+    generate_model: false
+    model: "servidorpg/stone_staff"
+    oversized_in_gui: true
 
 copper_staff:
   displayname: "<#dc8b4b>Staff de Cobre"
   material: BLAZE_ROD
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/copper_staff
+    generate_model: false
+    model: "servidorpg/copper_staff"
+    oversized_in_gui: true
 
 bronze_sword:
   displayname: "<#b97835>Espada de Bronce"
@@ -209,10 +206,10 @@ silver_shield:
   displayname: "<#edf2f7>Escudo de Plata"
   material: SHIELD
   Pack:
-    generate_model: true
-    parent_model: "item/generated"
-    textures:
-      - servidorpg/silver_shield
+    generate_model: false
+    model: "servidorpg/silver_shield"
+    blocking_model: "servidorpg/silver_shield_blocking"
+    oversized_in_gui: true
 
 bronze_wand:
   displayname: "<#b97835>Varita de Bronce"
@@ -236,19 +233,17 @@ bronze_staff:
   displayname: "<#b97835>Staff de Bronce"
   material: BLAZE_ROD
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/bronze_staff
+    generate_model: false
+    model: "servidorpg/bronze_staff"
+    oversized_in_gui: true
 
 silver_staff:
   displayname: "<#edf2f7>Staff de Plata"
   material: BLAZE_ROD
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/silver_staff
+    generate_model: false
+    model: "servidorpg/silver_staff"
+    oversized_in_gui: true
 
 tin_chunk:
   displayname: "<#d8d8d1>Trozo de Estano"
