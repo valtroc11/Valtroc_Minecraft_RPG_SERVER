@@ -182,9 +182,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     public void onDisable() {
         downed.values().forEach(state -> {
             state.cancel();
-            state.player.setSwimming(false);
-            state.player.removePotionEffect(PotionEffectType.DARKNESS);
-            state.player.removePotionEffect(PotionEffectType.BLINDNESS);
+            resetPlayerMobilityState(state.player);
             unhighlightDownedPlayer(state.player);
         });
         downed.clear();
@@ -1242,6 +1240,24 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             sender.sendMessage("Has levantado a " + target.getName() + ".");
             return true;
         }
+        if (args.length == 2 && args[0].equalsIgnoreCase("destrabar")) {
+            Player target = Bukkit.getPlayerExact(args[1]);
+            if (target == null) {
+                sender.sendMessage("Jugador no encontrado.");
+                return true;
+            }
+            DownedState state = downed.remove(target.getUniqueId());
+            if (state != null) {
+                state.cancel();
+            }
+            finishShieldGuard(target, false, false);
+            resetPlayerMobilityState(target);
+            unhighlightDownedPlayer(target);
+            refreshPlayerBaseStats(target);
+            sender.sendMessage("Estado de movilidad reiniciado para " + target.getName() + ".");
+            target.sendMessage(Component.text("Tu estado de movilidad fue reiniciado por un administrador.", NamedTextColor.YELLOW));
+            return true;
+        }
         if (args.length == 2 && args[0].equalsIgnoreCase("tumbar")) {
             Player target = Bukkit.getPlayerExact(args[1]);
             if (target == null) {
@@ -2175,10 +2191,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             return;
         }
         state.cancel();
-        player.setPose(Pose.STANDING, false);
-        player.setSwimming(false);
-        player.removePotionEffect(PotionEffectType.DARKNESS);
-        player.removePotionEffect(PotionEffectType.BLINDNESS);
+        resetPlayerMobilityState(player);
         unhighlightDownedPlayer(player);
         double maxHealth = player.getAttribute(Attribute.MAX_HEALTH).getValue();
         player.setHealth(Math.min(maxHealth, getConfig().getDouble("downed.revived-health", 1.0)));
@@ -2196,10 +2209,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         state.cancel();
         surrenderCooldowns.put(player.getUniqueId(),
                 System.currentTimeMillis() + getConfig().getLong("downed.surrender-cooldown-seconds", 45L) * 1000L);
-        player.setPose(Pose.STANDING, false);
-        player.setSwimming(false);
-        player.removePotionEffect(PotionEffectType.DARKNESS);
-        player.removePotionEffect(PotionEffectType.BLINDNESS);
+        resetPlayerMobilityState(player);
         player.removePotionEffect(PotionEffectType.WEAKNESS);
         unhighlightDownedPlayer(player);
         double maxHealth = player.getAttribute(Attribute.MAX_HEALTH).getValue();
@@ -4992,6 +5002,17 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    private void resetPlayerMobilityState(Player player) {
+        player.setSprinting(false);
+        player.setSneaking(false);
+        player.setSwimming(false);
+        player.setGliding(false);
+        player.setFreezeTicks(0);
+        player.setPose(Pose.STANDING, false);
+        player.removePotionEffect(PotionEffectType.DARKNESS);
+        player.removePotionEffect(PotionEffectType.BLINDNESS);
+    }
+
     private void applyOrReplaceLevelModifier(Player player, Attribute attribute, double amount) {
         AttributeInstance instance = player.getAttribute(attribute);
         if (instance == null) {
@@ -5660,10 +5681,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         DownedState state = downed.remove(event.getPlayer().getUniqueId());
         if (state != null) {
             state.cancel();
-            event.getPlayer().setPose(Pose.STANDING, false);
-            event.getPlayer().setSwimming(false);
-            event.getPlayer().removePotionEffect(PotionEffectType.DARKNESS);
-            event.getPlayer().removePotionEffect(PotionEffectType.BLINDNESS);
+            resetPlayerMobilityState(event.getPlayer());
             unhighlightDownedPlayer(event.getPlayer());
         }
     }
@@ -5671,6 +5689,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        DownedState staleState = downed.remove(player.getUniqueId());
+        if (staleState != null) {
+            staleState.cancel();
+        }
+        finishShieldGuard(player, false, false);
+        resetPlayerMobilityState(player);
         refreshPlayerBaseStats(player);
         updateTab(player);
         int delay = getConfig().getInt("onboarding.join-guide-delay-ticks", 30);
