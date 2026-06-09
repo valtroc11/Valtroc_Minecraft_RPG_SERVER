@@ -151,6 +151,105 @@ copper_staff:
     textures:
       - servidorpg/copper_staff
 
+bronze_sword:
+  displayname: "<#b97835>Espada de Bronce"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/bronze_sword
+
+bronze_axe:
+  displayname: "<#b97835>Hacha de Bronce"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/bronze_axe
+
+bronze_bow:
+  displayname: "<#b97835>Arco de Bronce"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/bronze_bow
+
+silver_sword:
+  displayname: "<#edf2f7>Espada de Plata"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/silver_sword
+
+silver_axe:
+  displayname: "<#edf2f7>Hacha de Plata"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/silver_axe
+
+silver_bow:
+  displayname: "<#edf2f7>Arco de Plata"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/silver_bow
+
+silver_shield:
+  displayname: "<#edf2f7>Escudo de Plata"
+  material: SHIELD
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/silver_shield
+
+bronze_wand:
+  displayname: "<#b97835>Varita de Bronce"
+  material: STICK
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/bronze_wand
+
+silver_wand:
+  displayname: "<#edf2f7>Varita de Plata"
+  material: STICK
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/silver_wand
+
+bronze_staff:
+  displayname: "<#b97835>Staff de Bronce"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/bronze_staff
+
+silver_staff:
+  displayname: "<#edf2f7>Staff de Plata"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/silver_staff
+
 tin_chunk:
   displayname: "<#d8d8d1>Trozo de Estano"
   material: RAW_IRON

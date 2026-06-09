@@ -221,3 +221,187 @@ copper_staff_recipe:
     - " C "
     - " A "
     - " B "
+
+bronze_sword_recipe:
+  result:
+    oraxen_item: bronze_sword
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: IRON_NUGGET
+    C:
+      minecraft_type: STICK
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+bronze_axe_recipe:
+  result:
+    oraxen_item: bronze_axe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: IRON_NUGGET
+    C:
+      minecraft_type: STICK
+  shape:
+    - "AB "
+    - "AC "
+    - " C "
+
+bronze_bow_recipe:
+  result:
+    oraxen_item: bronze_bow
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: STRING
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: COPPER_INGOT
+  shape:
+    - " AB"
+    - "C B"
+    - " AB"
+
+silver_sword_recipe:
+  result:
+    oraxen_item: silver_sword
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: QUARTZ
+    C:
+      minecraft_type: STICK
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+silver_axe_recipe:
+  result:
+    oraxen_item: silver_axe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: QUARTZ
+    C:
+      minecraft_type: STICK
+  shape:
+    - "AB "
+    - "AC "
+    - " C "
+
+silver_bow_recipe:
+  result:
+    oraxen_item: silver_bow
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: STRING
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: QUARTZ
+  shape:
+    - " AB"
+    - "C B"
+    - " AB"
+
+silver_shield_recipe:
+  result:
+    oraxen_item: silver_shield
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: QUARTZ
+    C:
+      minecraft_type: LEATHER
+  shape:
+    - "ACA"
+    - "ABA"
+    - " A "
+
+bronze_wand_recipe:
+  result:
+    oraxen_item: bronze_wand
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: AMETHYST_SHARD
+    D:
+      minecraft_type: IRON_NUGGET
+  shape:
+    - "  C"
+    - " D "
+    - "BA "
+
+silver_wand_recipe:
+  result:
+    oraxen_item: silver_wand
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: QUARTZ
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: AMETHYST_SHARD
+    D:
+      minecraft_type: IRON_NUGGET
+  shape:
+    - "  C"
+    - " D "
+    - "BA "
+
+bronze_staff_recipe:
+  result:
+    oraxen_item: bronze_staff
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: GLOWSTONE_DUST
+    D:
+      minecraft_type: IRON_NUGGET
+  shape:
+    - " C "
+    - " D "
+    - "BA "
+
+silver_staff_recipe:
+  result:
+    oraxen_item: silver_staff
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: QUARTZ
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: AMETHYST_SHARD
+    D:
+      minecraft_type: IRON_NUGGET
+  shape:
+    - " C "
+    - " D "
+    - "BA "

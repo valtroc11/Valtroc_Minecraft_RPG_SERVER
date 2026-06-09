@@ -36,7 +36,7 @@ Oraxen mas integrado, que base vanilla usan y que mecanica necesitan.
 | `copper_shield` | escudo | cobre | `SHIELD` | item/model | guerrero/clerigo | Listo |
 | `bronze_shield` | escudo | bronce | `SHIELD` | item/model | guerrero/clerigo | Listo |
 | `iron_shield` | escudo | hierro | `SHIELD` | item/model | guerrero/clerigo | Listo |
-| `silver_shield` | escudo | plata | `SHIELD` | item/model | guerrero/clerigo | Pendiente |
+| `silver_shield` | escudo | plata | `SHIELD` | item/model | guerrero/clerigo | Listo |
 | `diamond_shield` | escudo | diamante | `SHIELD` | item/model | guerrero/clerigo | Pendiente |
 | `oricalco_shield` | escudo | oricalco | `SHIELD` | item/model | guerrero/clerigo | Pendiente |
 | `mithril_shield` | escudo | mithril | `SHIELD` | item/model | guerrero/clerigo | Pendiente |
@@ -48,26 +48,26 @@ Oraxen mas integrado, que base vanilla usan y que mecanica necesitan.
 | `wood_wand` | varita | madera | `STICK` | item/model | mago | Listo |
 | `stone_wand` | varita | piedra | `STICK` | item/model | mago | Listo |
 | `copper_wand` | varita | cobre | `STICK` | item/model | mago | Listo |
-| `bronze_wand` | varita | bronce | `STICK` | item/model | mago | Pendiente |
+| `bronze_wand` | varita | bronce | `STICK` | item/model | mago | Listo |
 | `iron_wand` | varita | hierro | `STICK` | item/model | mago | Pendiente |
-| `silver_wand` | varita | plata | `STICK` | item/model | mago | Pendiente |
+| `silver_wand` | varita | plata | `STICK` | item/model | mago | Listo |
 | `wood_staff` | staff | madera | `BLAZE_ROD` | item/model | clerigo | Listo |
 | `stone_staff` | staff | piedra | `BLAZE_ROD` | item/model | clerigo | Listo |
 | `copper_staff` | staff | cobre | `BLAZE_ROD` | item/model | clerigo | Listo |
-| `bronze_staff` | staff | bronce | `BLAZE_ROD` | item/model | clerigo | Pendiente |
+| `bronze_staff` | staff | bronce | `BLAZE_ROD` | item/model | clerigo | Listo |
 | `iron_staff` | staff | hierro | `BLAZE_ROD` | item/model | clerigo | Pendiente |
-| `silver_staff` | staff | plata | `BLAZE_ROD` | item/model | clerigo | Pendiente |
+| `silver_staff` | staff | plata | `BLAZE_ROD` | item/model | clerigo | Listo |
 
 ## Fase 5 - Armas de progresion
 
 | ID | Tipo | Tier | Base vanilla | Mecanica Oraxen | Uso | Estado |
 | --- | --- | --- | --- | --- | --- | --- |
-| `bronze_sword` | arma | bronce | `IRON_SWORD` | item/model | guerrero | Pendiente |
-| `bronze_axe` | arma | bronce | `IRON_AXE` | item/model | guerrero | Pendiente |
-| `bronze_bow` | arma | bronce | `BOW` | item/model | explorador | Pendiente |
-| `silver_sword` | arma | plata | `IRON_SWORD` | item/model | guerrero | Pendiente |
-| `silver_axe` | arma | plata | `IRON_AXE` | item/model | guerrero | Pendiente |
-| `silver_bow` | arma | plata | `BOW` | item/model | explorador | Pendiente |
+| `bronze_sword` | arma | bronce | `IRON_SWORD` | item/model | guerrero | Listo |
+| `bronze_axe` | arma | bronce | `IRON_AXE` | item/model | guerrero | Listo |
+| `bronze_bow` | arma | bronce | `BOW` | item/model | explorador | Listo |
+| `silver_sword` | arma | plata | `IRON_SWORD` | item/model | guerrero | Listo |
+| `silver_axe` | arma | plata | `IRON_AXE` | item/model | guerrero | Listo |
+| `silver_bow` | arma | plata | `BOW` | item/model | explorador | Listo |
 
 ## Fase 6 - Materiales y componentes
 
@@ -105,7 +105,7 @@ Oraxen mas integrado, que base vanilla usan y que mecanica necesitan.
 
 1. `tin_ore`, `tin_block`, `silver_ore`, `silver_block`
 2. `bronze_wand`, `bronze_staff`, `bronze_sword`, `bronze_axe`, `bronze_bow`
-3. `silver_shield`, `silver_wand`, `silver_staff`
+3. `silver_shield`, `silver_wand`, `silver_staff`, `silver_sword`, `silver_axe`, `silver_bow`
 4. Integracion de visuales de mobs por afinidad
 5. `oricalco` y `mithril`
 
