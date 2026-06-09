@@ -61,6 +61,15 @@ wood_shield:
     textures:
       - servidorpg/wood_shield
 
+wood_shield_3d_test:
+  displayname: "<#d9b77d>Escudo de Madera [Prueba 3D]"
+  material: SHIELD
+  Pack:
+    generate_model: false
+    model: "servidorpg/wood_shield_3d_test"
+    blocking_model: "servidorpg/wood_shield_3d_test_blocking"
+    oversized_in_gui: true
+
 stone_shield:
   displayname: "<#8b8b93>Escudo de Piedra"
   material: SHIELD

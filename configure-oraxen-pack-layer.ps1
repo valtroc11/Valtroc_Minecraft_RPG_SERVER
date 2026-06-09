@@ -12,15 +12,11 @@ if (-not (Test-Path $settingsFile)) {
     exit 0
 }
 
-$content = Get-Content -Path $settingsFile -Raw
-$expected = "layer: '$LayerId'"
-if ($content -match "(?m)^\s*layer:\s*'$([regex]::Escape($LayerId))'\s*$") {
-    Write-Host "Oraxen ya usa layer '$LayerId' en $settingsFile" -ForegroundColor Green
-    exit 0
-}
-
 Copy-Item -Path $settingsFile -Destination "$settingsFile.bak" -Force
+$content = Get-Content -Path $settingsFile -Raw
 $updated = [regex]::Replace($content, '(?m)^(\s*layer:\s*).*$' , "`$1'$LayerId'")
+$updated = [regex]::Replace($updated, '(?m)^(\s*protection:\s*)true(\s*(?:#.*)?)$' , "`$1false`$2")
 Set-Content -Path $settingsFile -Value $updated -Encoding UTF8
 
 Write-Host "Layer de Oraxen ajustado a '$LayerId' en $settingsFile" -ForegroundColor Green
+Write-Host "Proteccion del pack Oraxen ajustada a false para depuracion/compatibilidad" -ForegroundColor Green

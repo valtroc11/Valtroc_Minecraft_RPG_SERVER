@@ -12,12 +12,30 @@ if [[ ! -f "$SETTINGS_FILE" ]]; then
   exit 0
 fi
 
-if grep -qE "^[[:space:]]*layer:[[:space:]]*'$LAYER_ID'[[:space:]]*$" "$SETTINGS_FILE"; then
-  echo "Oraxen ya usa layer '$LAYER_ID' en $SETTINGS_FILE"
-  exit 0
-fi
-
 cp "$SETTINGS_FILE" "$SETTINGS_FILE.bak"
-sed -i -E "s/^([[:space:]]*layer:[[:space:]]*).*/\\1'$LAYER_ID'/" "$SETTINGS_FILE"
+
+python3 - "$SETTINGS_FILE" "$LAYER_ID" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+settings_path = Path(sys.argv[1])
+layer_id = sys.argv[2]
+content = settings_path.read_text(encoding="utf-8")
+
+content = re.sub(
+    r"(?m)^(\s*layer:\s*).*$",
+    rf"\1'{layer_id}'",
+    content,
+)
+content = re.sub(
+    r"(?m)^(\s*protection:\s*)true(\s*(?:#.*)?)$",
+    r"\1false\2",
+    content,
+)
+
+settings_path.write_text(content, encoding="utf-8")
+PY
 
 echo "Layer de Oraxen ajustado a '$LAYER_ID' en $SETTINGS_FILE"
+echo "Proteccion del pack Oraxen ajustada a false para depuracion/compatibilidad"
