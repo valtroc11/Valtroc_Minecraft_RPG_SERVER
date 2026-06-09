@@ -2,35 +2,37 @@
 
 Servidro MX usa dos capas visuales distintas:
 
-1. **Pack del servidor (Oraxen)**  
+1. **Pack base del servidor (Excalibur)**  
+   Paper lo envia desde su URL oficial en Modrinth. Se usa para medievalizar
+   el mundo vanilla.
+
+2. **Pack del servidor (Oraxen)**  
    Este pack contiene los items, materiales, escudos, varitas, staffs y
    visuales RPG propios del servidor.
-
-2. **Pack recomendado del jugador (Excalibur)**  
-   Este pack mejora la apariencia del mundo vanilla con una estetica medieval.
 
 ## Objetivo
 
 La idea es simple:
 
-- **Oraxen** da identidad visual al RPG del servidor.
+- **Excalibur** da la base medieval del mundo.
+- **Oraxen** se monta encima para dar identidad visual al RPG del servidor.
 - **Excalibur** hace que aldeas, biomas, bloques y equipo vanilla se sientan
   medievales.
 
 ## Recomendacion para jugadores
 
-### Paso 1: instalar Excalibur
+### Paso 1: entrar y aceptar Excalibur
 
-Descarga Excalibur desde:
+Al entrar al servidor, Minecraft deberia pedirte el pack medieval base.
+
+La fuente oficial del pack es:
 
 - [Excalibur en Modrinth](https://modrinth.com/resourcepack/excal)
 
-Instalalo como cualquier resource pack normal de Minecraft Java.
+### Paso 2: dejar que Oraxen cargue la capa RPG
 
-### Paso 2: entrar al servidor y aceptar el pack del servidor
-
-Al entrar a Servidro MX, Oraxen deberia enviar automaticamente el pack del
-servidor.
+Despues de entrar, Oraxen deberia enviar automaticamente el pack RPG del
+servidor como capa adicional.
 
 Si no aparece el prompt, pide a un admin o ejecuta:
 
@@ -38,12 +40,12 @@ Si no aparece el prompt, pide a un admin o ejecuta:
 /oraxen pack send
 ```
 
-### Paso 3: usar ambas capas
+### Paso 3: jugar con ambas capas
 
 La experiencia visual que buscamos es:
 
 - **Excalibur** como base del mundo
-- **Pack del servidor** para contenido RPG custom
+- **Oraxen** para contenido RPG custom
 
 ## Que cubre cada capa
 
@@ -65,6 +67,13 @@ La experiencia visual que buscamos es:
 
 ## Solucion de problemas
 
+### No veo el pack medieval base
+
+Reintenta entrando al servidor. Si el juego te deja pasar sin el prompt:
+
+- revisa que no hayas rechazado el pack base
+- borra el historial del server en la lista de multijugador y vuelve a entrar
+
 ### No veo los items custom
 
 Prueba:
@@ -82,8 +91,8 @@ Si sigue igual:
 
 Eso significa que:
 
-- el pack del servidor si cargo
-- pero no tienes Excalibur instalado o activo
+- la capa de Oraxen si cargo
+- pero Excalibur no fue aceptado o no se descargo bien
 
 ### Veo Excalibur pero no los items RPG
 
@@ -95,6 +104,5 @@ Eso suele significar que el pack del servidor no cargo correctamente. Reintenta:
 
 ## Nota de licencias
 
-Excalibur se trata como **pack recomendado para jugadores**, no como pack
-redistribuido dentro del servidor. El contenido propio del servidor vive en el
-pack generado por Oraxen.
+Excalibur se descarga desde su URL oficial en Modrinth. El contenido propio del
+servidor vive en el pack generado por Oraxen y se monta como capa adicional.

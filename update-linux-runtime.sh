@@ -10,6 +10,11 @@ cd "$PROJECT_ROOT"
 echo "Actualizando repo..."
 git pull --ff-only
 
+if [[ -f "$PROJECT_ROOT/configure-server-base-pack.sh" ]]; then
+  echo "Ajustando pack base medieval en server.properties..."
+  "$PROJECT_ROOT/configure-server-base-pack.sh" "$PROJECT_ROOT/server"
+fi
+
 if [[ -f "$PLUGIN_BUILD_JAR" ]]; then
   echo "Sincronizando plugin compilado..."
   cp -f "$PLUGIN_BUILD_JAR" "$SERVER_PLUGIN_JAR"
@@ -23,7 +28,14 @@ if [[ -d "$PROJECT_ROOT/content/oraxen" ]]; then
   "$PROJECT_ROOT/sync-oraxen-content.sh" "$PROJECT_ROOT/server"
 fi
 
+if [[ -f "$PROJECT_ROOT/configure-oraxen-pack-layer.sh" ]]; then
+  echo "Ajustando layer de Oraxen para coexistir con el pack medieval base..."
+  "$PROJECT_ROOT/configure-oraxen-pack-layer.sh" "$PROJECT_ROOT/server"
+fi
+
 chmod +x start-server-ngrok.sh stop-server-ngrok.sh server-status.sh || true
 chmod +x start-server-playit.sh stop-server-playit.sh server-status-playit.sh || true
+chmod +x configure-server-base-pack.sh || true
+chmod +x configure-oraxen-pack-layer.sh || true
 
 echo "Listo."
