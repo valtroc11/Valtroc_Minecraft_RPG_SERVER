@@ -255,9 +255,29 @@ tin_block:
   material: IRON_BLOCK
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "block/cube_all"
     textures:
       - servidorpg/blocks/tin_block
+  Mechanics:
+    noteblock:
+      custom_variation: 100
+      model: tin_block
+      hardness: 4
+      block_sounds:
+        place_sound: block.metal.place
+        break_sound: block.metal.break
+        hit_sound: block.metal.hit
+        step_sound: block.metal.step
+        fall_sound: block.metal.fall
+        volume: 0.9
+        pitch: 1.0
+      drop:
+        silktouch: true
+        minimal_type: STONE
+        best_tools:
+          - PICKAXE
+        loots:
+          - {oraxen_item: tin_block, probability: 1.0}
 
 bronze_block:
   displayname: "<#bf7d39>Bloque de Bronce"
@@ -273,9 +293,29 @@ silver_block:
   material: QUARTZ_BLOCK
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "block/cube_all"
     textures:
       - servidorpg/blocks/silver_block
+  Mechanics:
+    noteblock:
+      custom_variation: 101
+      model: silver_block
+      hardness: 5
+      block_sounds:
+        place_sound: block.metal.place
+        break_sound: block.metal.break
+        hit_sound: block.metal.hit
+        step_sound: block.metal.step
+        fall_sound: block.metal.fall
+        volume: 0.9
+        pitch: 1.15
+      drop:
+        silktouch: true
+        minimal_type: IRON
+        best_tools:
+          - PICKAXE
+        loots:
+          - {oraxen_item: silver_block, probability: 1.0}
 
 oricalco_block:
   displayname: "<#e5ab48>Bloque de Oricalco"
@@ -300,18 +340,62 @@ tin_ore:
   material: IRON_ORE
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "block/cube_all"
     textures:
       - servidorpg/ores/tin_ore
+  Mechanics:
+    noteblock:
+      custom_variation: 102
+      model: tin_ore
+      hardness: 3
+      block_sounds:
+        place_sound: block.stone.place
+        break_sound: block.stone.break
+        hit_sound: block.stone.hit
+        step_sound: block.stone.step
+        fall_sound: block.stone.fall
+        volume: 0.8
+        pitch: 0.95
+      drop:
+        silktouch: true
+        fortune: true
+        minimal_type: STONE
+        best_tools:
+          - PICKAXE
+        loots:
+          - oraxen_item: tin_chunk
+            probability: 1.0
 
 silver_ore:
   displayname: "<#f0f4fa>Mena de Plata"
   material: DEEPSLATE_GOLD_ORE
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "block/cube_all"
     textures:
       - servidorpg/ores/silver_ore
+  Mechanics:
+    noteblock:
+      custom_variation: 103
+      model: silver_ore
+      hardness: 5
+      block_sounds:
+        place_sound: block.deepslate.place
+        break_sound: block.deepslate.break
+        hit_sound: block.deepslate.hit
+        step_sound: block.deepslate.step
+        fall_sound: block.deepslate.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: true
+        fortune: true
+        minimal_type: IRON
+        best_tools:
+          - PICKAXE
+        loots:
+          - oraxen_item: silver_chunk
+            probability: 1.0
 
 oricalco_ore:
   displayname: "<#ffb54b>Mena de Oricalco"
