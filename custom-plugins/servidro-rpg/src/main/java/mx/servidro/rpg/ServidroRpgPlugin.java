@@ -162,6 +162,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     private NamespacedKey mobHuntActiveKey;
     private NamespacedKey mobVillageCorruptedKey;
     private NamespacedKey mobWaveAnnouncedKey;
+    private NamespacedKey servidroMobIdKey;
     private NamespacedKey classXpFlaskTierKey;
     private NamespacedKey customMaterialKey;
     private NamespacedKey actionBarSkillKey;
@@ -182,6 +183,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         mobHuntActiveKey = new NamespacedKey(this, "mob-hunt-active");
         mobVillageCorruptedKey = new NamespacedKey(this, "mob-village-corrupted");
         mobWaveAnnouncedKey = new NamespacedKey(this, "mob-wave-announced");
+        servidroMobIdKey = new NamespacedKey(this, "servidro-mob-id");
         classXpFlaskTierKey = new NamespacedKey(this, "class-xp-flask-tier");
         customMaterialKey = new NamespacedKey(this, "custom-material-id");
         actionBarSkillKey = new NamespacedKey(this, "action-bar-skill-id");
@@ -2979,6 +2981,46 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             sender.sendMessage("Has recibido " + amount + "x " + id + ".");
             return true;
         }
+        if (args.length == 1 && args[0].equalsIgnoreCase("mobs")) {
+            sender.sendMessage(Component.text("Mobs Servidro:", NamedTextColor.GOLD));
+            for (ServidroMobType mobType : ServidroMobType.values()) {
+                sender.sendMessage(Component.text("- " + mobType.id() + " -> " + mobType.displayName()
+                        + " (" + mobType.entityType().name() + ")", mobType.nameColor()));
+            }
+            sender.sendMessage(Component.text("Spawn: /servidro spawnservidromob <id> [nivel] [rareza]", NamedTextColor.GRAY));
+            return true;
+        }
+        if (args.length >= 2 && args[0].equalsIgnoreCase("spawnservidromob")) {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("Ejecuta este comando dentro del juego.");
+                return true;
+            }
+            ServidroMobType mobType = ServidroMobType.find(args[1]);
+            if (mobType == null) {
+                sender.sendMessage("Mob Servidro desconocido. Usa /servidro mobs.");
+                return true;
+            }
+            int level = Math.max(1, profiles.get(player.getUniqueId()).level());
+            MobRarity rarity = MobRarity.RARE;
+            if (args.length >= 3) {
+                try {
+                    level = Math.max(1, Integer.parseInt(args[2]));
+                } catch (NumberFormatException ignored) {
+                    sender.sendMessage("El nivel debe ser un numero entero.");
+                    return true;
+                }
+            }
+            if (args.length >= 4) {
+                rarity = MobRarity.find(args[3]);
+                if (rarity == null) {
+                    sender.sendMessage("Rareza invalida. Usa normal, rare, elite o miniboss.");
+                    return true;
+                }
+            }
+            spawnServidroMob(player, mobType, level, rarity);
+            sender.sendMessage("Mob Servidro invocado: " + mobType.id() + " LVL " + level + " " + rarity.displayName() + ".");
+            return true;
+        }
         if (args.length >= 4 && args[0].equalsIgnoreCase("spawnmob")) {
             if (!(sender instanceof Player player)) {
                 sender.sendMessage("Ejecuta este comando dentro del juego.");
@@ -3247,6 +3289,63 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         threatManager.markManaged(mob);
         if (mob instanceof Monster monster) {
             monster.setTarget(player);
+        }
+    }
+
+    private void spawnServidroMob(Player player, ServidroMobType mobType, int level, MobRarity rarity) {
+        Location spawn = player.getLocation().add(player.getLocation().getDirection().normalize().multiply(3.0));
+        Entity entity = player.getWorld().spawnEntity(spawn, mobType.entityType());
+        if (!(entity instanceof LivingEntity mob)) {
+            entity.remove();
+            return;
+        }
+        mob.getPersistentDataContainer().set(servidroMobIdKey, PersistentDataType.STRING, mobType.id());
+        applyScaledMobProfile(mob, level, rarity, mobType.affix(), mobType.skill());
+        applyServidroMobPresentation(mob, mobType, level, rarity);
+        announceRareMobSpawn(mob, level, rarity);
+        threatManager.markManaged(mob);
+        if (mob instanceof Monster monster) {
+            monster.setTarget(player);
+        } else if (mob instanceof Mob neutralMob) {
+            neutralMob.setTarget(player);
+        }
+    }
+
+    private void applyServidroMobPresentation(LivingEntity mob, ServidroMobType mobType, int level, MobRarity rarity) {
+        mob.customName(Component.text("[LVL " + level + " " + rarity.displayName() + "] ", rarity.color())
+                .append(Component.text(mobType.displayName(), mobType.nameColor())));
+        mob.setCustomNameVisible(false);
+        if (mobType.element() == ServidroElement.ICE) {
+            mob.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20 * 60 * 10, 0, true, false));
+            mob.getWorld().spawnParticle(Particle.SNOWFLAKE, mob.getLocation().add(0, 1.0, 0), 24, 0.7, 0.7, 0.7, 0.02);
+        } else {
+            mob.setFireTicks(20 * 4);
+            mob.getWorld().spawnParticle(Particle.FLAME, mob.getLocation().add(0, 1.0, 0), 24, 0.7, 0.7, 0.7, 0.02);
+        }
+        equipServidroMobAccent(mob, mobType);
+    }
+
+    private void equipServidroMobAccent(LivingEntity mob, ServidroMobType mobType) {
+        EntityEquipment equipment = mob.getEquipment();
+        if (equipment == null) {
+            return;
+        }
+        Material accent = mobType.element() == ServidroElement.ICE ? Material.PACKED_ICE : Material.MAGMA_BLOCK;
+        switch (mob.getType()) {
+            case ZOMBIE, SKELETON, WITCH, PIGLIN -> {
+                equipment.setHelmet(new ItemStack(accent));
+                equipment.setHelmetDropChance(0.0f);
+            }
+            case IRON_GOLEM -> {
+                equipment.setItemInMainHand(new ItemStack(mobType.element() == ServidroElement.ICE ? Material.BLUE_ICE : Material.BLAZE_ROD));
+                equipment.setItemInMainHandDropChance(0.0f);
+            }
+            default -> {
+                if (equipment.getItemInMainHand().getType() == Material.AIR) {
+                    equipment.setItemInMainHand(new ItemStack(mobType.element() == ServidroElement.ICE ? Material.SNOWBALL : Material.FIRE_CHARGE));
+                    equipment.setItemInMainHandDropChance(0.0f);
+                }
+            }
         }
     }
 
@@ -8698,6 +8797,121 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private record ElementalSapling(String element, String family) {
+    }
+
+    private enum ServidroElement {
+        ICE,
+        FIRE
+    }
+
+    private enum ServidroMobType {
+        ICE_ZOMBIE("srv_ice_zombie", EntityType.ZOMBIE, ServidroElement.ICE, "Zombie de Hielo", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.ONDA_HELADA),
+        FIRE_ZOMBIE("srv_fire_zombie", EntityType.ZOMBIE, ServidroElement.FIRE, "Zombie Ardiente", NamedTextColor.GOLD,
+                MobAffix.BRUTAL, MobSkill.CARGA),
+        ICE_SKELETON("srv_ice_skeleton", EntityType.SKELETON, ServidroElement.ICE, "Esqueleto de Hielo", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.ONDA_HELADA),
+        FIRE_SKELETON("srv_fire_skeleton", EntityType.SKELETON, ServidroElement.FIRE, "Esqueleto Ardiente", NamedTextColor.GOLD,
+                MobAffix.BRUTAL, MobSkill.RETROCESO_TACTICO),
+        ICE_SPIDER("srv_ice_spider", EntityType.SPIDER, ServidroElement.ICE, "Arana de Hielo", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.CARGA),
+        FIRE_SPIDER("srv_fire_spider", EntityType.SPIDER, ServidroElement.FIRE, "Arana Ardiente", NamedTextColor.GOLD,
+                MobAffix.VELOZ, MobSkill.CARGA),
+        ICE_CAVE_SPIDER("srv_ice_cave_spider", EntityType.CAVE_SPIDER, ServidroElement.ICE, "Arana de Cueva Helada", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.CARGA),
+        FIRE_CAVE_SPIDER("srv_fire_cave_spider", EntityType.CAVE_SPIDER, ServidroElement.FIRE, "Arana de Cueva Ardiente", NamedTextColor.GOLD,
+                MobAffix.VELOZ, MobSkill.CARGA),
+        ICE_CREEPER("srv_ice_creeper", EntityType.CREEPER, ServidroElement.ICE, "Creeper Glacial", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.ONDA_HELADA),
+        FIRE_CREEPER("srv_fire_creeper", EntityType.CREEPER, ServidroElement.FIRE, "Creeper Volcanico", NamedTextColor.GOLD,
+                MobAffix.BRUTAL, MobSkill.CARGA),
+        ICE_ENDERMAN("srv_ice_enderman", EntityType.ENDERMAN, ServidroElement.ICE, "Enderman de Escarcha", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.ONDA_HELADA),
+        FIRE_ENDERMAN("srv_fire_enderman", EntityType.ENDERMAN, ServidroElement.FIRE, "Enderman de Brasas", NamedTextColor.GOLD,
+                MobAffix.VELOZ, MobSkill.RETROCESO_TACTICO),
+        ICE_WITCH("srv_ice_witch", EntityType.WITCH, ServidroElement.ICE, "Bruja de Hielo", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.ONDA_HELADA),
+        FIRE_WITCH("srv_fire_witch", EntityType.WITCH, ServidroElement.FIRE, "Bruja de Fuego", NamedTextColor.GOLD,
+                MobAffix.VAMPIRICO, MobSkill.LLAMADO_CORRUPTO),
+        ICE_PIGLIN("srv_ice_piglin", EntityType.PIGLIN, ServidroElement.ICE, "Piglin de Hielo", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.LLAMADO_CORRUPTO),
+        FIRE_PIGLIN("srv_fire_piglin", EntityType.PIGLIN, ServidroElement.FIRE, "Piglin de Fuego", NamedTextColor.GOLD,
+                MobAffix.BRUTAL, MobSkill.LLAMADO_CORRUPTO),
+        ICE_WOLF("srv_ice_wolf", EntityType.WOLF, ServidroElement.ICE, "Lobo de Hielo", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.CARGA),
+        FIRE_WOLF("srv_fire_wolf", EntityType.WOLF, ServidroElement.FIRE, "Lobo de Fuego", NamedTextColor.GOLD,
+                MobAffix.VELOZ, MobSkill.CARGA),
+        ICE_BEE("srv_ice_bee", EntityType.BEE, ServidroElement.ICE, "Abeja de Hielo", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.ONDA_HELADA),
+        FIRE_BEE("srv_fire_bee", EntityType.BEE, ServidroElement.FIRE, "Abeja de Fuego", NamedTextColor.GOLD,
+                MobAffix.VELOZ, MobSkill.RETROCESO_TACTICO),
+        ICE_IRON_GOLEM("srv_ice_iron_golem", EntityType.IRON_GOLEM, ServidroElement.ICE, "Golem de Hielo", NamedTextColor.AQUA,
+                MobAffix.ROBUSTO, MobSkill.GOLPE_TERRITORIAL),
+        FIRE_IRON_GOLEM("srv_fire_iron_golem", EntityType.IRON_GOLEM, ServidroElement.FIRE, "Golem de Fuego", NamedTextColor.GOLD,
+                MobAffix.BRUTAL, MobSkill.GOLPE_TERRITORIAL),
+        ICE_LLAMA("srv_ice_llama", EntityType.LLAMA, ServidroElement.ICE, "Llama de Hielo", NamedTextColor.AQUA,
+                MobAffix.CONGELANTE, MobSkill.GOLPE_TERRITORIAL),
+        FIRE_LLAMA("srv_fire_llama", EntityType.LLAMA, ServidroElement.FIRE, "Llama de Fuego", NamedTextColor.GOLD,
+                MobAffix.BRUTAL, MobSkill.CARGA);
+
+        private final String id;
+        private final EntityType entityType;
+        private final ServidroElement element;
+        private final String displayName;
+        private final NamedTextColor nameColor;
+        private final MobAffix affix;
+        private final MobSkill skill;
+
+        ServidroMobType(String id, EntityType entityType, ServidroElement element, String displayName,
+                NamedTextColor nameColor, MobAffix affix, MobSkill skill) {
+            this.id = id;
+            this.entityType = entityType;
+            this.element = element;
+            this.displayName = displayName;
+            this.nameColor = nameColor;
+            this.affix = affix;
+            this.skill = skill;
+        }
+
+        String id() {
+            return id;
+        }
+
+        EntityType entityType() {
+            return entityType;
+        }
+
+        ServidroElement element() {
+            return element;
+        }
+
+        String displayName() {
+            return displayName;
+        }
+
+        NamedTextColor nameColor() {
+            return nameColor;
+        }
+
+        MobAffix affix() {
+            return affix;
+        }
+
+        MobSkill skill() {
+            return skill;
+        }
+
+        static ServidroMobType find(String value) {
+            if (value == null || value.isBlank()) {
+                return null;
+            }
+            for (ServidroMobType mobType : values()) {
+                if (mobType.id.equalsIgnoreCase(value) || mobType.name().equalsIgnoreCase(value)) {
+                    return mobType;
+                }
+            }
+            return null;
+        }
     }
 
     private static final class DownedState {
