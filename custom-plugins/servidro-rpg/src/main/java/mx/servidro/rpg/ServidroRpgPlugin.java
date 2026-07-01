@@ -57,13 +57,16 @@ import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -74,12 +77,14 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.EquipmentSlot;
@@ -87,19 +92,26 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantInventory;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
+import org.bukkit.enchantments.Enchantment;
 
 public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     private static final List<String> PROGRESSION_TIER_ORDER = List.of(
             "wood", "stone", "copper", "bronze", "iron", "silver", "diamond", "oricalco", "mithril", "legendary");
+    private static final int WARRIOR_WEAPON_SLOT = 0;
+    private static final List<Integer> WARRIOR_VIRTUAL_SKILL_SLOTS = List.of(1, 2, 3, 4);
+    private static final List<Integer> MAGE_VIRTUAL_SKILL_SLOTS = List.of(1, 2, 3, 4);
+    private static final List<Integer> CLERIC_VIRTUAL_SKILL_SLOTS = List.of(1, 2, 3, 4);
     private final Map<UUID, DownedState> downed = new HashMap<>();
     private final Map<UUID, Location> lastSafeLocations = new HashMap<>();
     private final Map<String, Long> abilityCooldowns = new HashMap<>();
@@ -110,10 +122,21 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     private final Map<UUID, Long> surrenderCooldowns = new HashMap<>();
     private final Map<UUID, ShieldGuardState> activeShieldGuards = new HashMap<>();
     private final Map<UUID, Long> shieldGuardCooldowns = new HashMap<>();
+    private final Map<UUID, Long> silencedPlayers = new HashMap<>();
+    private final Map<UUID, Long> silenceImmunityPlayers = new HashMap<>();
+    private final Map<UUID, Long> silenceFeedbackCooldowns = new HashMap<>();
+    private final Map<UUID, Long> moveDebugCooldowns = new HashMap<>();
+    private final Map<UUID, Integer> warriorSelectedSkillSlots = new HashMap<>();
+    private final Map<UUID, Integer> mageSelectedSkillSlots = new HashMap<>();
+    private final Map<UUID, Integer> clericSelectedSkillSlots = new HashMap<>();
     private final Map<MobRarity, Long> rareSpawnCooldowns = new HashMap<>();
     private final Map<UUID, Component> trackedNameplates = new HashMap<>();
     private final Map<UUID, Boolean> trackedNameplateVisibility = new HashMap<>();
     private final Set<String> playerPlacedMiningBlocks = new HashSet<>();
+    private final Map<String, ElementalSapling> elementalSaplings = new HashMap<>();
+    private boolean starterOraxenBridgeWarningLogged;
+    private boolean oraxenItemLookupWarningLogged;
+    private boolean oraxenBlockBridgeWarningLogged;
     private ProfileStore profiles;
     private Economy economy;
     private ThreatManager threatManager;
@@ -123,6 +146,9 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     private BukkitTask healthBarTask;
     private BukkitTask scaledMobSkillTask;
     private BukkitTask shieldGuardTask;
+    private BukkitTask frozenBiomeTask;
+    private BukkitTask combatBarTask;
+    private BukkitTask elementalSaplingTask;
     private NamespacedKey mobLevelKey;
     private NamespacedKey mobRarityKey;
     private NamespacedKey mobAffixKey;
@@ -138,6 +164,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     private NamespacedKey mobWaveAnnouncedKey;
     private NamespacedKey classXpFlaskTierKey;
     private NamespacedKey customMaterialKey;
+    private NamespacedKey actionBarSkillKey;
 
     @Override
     public void onEnable() {
@@ -157,6 +184,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         mobWaveAnnouncedKey = new NamespacedKey(this, "mob-wave-announced");
         classXpFlaskTierKey = new NamespacedKey(this, "class-xp-flask-tier");
         customMaterialKey = new NamespacedKey(this, "custom-material-id");
+        actionBarSkillKey = new NamespacedKey(this, "action-bar-skill-id");
         profiles = new ProfileStore(
                 getDataFolder(),
                 classMaxLevel(),
@@ -175,6 +203,8 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         healthBarTask = Bukkit.getScheduler().runTaskTimer(this, this::updateNearbyHealthBars, 10L, 10L);
         scaledMobSkillTask = Bukkit.getScheduler().runTaskTimer(this, this::runScaledMobSkills, 40L, 20L);
         shieldGuardTask = Bukkit.getScheduler().runTaskTimer(this, this::tickShieldGuards, 1L, 1L);
+        frozenBiomeTask = Bukkit.getScheduler().runTaskTimer(this, this::tickFrozenBiomes, 40L, 40L);
+        elementalSaplingTask = Bukkit.getScheduler().runTaskTimer(this, this::tickElementalSaplings, 20L * 60L, 20L * 60L);
         getLogger().info("ServidroRpg habilitado. Economia Vault: " + (economy != null ? "activa" : "no disponible"));
     }
 
@@ -195,8 +225,20 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (shieldGuardTask != null) {
             shieldGuardTask.cancel();
         }
+        if (frozenBiomeTask != null) {
+            frozenBiomeTask.cancel();
+        }
+        if (elementalSaplingTask != null) {
+            elementalSaplingTask.cancel();
+        }
         activeShieldGuards.clear();
         shieldGuardCooldowns.clear();
+        silencedPlayers.clear();
+        silenceImmunityPlayers.clear();
+        silenceFeedbackCooldowns.clear();
+        warriorSelectedSkillSlots.clear();
+        mageSelectedSkillSlots.clear();
+        clericSelectedSkillSlots.clear();
         restoreTrackedNameplates();
         saveProfiles();
         savePersonalChests();
@@ -229,8 +271,22 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             case "rendirse" -> handleSurrender(sender);
             case "habilidades" -> handleAbilities(sender, args);
             case "estadisticas" -> handleStats(sender);
+            case "pochelado" -> handleFrozenPocCommand(sender);
             default -> false;
         };
+    }
+
+    private boolean handleFrozenPocCommand(CommandSender sender) {
+        if (!sender.hasPermission("servidro.admin")) {
+            sender.sendMessage(Component.text("No tienes permiso.", NamedTextColor.RED));
+            return true;
+        }
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("Ejecuta este comando dentro del juego.");
+            return true;
+        }
+        teleportToFrozenPoc(player);
+        return true;
     }
 
     private boolean handleSurrender(CommandSender sender) {
@@ -346,6 +402,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             if (getConfig().getBoolean("onboarding.starter-kit-on-class-choice", true)) {
                 ensureStarterKit(player, profile, true);
             }
+            syncClassCombatBar(player);
             saveProfiles();
             sendGuide(player);
             return true;
@@ -390,6 +447,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             profile.setSpecialization(selected);
             profile.resetSpecializationLevel();
             saveProfiles();
+            syncClassCombatBar(player);
             player.sendMessage(Component.text("Especializacion activa: " + selected
                     + ". Su progreso comienza desde nivel 0.", NamedTextColor.GREEN));
             return true;
@@ -753,8 +811,8 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                         "Tier " + displayTier(tierId) + "\n\nHerrero requerido: " + tierRequirement(tierId, "smith-level", 1)
                                 + "\nClase sugerida: " + tierRequirement(tierId, "equip-level", 1),
                         "Equipo:\nArmas, herramientas, armaduras y escudos del tier "
-                                + displayTier(tierId) + ".",
-                        "Consejo:\nLas piezas pesadas y escudos dan mas XP de Herrero. La mejor forja del tier no supera el tier siguiente.");
+                                + displayTier(tierId) + ".\n\nTambien desbloqueas familias de clase como Hachas Berserker, Arcos del Cazador, Focos Arcanos, Reliquias, Dagas, Cuchillos, Azadas, Espadas Anchas y Grimorios.",
+                        "Consejo:\nLas piezas pesadas y escudos dan mas XP de Herrero. Los cuchillos del tier te ayudan a sacar cueros y telas del mismo escalon. Las azadas del tier mejoran la cosecha de plantas, flores y cultivos. La mejor forja del tier no supera el tier siguiente.");
             }
             case "minero" -> {
                 meta.setTitle("Carta de Vetas " + displayTier(tierId));
@@ -925,26 +983,31 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         switch (baseClass) {
             case "guerrero" -> {
                 items.add(createStarterTool(Material.WOODEN_SWORD, "Espada de " + displayTier(tierId), tierId,
-                        "Golpe Abrumador: Shift + clic izquierdo"));
+                        "Q: Golpe Abrumador"));
                 items.add(createStarterTool(Material.WOODEN_AXE, "Hacha de " + displayTier(tierId), tierId,
-                        "Dash: F al sprintar | Salto: saltar + Shift"));
-                items.add(createStarterTool(Material.SHIELD, "Escudo Ligero de " + displayTier(tierId), tierId,
-                        "Guardia 5 s | CD 10 s | Provocar: Shift + clic derecho"));
+                        "Shift en el aire: Salto Desolador"));
+                items.add(createStarterTool(Material.SHIELD, tierId + "_shield",
+                        "Escudo Ligero de " + displayTier(tierId), tierId,
+                        "Click derecho: Guardia | Shift + click derecho: Provocar"));
             }
             case "explorador" -> {
-                items.add(createStarterTool(Material.BOW, "Arco de " + displayTier(tierId), tierId,
+                items.add(createStarterTool(Material.BOW, tierId + "_hunter_bow",
+                        "Arco de " + displayTier(tierId), tierId,
                         "Rodar: Shift + clic izquierdo"));
                 items.add(new ItemStack(Material.ARROW, getConfig().getInt("onboarding.starter-arrows", 32)));
                 items.add(createStarterTool(Material.WOODEN_SWORD, "Hoja de Campo", tierId,
                         "Apoya tu juego de distancia"));
             }
-            case "mago" -> items.add(createStarterTool(Material.STICK, "Varita de " + displayTier(tierId), tierId,
-                    "Barrera: Shift + clic izquierdo"));
+            case "mago" -> items.add(createStarterTool(Material.STICK, tierId + "_mage_focus",
+                    "Foco Arcano de " + displayTier(tierId), tierId,
+                    "Click derecho: proyectil arcano | Shift + clic izquierdo: Barrera"));
             case "clerigo" -> {
-                items.add(createStarterTool(Material.BLAZE_ROD, "Staff de " + displayTier(tierId), tierId,
-                        "Bendicion: Shift + clic izquierdo | Curacion: clic derecho"));
-                items.add(createStarterTool(Material.SHIELD, "Escudo de Peregrino", tierId,
-                        "Guardia 5 s | CD 10 s | Supervivencia"));
+                items.add(createStarterTool(Material.BLAZE_ROD, tierId + "_cleric_relic",
+                        "Reliquia del Clerigo de " + displayTier(tierId), tierId,
+                        "Click derecho: proyectil de luz | Shift + clic izquierdo: Bendicion"));
+                items.add(createStarterTool(Material.SHIELD, tierId + "_shield",
+                        "Escudo de Peregrino", tierId,
+                        "Click derecho: Guardia | 5 s activos y 10 s de enfriamiento"));
             }
             default -> {
             }
@@ -957,14 +1020,1589 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private ItemStack createStarterTool(Material material, String label, String tierId, String hint) {
-        ItemStack stack = new ItemStack(material);
+        return createStarterTool(material, null, label, tierId, hint);
+    }
+
+    private ItemStack createStarterTool(Material material, String oraxenItemId, String label, String tierId, String hint) {
+        ItemStack stack = createOraxenItem(oraxenItemId);
+        if (stack == null) {
+            stack = new ItemStack(material);
+        }
+        return decorateStarterItem(stack, label, tierId, hint);
+    }
+
+    private ItemStack decorateStarterItem(ItemStack stack, String label, String tierId, String hint) {
         ItemMeta meta = stack.getItemMeta();
-        meta.displayName(Component.text(label, NamedTextColor.YELLOW));
-        meta.lore(List.of(
-                Component.text("Tier inicial: " + displayTier(tierId), NamedTextColor.GREEN),
-                Component.text(hint, NamedTextColor.GRAY)));
+        if (!meta.hasDisplayName()) {
+            meta.displayName(Component.text(label, NamedTextColor.YELLOW));
+        }
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Tier inicial: " + displayTier(tierId), NamedTextColor.GREEN));
+        lore.add(Component.text(hint, NamedTextColor.GRAY));
+        if (meta.hasLore() && meta.lore() != null) {
+            lore.addAll(meta.lore());
+        }
+        meta.lore(lore);
         stack.setItemMeta(meta);
         return stack;
+    }
+
+    private void syncClassCombatBar(Player player) {
+        clearWarriorCombatBar(player);
+        clearMageCombatBar(player);
+        clearClericCombatBar(player);
+    }
+
+    private void scheduleWarriorCombatBarSync(Player player) {
+        scheduleClassCombatBarSync(player);
+    }
+
+    private void scheduleClassCombatBarSync(Player player) {
+        Bukkit.getScheduler().runTask(this, () -> {
+            if (player.isOnline()) {
+                syncClassCombatBar(player);
+            }
+        });
+    }
+
+    private void tickCombatBars() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            syncClassCombatBar(player);
+        }
+    }
+
+    private void syncWarriorCombatBar(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        ensureWarriorWeaponSlot(player, inventory);
+        ensureWarriorSkillSlots(player, inventory);
+        refreshWarriorCooldownVisuals(player);
+    }
+
+    private void clearWarriorCombatBar(Player player) {
+        warriorSelectedSkillSlots.remove(player.getUniqueId());
+        clearActionBarSkillItems(player);
+    }
+
+    private void syncMageCombatBar(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        ensureMageWeaponSlot(player, inventory);
+        ensureMageSkillSlots(player, inventory);
+        refreshMageCooldownVisuals(player);
+    }
+
+    private void clearMageCombatBar(Player player) {
+        mageSelectedSkillSlots.remove(player.getUniqueId());
+        clearActionBarSkillItems(player);
+    }
+
+    private void syncClericCombatBar(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        ensureClericWeaponSlot(player, inventory);
+        ensureClericSkillSlots(player, inventory);
+        refreshClericCooldownVisuals(player);
+    }
+
+    private void clearClericCombatBar(Player player) {
+        clericSelectedSkillSlots.remove(player.getUniqueId());
+        clearActionBarSkillItems(player);
+    }
+
+    private void clearActionBarSkillItems(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        boolean changed = false;
+        for (int slot = 0; slot < inventory.getSize(); slot++) {
+            if (isActionBarSkillItem(inventory.getItem(slot))) {
+                inventory.setItem(slot, null);
+                changed = true;
+            }
+        }
+        if (changed) {
+            player.updateInventory();
+        }
+    }
+
+    private void ensureWarriorWeaponSlot(Player player, PlayerInventory inventory) {
+        ItemStack current = inventory.getItem(WARRIOR_WEAPON_SLOT);
+        if (canOccupyWarriorWeaponSlot(current)) {
+            return;
+        }
+        int weaponSlot = firstWarriorWeaponSlot(inventory);
+        if (weaponSlot >= 0) {
+            ItemStack displaced = current == null ? null : current.clone();
+            inventory.setItem(WARRIOR_WEAPON_SLOT, inventory.getItem(weaponSlot));
+            inventory.setItem(weaponSlot, displaced);
+            current = inventory.getItem(WARRIOR_WEAPON_SLOT);
+            if (canOccupyWarriorWeaponSlot(current)) {
+                return;
+            }
+        }
+        if (current != null && !current.getType().isAir()) {
+            moveItemToWarriorStorage(player, inventory, current.clone(), Set.of(0, 1, 2, 3, 4));
+            inventory.setItem(WARRIOR_WEAPON_SLOT, null);
+        }
+    }
+
+    private void ensureWarriorSkillSlots(Player player, PlayerInventory inventory) {
+        Integer selectedSlot = selectedWarriorSkillSlot(player);
+        for (int slot : WARRIOR_VIRTUAL_SKILL_SLOTS) {
+            ItemStack existing = inventory.getItem(slot);
+            String expectedSkillId = warriorSkillId(slot);
+            if (!(isActionBarSkillItem(existing) && expectedSkillId.equals(actionBarSkillId(existing)))
+                    && existing != null
+                    && !existing.getType().isAir()) {
+                moveItemToWarriorStorage(player, inventory, existing.clone(), Set.of(0, 1, 2, 3, 4));
+            }
+            updateActionBarSkillSlot(inventory, slot,
+                    createWarriorSkillIcon(player, slot, selectedSlot != null && selectedSlot == slot));
+        }
+    }
+
+    private void updateActionBarSkillSlot(PlayerInventory inventory, int slot, ItemStack replacement) {
+        ItemStack current = inventory.getItem(slot);
+        if (current != null && current.isSimilar(replacement)) {
+            return;
+        }
+        inventory.setItem(slot, replacement);
+    }
+
+    private boolean canOccupyWarriorWeaponSlot(ItemStack stack) {
+        return stack != null && !stack.getType().isAir() && !isActionBarSkillItem(stack) && isWarriorWeapon(stack.getType());
+    }
+
+    private ItemStack mainHandItem(Player player) {
+        return player.getInventory().getItemInMainHand();
+    }
+
+    private boolean isWarriorAbilityWeapon(ItemStack stack) {
+        return stack != null && !stack.getType().isAir() && isWarriorWeapon(stack.getType());
+    }
+
+    private int firstWarriorWeaponSlot(PlayerInventory inventory) {
+        int[] priority = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+        for (int slot : priority) {
+            if (canOccupyWarriorWeaponSlot(inventory.getItem(slot))) {
+                return slot;
+            }
+        }
+        for (int slot = 9; slot < 36; slot++) {
+            if (canOccupyWarriorWeaponSlot(inventory.getItem(slot))) {
+                return slot;
+            }
+        }
+        return -1;
+    }
+
+    private void moveItemToWarriorStorage(Player player, PlayerInventory inventory, ItemStack stack, Set<Integer> blockedSlots) {
+        int target = firstWarriorOpenStorageSlot(inventory, blockedSlots);
+        if (target >= 0) {
+            inventory.setItem(target, stack);
+            return;
+        }
+        player.getWorld().dropItemNaturally(player.getLocation(), stack);
+    }
+
+    private int firstWarriorOpenStorageSlot(PlayerInventory inventory, Set<Integer> blockedSlots) {
+        for (int slot = 5; slot <= 8; slot++) {
+            if (blockedSlots.contains(slot)) {
+                continue;
+            }
+            ItemStack candidate = inventory.getItem(slot);
+            if (candidate == null || candidate.getType().isAir()) {
+                return slot;
+            }
+        }
+        for (int slot = 9; slot < 36; slot++) {
+            if (blockedSlots.contains(slot)) {
+                continue;
+            }
+            ItemStack candidate = inventory.getItem(slot);
+            if (candidate == null || candidate.getType().isAir()) {
+                return slot;
+            }
+        }
+        return -1;
+    }
+
+    private boolean isWarriorVirtualSkillSlot(int slot) {
+        return WARRIOR_VIRTUAL_SKILL_SLOTS.contains(slot);
+    }
+
+    private boolean isWarriorUtilityHotbarSlot(int slot) {
+        return slot >= 5 && slot <= 8;
+    }
+
+    private String warriorSkillId(int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> "warrior_overwhelming_strike";
+            case 2 -> "warrior_taunt";
+            case 3 -> "warrior_guard";
+            case 4 -> "warrior_desolating_leap";
+            default -> "warrior_unknown";
+        };
+    }
+
+    private String warriorSkillLabel(int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> "Golpe Abrumador";
+            case 2 -> "Provocar";
+            case 3 -> "Guardia";
+            case 4 -> "Salto Desolador";
+            default -> "Habilidad";
+        };
+    }
+
+    private Material warriorSkillIconMaterial(int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> Material.RED_DYE;
+            case 2 -> Material.BELL;
+            case 3 -> Material.SHIELD;
+            case 4 -> Material.RABBIT_FOOT;
+            default -> Material.PAPER;
+        };
+    }
+
+    private NamedTextColor warriorSkillColor(int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> NamedTextColor.RED;
+            case 2 -> NamedTextColor.GOLD;
+            case 3 -> NamedTextColor.YELLOW;
+            case 4 -> NamedTextColor.AQUA;
+            default -> NamedTextColor.WHITE;
+        };
+    }
+
+    private ItemStack createWarriorSkillIcon(Player player, int hotbarSlot, boolean selected) {
+        Component label = Component.text((selected ? "> " : "") + warriorSkillLabel(hotbarSlot), warriorSkillColor(hotbarSlot));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Slot " + (hotbarSlot + 1) + " virtual de guerrero", NamedTextColor.GRAY));
+        lore.add(Component.text(warriorSkillStateLabel(player, hotbarSlot, selected), warriorSkillStateColor(player, hotbarSlot)));
+        lore.add(Component.text("Selecciona con " + (hotbarSlot + 1) + " y quedate en ese slot para lanzar.",
+                NamedTextColor.DARK_GRAY));
+        lore.add(Component.text("Click derecho: usar | si esta en recarga -> basico del slot 1", NamedTextColor.DARK_GRAY));
+        return createSkillDisplayItem(
+                player.getInventory().getItem(WARRIOR_WEAPON_SLOT),
+                canOccupyWarriorWeaponSlot(player.getInventory().getItem(WARRIOR_WEAPON_SLOT)),
+                warriorSkillIconMaterial(hotbarSlot),
+                label,
+                lore,
+                warriorSkillId(hotbarSlot),
+                selected);
+    }
+
+    private String actionBarSkillId(ItemStack stack) {
+        if (stack == null || stack.getType().isAir()) {
+            return null;
+        }
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) {
+            return null;
+        }
+        return meta.getPersistentDataContainer().get(actionBarSkillKey, PersistentDataType.STRING);
+    }
+
+    private boolean isActionBarSkillItem(ItemStack stack) {
+        String skillId = actionBarSkillId(stack);
+        return skillId != null && !skillId.isBlank();
+    }
+
+    private ItemStack createSkillDisplayItem(
+            ItemStack visualSource,
+            boolean useVisualSource,
+            Material fallbackMaterial,
+            Component displayName,
+            List<Component> skillLore,
+            String skillId,
+            boolean selected) {
+        ItemStack item = useVisualSource && visualSource != null && !visualSource.getType().isAir()
+                ? visualSource.clone()
+                : new ItemStack(fallbackMaterial);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(displayName);
+        List<Component> lore = new ArrayList<>(skillLore);
+        List<Component> existingLore = meta.lore();
+        if (existingLore != null && !existingLore.isEmpty()) {
+            lore.add(Component.empty());
+            lore.addAll(existingLore);
+        }
+        if (selected) {
+            meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+        meta.lore(lore);
+        meta.getPersistentDataContainer().set(actionBarSkillKey, PersistentDataType.STRING, skillId);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private boolean isWarriorActionBarEnabled(Player player) {
+        return false;
+    }
+
+    private Integer selectedWarriorSkillSlot(Player player) {
+        return null;
+    }
+
+    private boolean handleWarriorVirtualSkillInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (!isWarriorActionBarEnabled(player)
+                || event.getHand() != EquipmentSlot.HAND
+                || (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)) {
+            return false;
+        }
+        Integer slot = selectedWarriorSkillSlot(player);
+        if (slot == null) {
+            return false;
+        }
+        event.setCancelled(true);
+        switch (slot) {
+            case 1 -> {
+                if (isAbilityOnCooldown(player, "warrior-overwhelming-strike")) {
+                    performWarriorBasicFallback(player, slot);
+                    return true;
+                }
+                useWarriorOverwhelmingStrike(player);
+                applyHotbarCooldownVisual(player, warriorSkillIconMaterial(slot), "warrior-overwhelming-strike");
+                return true;
+            }
+            case 2 -> {
+                if (isAbilityOnCooldown(player, "guardian-taunt")) {
+                    performWarriorBasicFallback(player, slot);
+                    return true;
+                }
+                useTauntAbility(player);
+                applyHotbarCooldownVisual(player, warriorSkillIconMaterial(slot), "guardian-taunt");
+                return true;
+            }
+            case 3 -> {
+                EquipmentSlot shieldHand = preferredShieldHand(player);
+                if (shieldHand == null) {
+                    player.sendActionBar(Component.text("Necesitas un escudo para usar Guardia.", NamedTextColor.YELLOW));
+                    return true;
+                }
+                if (activeShieldGuards.containsKey(player.getUniqueId())) {
+                    player.sendActionBar(Component.text("Guardia ya esta activa.", NamedTextColor.AQUA));
+                    return true;
+                }
+                if (isShieldGuardOnCooldown(player)) {
+                    performWarriorBasicFallback(player, slot);
+                    return true;
+                }
+                if (!tryActivateShieldGuard(player, shieldHand)) {
+                    player.sendActionBar(Component.text("No se pudo levantar la guardia.", NamedTextColor.YELLOW));
+                }
+                return true;
+            }
+            case 4 -> {
+                if (isAbilityOnCooldown(player, "warrior-desolating-leap")) {
+                    performWarriorBasicFallback(player, slot);
+                    return true;
+                }
+                useWarriorDesolatingLeap(player);
+                applyHotbarCooldownVisual(player, warriorSkillIconMaterial(slot), "warrior-desolating-leap");
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    private void performWarriorBasicFallback(Player player, int slot) {
+        if (performWarriorBasicAttack(player)) {
+            player.sendActionBar(Component.text(
+                    warriorSkillLabel(slot) + " en recarga -> ataque basico",
+                    NamedTextColor.YELLOW));
+            return;
+        }
+        player.sendActionBar(Component.text(
+                warriorSkillLabel(slot) + " en recarga y el ataque basico no esta listo.",
+                NamedTextColor.RED));
+    }
+
+    private boolean performWarriorBasicAttack(Player player) {
+        ItemStack weapon = mainHandItem(player);
+        if (!isWarriorAbilityWeapon(weapon)) {
+            return false;
+        }
+        if (player.getAttackCooldown() < 0.92f) {
+            return false;
+        }
+        LivingEntity target = firstLivingTargetInSight(player, 5, 1.05);
+        if (target == null || !isAbilityTarget(player, target)) {
+            return false;
+        }
+        player.swingMainHand();
+        dealAbilityDamage(player, target, weaponDamage(weapon));
+        target.getWorld().playSound(target.getLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, 0.9f, 1.0f);
+        return true;
+    }
+
+    private boolean isAbilityOnCooldown(Player player, String ability) {
+        return abilityCooldownRemainingMillis(player, ability) > 0L;
+    }
+
+    private long abilityCooldownRemainingMillis(Player player, String ability) {
+        long availableAt = abilityCooldowns.getOrDefault(cooldownKey(player, ability), 0L);
+        return Math.max(0L, availableAt - System.currentTimeMillis());
+    }
+
+    private void applyHotbarCooldownVisual(Player player, Material material, String ability) {
+        long remainingMillis = abilityCooldownRemainingMillis(player, ability);
+        if (remainingMillis <= 0L) {
+            return;
+        }
+        player.setCooldown(material, (int) Math.max(1L, Math.ceil(remainingMillis / 50.0)));
+    }
+
+    private EquipmentSlot preferredShieldHand(Player player) {
+        if (heldShield(player, EquipmentSlot.OFF_HAND) != null) {
+            return EquipmentSlot.OFF_HAND;
+        }
+        if (heldShield(player, EquipmentSlot.HAND) != null) {
+            return EquipmentSlot.HAND;
+        }
+        return null;
+    }
+
+    private boolean isShieldGuardOnCooldown(Player player) {
+        return shieldGuardCooldowns.getOrDefault(player.getUniqueId(), 0L) > System.currentTimeMillis();
+    }
+
+    private boolean isWarriorUtilityAttack(Player player) {
+        return isWarriorActionBarEnabled(player) && isWarriorUtilityHotbarSlot(player.getInventory().getHeldItemSlot());
+    }
+
+    private void ensureMageWeaponSlot(Player player, PlayerInventory inventory) {
+        ItemStack current = inventory.getItem(WARRIOR_WEAPON_SLOT);
+        if (canOccupyMageWeaponSlot(current)) {
+            return;
+        }
+        int weaponSlot = firstMageWeaponSlot(inventory);
+        if (weaponSlot >= 0) {
+            ItemStack displaced = current == null ? null : current.clone();
+            inventory.setItem(WARRIOR_WEAPON_SLOT, inventory.getItem(weaponSlot));
+            inventory.setItem(weaponSlot, displaced);
+            current = inventory.getItem(WARRIOR_WEAPON_SLOT);
+            if (canOccupyMageWeaponSlot(current)) {
+                return;
+            }
+        }
+        if (current != null && !current.getType().isAir()) {
+            moveItemToWarriorStorage(player, inventory, current.clone(), Set.of(0, 1, 2, 3, 4));
+            inventory.setItem(WARRIOR_WEAPON_SLOT, null);
+        }
+    }
+
+    private void ensureMageSkillSlots(Player player, PlayerInventory inventory) {
+        Integer selectedSlot = selectedMageSkillSlot(player);
+        for (int slot : MAGE_VIRTUAL_SKILL_SLOTS) {
+            ItemStack existing = inventory.getItem(slot);
+            String expectedSkillId = mageSkillId(slot);
+            if (!(isActionBarSkillItem(existing) && expectedSkillId.equals(actionBarSkillId(existing)))
+                    && existing != null
+                    && !existing.getType().isAir()) {
+                moveItemToWarriorStorage(player, inventory, existing.clone(), Set.of(0, 1, 2, 3, 4));
+            }
+            updateActionBarSkillSlot(inventory, slot,
+                    createMageSkillIcon(player, slot, selectedSlot != null && selectedSlot == slot));
+        }
+    }
+
+    private boolean canOccupyMageWeaponSlot(ItemStack stack) {
+        if (stack == null || stack.getType().isAir() || isActionBarSkillItem(stack)) {
+            return false;
+        }
+        String itemId = oraxenItemId(stack);
+        if (itemId != null) {
+            String normalized = itemId.toLowerCase(Locale.ROOT);
+            if (isMageWeaponItemId(normalized)) {
+                return true;
+            }
+        }
+        return isMageWeaponMaterial(stack.getType());
+    }
+
+    private boolean isMageWeaponItemId(String normalizedItemId) {
+        return normalizedItemId.endsWith("_focus")
+                || normalizedItemId.endsWith("_wand")
+                || normalizedItemId.endsWith("_staff")
+                || normalizedItemId.endsWith("_spellbook");
+    }
+
+    private boolean isMageWeaponMaterial(Material material) {
+        return switch (material) {
+            case STICK, AMETHYST_SHARD, BLAZE_ROD, BOOK, ENCHANTED_BOOK, WRITTEN_BOOK -> true;
+            default -> false;
+        };
+    }
+
+    private boolean isMageAbilityWeapon(ItemStack stack) {
+        if (stack == null || stack.getType().isAir()) {
+            return false;
+        }
+        String itemId = oraxenItemId(stack);
+        if (itemId != null && isMageWeaponItemId(itemId.toLowerCase(Locale.ROOT))) {
+            return true;
+        }
+        return isMageWeaponMaterial(stack.getType());
+    }
+
+    private boolean isClericWeaponItemId(String normalizedItemId) {
+        return normalizedItemId.endsWith("_relic")
+                || normalizedItemId.endsWith("_wand")
+                || normalizedItemId.endsWith("_staff")
+                || normalizedItemId.endsWith("_spellbook");
+    }
+
+    private boolean isClericAbilityWeapon(ItemStack stack) {
+        if (stack == null || stack.getType().isAir()) {
+            return false;
+        }
+        String itemId = oraxenItemId(stack);
+        if (itemId != null && isClericWeaponItemId(itemId.toLowerCase(Locale.ROOT))) {
+            return true;
+        }
+        return switch (stack.getType()) {
+            case BLAZE_ROD, STICK, BOOK, ENCHANTED_BOOK, WRITTEN_BOOK -> true;
+            default -> false;
+        };
+    }
+
+    private boolean isExplorerAbilityWeapon(ItemStack stack) {
+        if (stack == null || stack.getType().isAir()) {
+            return false;
+        }
+        String itemId = oraxenItemId(stack);
+        if (itemId != null) {
+            String normalized = itemId.toLowerCase(Locale.ROOT);
+            if (normalized.endsWith("_hunter_bow")
+                    || normalized.endsWith("_bow")
+                    || normalized.endsWith("_dagger")
+                    || normalized.endsWith("_knife")
+                    || normalized.endsWith("_sword")) {
+                return true;
+            }
+        }
+        return switch (stack.getType()) {
+            case BOW, CROSSBOW,
+                    WOODEN_SWORD, STONE_SWORD, IRON_SWORD, GOLDEN_SWORD, DIAMOND_SWORD, NETHERITE_SWORD -> true;
+            default -> false;
+        };
+    }
+
+    private boolean requireWarriorWeaponInMainHand(Player player, boolean feedback) {
+        if (isWarriorAbilityWeapon(mainHandItem(player))) {
+            return true;
+        }
+        if (feedback) {
+            player.sendActionBar(Component.text("Necesitas espada o hacha de guerrero en la mano derecha.",
+                    NamedTextColor.YELLOW));
+        }
+        return false;
+    }
+
+    private boolean requireMageWeaponInMainHand(Player player, boolean feedback) {
+        if (isMageAbilityWeapon(mainHandItem(player))) {
+            return true;
+        }
+        if (feedback) {
+            player.sendActionBar(Component.text("Necesitas foco, varita, staff o grimorio en la mano derecha.",
+                    NamedTextColor.YELLOW));
+        }
+        return false;
+    }
+
+    private boolean requireClericWeaponInMainHand(Player player, boolean feedback) {
+        if (isClericAbilityWeapon(mainHandItem(player))) {
+            return true;
+        }
+        if (feedback) {
+            player.sendActionBar(Component.text("Necesitas reliquia, varita o staff en la mano derecha.",
+                    NamedTextColor.YELLOW));
+        }
+        return false;
+    }
+
+    private boolean requireExplorerWeaponInMainHand(Player player, boolean feedback) {
+        if (isExplorerAbilityWeapon(mainHandItem(player))) {
+            return true;
+        }
+        if (feedback) {
+            player.sendActionBar(Component.text("Necesitas arco o arma ligera de explorador en la mano derecha.",
+                    NamedTextColor.YELLOW));
+        }
+        return false;
+    }
+
+    private boolean requireBaseClassWeaponInMainHand(Player player, boolean feedback) {
+        PlayerProfile profile = profiles.get(player.getUniqueId());
+        if (profile == null || profile.baseClass() == null) {
+            return false;
+        }
+        return switch (profile.baseClass()) {
+            case "guerrero" -> requireWarriorWeaponInMainHand(player, feedback);
+            case "explorador" -> requireExplorerWeaponInMainHand(player, feedback);
+            case "mago" -> requireMageWeaponInMainHand(player, feedback);
+            case "clerigo" -> requireClericWeaponInMainHand(player, feedback);
+            default -> false;
+        };
+    }
+
+    private boolean canOccupyClericWeaponSlot(ItemStack stack) {
+        if (stack == null || stack.getType().isAir() || isActionBarSkillItem(stack)) {
+            return false;
+        }
+        String itemId = oraxenItemId(stack);
+        if (itemId != null) {
+            String normalized = itemId.toLowerCase(Locale.ROOT);
+            if (isClericWeaponItemId(normalized)) {
+                return true;
+            }
+        }
+        return isClericAbilityWeapon(stack);
+    }
+
+    private int firstMageWeaponSlot(PlayerInventory inventory) {
+        int[] priority = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+        for (int slot : priority) {
+            if (canOccupyMageWeaponSlot(inventory.getItem(slot))) {
+                return slot;
+            }
+        }
+        for (int slot = 9; slot < 36; slot++) {
+            if (canOccupyMageWeaponSlot(inventory.getItem(slot))) {
+                return slot;
+            }
+        }
+        return -1;
+    }
+
+    private void ensureClericWeaponSlot(Player player, PlayerInventory inventory) {
+        ItemStack current = inventory.getItem(WARRIOR_WEAPON_SLOT);
+        if (canOccupyClericWeaponSlot(current)) {
+            return;
+        }
+        int weaponSlot = firstClericWeaponSlot(inventory);
+        if (weaponSlot >= 0) {
+            ItemStack displaced = current == null ? null : current.clone();
+            inventory.setItem(WARRIOR_WEAPON_SLOT, inventory.getItem(weaponSlot));
+            inventory.setItem(weaponSlot, displaced);
+            current = inventory.getItem(WARRIOR_WEAPON_SLOT);
+            if (canOccupyClericWeaponSlot(current)) {
+                return;
+            }
+        }
+        if (current != null && !current.getType().isAir()) {
+            moveItemToWarriorStorage(player, inventory, current.clone(), Set.of(0, 1, 2, 3, 4));
+            inventory.setItem(WARRIOR_WEAPON_SLOT, null);
+        }
+    }
+
+    private void ensureClericSkillSlots(Player player, PlayerInventory inventory) {
+        Integer selectedSlot = selectedClericSkillSlot(player);
+        for (int slot : CLERIC_VIRTUAL_SKILL_SLOTS) {
+            ItemStack existing = inventory.getItem(slot);
+            String expectedSkillId = clericSkillId(slot);
+            if (!(isActionBarSkillItem(existing) && expectedSkillId.equals(actionBarSkillId(existing)))
+                    && existing != null
+                    && !existing.getType().isAir()) {
+                moveItemToWarriorStorage(player, inventory, existing.clone(), Set.of(0, 1, 2, 3, 4));
+            }
+            updateActionBarSkillSlot(inventory, slot,
+                    createClericSkillIcon(player, slot, selectedSlot != null && selectedSlot == slot));
+        }
+    }
+
+    private int firstClericWeaponSlot(PlayerInventory inventory) {
+        int[] priority = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+        for (int slot : priority) {
+            if (canOccupyClericWeaponSlot(inventory.getItem(slot))) {
+                return slot;
+            }
+        }
+        for (int slot = 9; slot < 36; slot++) {
+            if (canOccupyClericWeaponSlot(inventory.getItem(slot))) {
+                return slot;
+            }
+        }
+        return -1;
+    }
+
+    private boolean isMageVirtualSkillSlot(int slot) {
+        return MAGE_VIRTUAL_SKILL_SLOTS.contains(slot);
+    }
+
+    private boolean isClericVirtualSkillSlot(int slot) {
+        return CLERIC_VIRTUAL_SKILL_SLOTS.contains(slot);
+    }
+
+    private String mageSkillId(int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> "mage_arcane_burst";
+            case 2 -> "mage_barrier";
+            case 3 -> "mage_specialization";
+            case 4 -> "mage_reserved";
+            default -> "mage_unknown";
+        };
+    }
+
+    private String mageSkillLabel(Player player, int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> "Descarga Arcana";
+            case 2 -> "Barrera";
+            case 3 -> mageSpecializationSkillLabel(player);
+            case 4 -> "Ranura futura";
+            default -> "Hechizo";
+        };
+    }
+
+    private Material mageSkillIconMaterial(Player player, int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> Material.ENDER_EYE;
+            case 2 -> Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+            case 3 -> {
+                String specialization = profiles.get(player.getUniqueId()).specialization();
+                if ("piromante".equals(specialization)) {
+                    yield Material.FIRE_CHARGE;
+                }
+                if ("arcanista".equals(specialization)) {
+                    yield Material.AMETHYST_SHARD;
+                }
+                yield Material.BARRIER;
+            }
+            case 4 -> Material.GRAY_DYE;
+            default -> Material.PAPER;
+        };
+    }
+
+    private NamedTextColor mageSkillColor(Player player, int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> NamedTextColor.LIGHT_PURPLE;
+            case 2 -> NamedTextColor.AQUA;
+            case 3 -> {
+                String specialization = profiles.get(player.getUniqueId()).specialization();
+                if ("piromante".equals(specialization)) {
+                    yield NamedTextColor.RED;
+                }
+                if ("arcanista".equals(specialization)) {
+                    yield NamedTextColor.AQUA;
+                }
+                yield NamedTextColor.GRAY;
+            }
+            case 4 -> NamedTextColor.GRAY;
+            default -> NamedTextColor.WHITE;
+        };
+    }
+
+    private String mageSpecializationSkillLabel(Player player) {
+        String specialization = profiles.get(player.getUniqueId()).specialization();
+        return switch (specialization == null ? "" : specialization) {
+            case "piromante" -> "Bola de Fuego";
+            case "arcanista" -> "Vinculo";
+            default -> "Especializacion";
+        };
+    }
+
+    private String clericSkillId(int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> "cleric_blessing";
+            case 2 -> "cleric_minor_heal";
+            case 3 -> "cleric_specialization";
+            case 4 -> "cleric_guard";
+            default -> "cleric_unknown";
+        };
+    }
+
+    private String clericSkillLabel(Player player, int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> "Bendicion";
+            case 2 -> "Curacion Menor";
+            case 3 -> clericSpecializationSkillLabel(player);
+            case 4 -> "Guardia";
+            default -> "Milagro";
+        };
+    }
+
+    private Material clericSkillIconMaterial(Player player, int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> Material.GOLDEN_APPLE;
+            case 2 -> Material.HONEY_BOTTLE;
+            case 3 -> {
+                String specialization = profiles.get(player.getUniqueId()).specialization();
+                if ("paladin".equals(specialization)) {
+                    yield Material.BELL;
+                }
+                if ("druida".equals(specialization)) {
+                    yield Material.WHEAT_SEEDS;
+                }
+                yield Material.BARRIER;
+            }
+            case 4 -> Material.SHIELD;
+            default -> Material.PAPER;
+        };
+    }
+
+    private NamedTextColor clericSkillColor(Player player, int hotbarSlot) {
+        return switch (hotbarSlot) {
+            case 1 -> NamedTextColor.GOLD;
+            case 2 -> NamedTextColor.GREEN;
+            case 3 -> {
+                String specialization = profiles.get(player.getUniqueId()).specialization();
+                if ("paladin".equals(specialization)) {
+                    yield NamedTextColor.YELLOW;
+                }
+                if ("druida".equals(specialization)) {
+                    yield NamedTextColor.GREEN;
+                }
+                yield NamedTextColor.GRAY;
+            }
+            case 4 -> NamedTextColor.AQUA;
+            default -> NamedTextColor.WHITE;
+        };
+    }
+
+    private String clericSpecializationSkillLabel(Player player) {
+        String specialization = profiles.get(player.getUniqueId()).specialization();
+        return switch (specialization == null ? "" : specialization) {
+            case "paladin" -> "Desafio";
+            case "druida" -> "Floracion";
+            default -> "Especializacion";
+        };
+    }
+
+    private String clericSpecializationAbilityId(Player player) {
+        String specialization = profiles.get(player.getUniqueId()).specialization();
+        return switch (specialization == null ? "" : specialization) {
+            case "paladin" -> "paladin-challenge";
+            case "druida" -> "druid-bloom";
+            default -> null;
+        };
+    }
+
+    private void useClericSpecializationAbility(Player player) {
+        String specialization = profiles.get(player.getUniqueId()).specialization();
+        if ("paladin".equals(specialization)) {
+            usePaladinChallenge(player);
+        } else if ("druida".equals(specialization)) {
+            useDruidBloom(player);
+        }
+    }
+
+    private ItemStack createMageSkillIcon(Player player, int hotbarSlot, boolean selected) {
+        Component label = Component.text((selected ? "> " : "") + mageSkillLabel(player, hotbarSlot), mageSkillColor(player, hotbarSlot));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Slot " + (hotbarSlot + 1) + " virtual de mago", NamedTextColor.GRAY));
+        lore.add(Component.text(mageSkillStateLabel(player, hotbarSlot, selected), mageSkillStateColor(player, hotbarSlot)));
+        lore.add(Component.text("Selecciona con " + (hotbarSlot + 1) + " y quedate en ese slot para lanzar.",
+                NamedTextColor.DARK_GRAY));
+        if (hotbarSlot == 4) {
+            lore.add(Component.text("Reservado para la siguiente tanda del mago.", NamedTextColor.DARK_GRAY));
+        } else {
+            lore.add(Component.text("Click derecho: usar | si esta en recarga -> basico arcano", NamedTextColor.DARK_GRAY));
+        }
+        if (hotbarSlot == 3 && mageSpecializationAbilityId(player) == null) {
+            lore.add(Component.text("Elige Piromante o Arcanista con /especializacion.", NamedTextColor.DARK_GRAY));
+        }
+        ItemStack visualSource = player.getInventory().getItem(WARRIOR_WEAPON_SLOT);
+        return createSkillDisplayItem(
+                visualSource,
+                canOccupyMageWeaponSlot(visualSource),
+                mageSkillIconMaterial(player, hotbarSlot),
+                label,
+                lore,
+                mageSkillId(hotbarSlot),
+                selected);
+    }
+
+    private ItemStack createClericSkillIcon(Player player, int hotbarSlot, boolean selected) {
+        Component label = Component.text((selected ? "> " : "") + clericSkillLabel(player, hotbarSlot), clericSkillColor(player, hotbarSlot));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Slot " + (hotbarSlot + 1) + " virtual de clerigo", NamedTextColor.GRAY));
+        lore.add(Component.text(clericSkillStateLabel(player, hotbarSlot, selected), clericSkillStateColor(player, hotbarSlot)));
+        lore.add(Component.text("Selecciona con " + (hotbarSlot + 1) + " y quedate en ese slot para lanzar.",
+                NamedTextColor.DARK_GRAY));
+        lore.add(Component.text("Click derecho: usar | si esta en recarga -> proyectil de luz", NamedTextColor.DARK_GRAY));
+        if (hotbarSlot == 3 && clericSpecializationAbilityId(player) == null) {
+            lore.add(Component.text("Elige Paladin o Druida con /especializacion.", NamedTextColor.DARK_GRAY));
+        }
+        ItemStack visualSource = player.getInventory().getItem(WARRIOR_WEAPON_SLOT);
+        return createSkillDisplayItem(
+                visualSource,
+                canOccupyClericWeaponSlot(visualSource),
+                clericSkillIconMaterial(player, hotbarSlot),
+                label,
+                lore,
+                clericSkillId(hotbarSlot),
+                selected);
+    }
+
+    private boolean isMageActionBarEnabled(Player player) {
+        return false;
+    }
+
+    private Integer selectedMageSkillSlot(Player player) {
+        return null;
+    }
+
+    private boolean isClericActionBarEnabled(Player player) {
+        return false;
+    }
+
+    private Integer selectedClericSkillSlot(Player player) {
+        return null;
+    }
+
+    private ItemStack activeWarriorWeapon(Player player) {
+        ItemStack held = player.getInventory().getItemInMainHand();
+        if (canOccupyWarriorWeaponSlot(held)) {
+            return held;
+        }
+        ItemStack slotWeapon = player.getInventory().getItem(WARRIOR_WEAPON_SLOT);
+        return canOccupyWarriorWeaponSlot(slotWeapon) ? slotWeapon : held;
+    }
+
+    private ItemStack activeMageWeapon(Player player) {
+        ItemStack held = player.getInventory().getItemInMainHand();
+        if (canOccupyMageWeaponSlot(held)) {
+            return held;
+        }
+        ItemStack slotWeapon = player.getInventory().getItem(WARRIOR_WEAPON_SLOT);
+        return canOccupyMageWeaponSlot(slotWeapon) ? slotWeapon : held;
+    }
+
+    private ItemStack activeClericWeapon(Player player) {
+        ItemStack held = player.getInventory().getItemInMainHand();
+        if (canOccupyClericWeaponSlot(held)) {
+            return held;
+        }
+        ItemStack slotWeapon = player.getInventory().getItem(WARRIOR_WEAPON_SLOT);
+        return canOccupyClericWeaponSlot(slotWeapon) ? slotWeapon : held;
+    }
+
+    private boolean handleMageVirtualSkillInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (!isMageActionBarEnabled(player)
+                || event.getHand() != EquipmentSlot.HAND
+                || (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)) {
+            return false;
+        }
+        Integer slot = selectedMageSkillSlot(player);
+        if (slot == null) {
+            return false;
+        }
+        event.setCancelled(true);
+        if (!requireMageWeaponInMainHand(player, true)) {
+            return true;
+        }
+        switch (slot) {
+            case 1 -> {
+                if (isAbilityOnCooldown(player, "mage-arcane-burst")) {
+                    performMageBasicFallback(player, slot);
+                    return true;
+                }
+                useMageArcaneBurst(player);
+                applyHotbarCooldownVisual(player, mageSkillIconMaterial(player, slot), "mage-arcane-burst");
+                return true;
+            }
+            case 2 -> {
+                if (isAbilityOnCooldown(player, "mage-barrier")) {
+                    performMageBasicFallback(player, slot);
+                    return true;
+                }
+                useMageBarrier(player);
+                applyHotbarCooldownVisual(player, mageSkillIconMaterial(player, slot), "mage-barrier");
+                return true;
+            }
+            case 3 -> {
+                String abilityId = mageSpecializationAbilityId(player);
+                if (abilityId == null) {
+                    player.sendActionBar(Component.text("Necesitas una especializacion para esta ranura.", NamedTextColor.YELLOW));
+                    return true;
+                }
+                if (isAbilityOnCooldown(player, abilityId)) {
+                    performMageBasicFallback(player, slot);
+                    return true;
+                }
+                useMageSpecializationAbility(player);
+                applyHotbarCooldownVisual(player, mageSkillIconMaterial(player, slot), abilityId);
+                return true;
+            }
+            case 4 -> {
+                player.sendActionBar(Component.text("Ranura reservada para la siguiente fase del mago.", NamedTextColor.GRAY));
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    private boolean handleClericVirtualSkillInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (!isClericActionBarEnabled(player)
+                || event.getHand() != EquipmentSlot.HAND
+                || (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)) {
+            return false;
+        }
+        Integer slot = selectedClericSkillSlot(player);
+        if (slot == null) {
+            return false;
+        }
+        event.setCancelled(true);
+        if (!requireClericWeaponInMainHand(player, true)) {
+            return true;
+        }
+        switch (slot) {
+            case 1 -> {
+                if (isAbilityOnCooldown(player, "cleric-blessing")) {
+                    performClericBasicFallback(player, slot);
+                    return true;
+                }
+                useClericBlessing(player);
+                applyHotbarCooldownVisual(player, clericSkillIconMaterial(player, slot), "cleric-blessing");
+                return true;
+            }
+            case 2 -> {
+                if (isAbilityOnCooldown(player, "minor-heal")) {
+                    performClericBasicFallback(player, slot);
+                    return true;
+                }
+                useMinorHeal(player);
+                applyHotbarCooldownVisual(player, clericSkillIconMaterial(player, slot), "minor-heal");
+                return true;
+            }
+            case 3 -> {
+                String abilityId = clericSpecializationAbilityId(player);
+                if (abilityId == null) {
+                    player.sendActionBar(Component.text("Necesitas una especializacion para esta ranura.", NamedTextColor.YELLOW));
+                    return true;
+                }
+                if (isAbilityOnCooldown(player, abilityId)) {
+                    performClericBasicFallback(player, slot);
+                    return true;
+                }
+                useClericSpecializationAbility(player);
+                applyHotbarCooldownVisual(player, clericSkillIconMaterial(player, slot), abilityId);
+                return true;
+            }
+            case 4 -> {
+                EquipmentSlot shieldHand = preferredShieldHand(player);
+                if (shieldHand == null) {
+                    player.sendActionBar(Component.text("Necesitas un escudo para usar Guardia.", NamedTextColor.YELLOW));
+                    return true;
+                }
+                if (activeShieldGuards.containsKey(player.getUniqueId())) {
+                    player.sendActionBar(Component.text("Guardia ya esta activa.", NamedTextColor.AQUA));
+                    return true;
+                }
+                if (isShieldGuardOnCooldown(player)) {
+                    performClericBasicFallback(player, slot);
+                    return true;
+                }
+                if (!tryActivateShieldGuard(player, shieldHand)) {
+                    player.sendActionBar(Component.text("No se pudo levantar la guardia.", NamedTextColor.YELLOW));
+                }
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    private boolean handleCasterPrimaryBasicInteract(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND
+                || (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+                || event.getItem() == null) {
+            return false;
+        }
+        Player player = event.getPlayer();
+        PlayerProfile profile = profiles.get(player.getUniqueId());
+        if (profile == null || profile.baseClass() == null) {
+            return false;
+        }
+        if ("mago".equals(profile.baseClass())) {
+            if (!canOccupyMageWeaponSlot(event.getItem())) {
+                return false;
+            }
+            event.setCancelled(true);
+            useMageBasicBolt(player, true);
+            return true;
+        }
+        if ("clerigo".equals(profile.baseClass())) {
+            if (!canOccupyClericWeaponSlot(event.getItem())) {
+                return false;
+            }
+            event.setCancelled(true);
+            useClericBasicBolt(player, true);
+            return true;
+        }
+        return false;
+    }
+
+    private String mageSpecializationAbilityId(Player player) {
+        String specialization = profiles.get(player.getUniqueId()).specialization();
+        return switch (specialization == null ? "" : specialization) {
+            case "piromante" -> "pyromancer-fireball";
+            case "arcanista" -> "arcanist-link";
+            default -> null;
+        };
+    }
+
+    private void useMageSpecializationAbility(Player player) {
+        String specialization = profiles.get(player.getUniqueId()).specialization();
+        if ("piromante".equals(specialization)) {
+            usePyromancerFireball(player);
+        } else if ("arcanista".equals(specialization)) {
+            useArcanistLink(player);
+        }
+    }
+
+    private void performMageBasicFallback(Player player, int slot) {
+        if (performMageBasicAttack(player)) {
+            player.sendActionBar(Component.text(
+                    mageSkillLabel(player, slot) + " en recarga -> basico arcano",
+                    NamedTextColor.YELLOW));
+            return;
+        }
+        player.sendActionBar(Component.text(
+                mageSkillLabel(player, slot) + " en recarga y tu basico arcano no esta listo.",
+                NamedTextColor.RED));
+    }
+
+    private boolean performMageBasicAttack(Player player) {
+        return useMageBasicBolt(player, false);
+    }
+
+    private boolean useMageBasicBolt(Player player, boolean feedback) {
+        ItemStack weapon = mainHandItem(player);
+        if (!isMageAbilityWeapon(weapon)) {
+            if (feedback) {
+                requireMageWeaponInMainHand(player, true);
+            }
+            return false;
+        }
+        double cooldown = getConfig().getDouble("base-class-abilities.mage-basic-bolt.cooldown-seconds", 2.5);
+        if (!startCooldown(player, "mage-basic-bolt", cooldown)) {
+            return false;
+        }
+        int range = getConfig().getInt("base-class-abilities.mage-basic-bolt.range", 16);
+        LivingEntity target = firstLivingTargetInSight(player, range, 1.0);
+        if (target == null || !isAbilityTarget(player, target)) {
+            clearCooldown(player, "mage-basic-bolt");
+            if (feedback) {
+                player.sendActionBar(Component.text("Mira a un objetivo para lanzar tu proyectil arcano.", NamedTextColor.YELLOW));
+            }
+            return false;
+        }
+        double damage = casterScaledDamage(
+                player,
+                weapon,
+                getConfig().getDouble("base-class-abilities.mage-basic-bolt.base-damage", 2.2),
+                getConfig().getDouble("base-class-abilities.mage-basic-bolt.tier-damage", 0.35),
+                getConfig().getDouble("base-class-abilities.mage-basic-bolt.level-damage", 0.10));
+        player.swingMainHand();
+        dealAbilityDamage(player, target, damage);
+        playMageBoltEffect(player, target, Particle.FLAME, Particle.END_ROD,
+                Sound.ENTITY_BLAZE_SHOOT, 1.2f);
+        return true;
+    }
+
+    private void useMageArcaneBurst(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        ItemStack weapon = mainHandItem(player);
+        if (!isMageAbilityWeapon(weapon)) {
+            requireMageWeaponInMainHand(player, true);
+            return;
+        }
+        int range = getConfig().getInt("base-class-abilities.mage-arcane-burst.range", 18);
+        LivingEntity target = firstLivingTargetInSight(player, range, 1.0);
+        if (target == null || !isAbilityTarget(player, target)) {
+            player.sendMessage(Component.text("Mira a una entidad viva.", NamedTextColor.YELLOW));
+            return;
+        }
+        int cooldown = getConfig().getInt("base-class-abilities.mage-arcane-burst.cooldown-seconds", 4);
+        if (!startCooldown(player, "mage-arcane-burst", cooldown)) {
+            return;
+        }
+        showSkillCast(player, Component.text("Descarga Arcana", NamedTextColor.LIGHT_PURPLE));
+        double damage = casterScaledDamage(
+                player,
+                weapon,
+                getConfig().getDouble("base-class-abilities.mage-arcane-burst.base-damage", 4.0),
+                getConfig().getDouble("base-class-abilities.mage-arcane-burst.tier-damage", 0.60),
+                getConfig().getDouble("base-class-abilities.mage-arcane-burst.level-damage", 0.16));
+        dealAbilityDamage(player, target, damage);
+        playMageBoltEffect(player, target, Particle.ENCHANT, Particle.WITCH,
+                Sound.ENTITY_ILLUSIONER_CAST_SPELL, 1.15f);
+    }
+
+    private boolean useClericBasicBolt(Player player, boolean feedback) {
+        ItemStack weapon = mainHandItem(player);
+        if (!isClericAbilityWeapon(weapon)) {
+            if (feedback) {
+                requireClericWeaponInMainHand(player, true);
+            }
+            return false;
+        }
+        double cooldown = getConfig().getDouble("base-class-abilities.cleric-basic-bolt.cooldown-seconds", 2.5);
+        if (!startCooldown(player, "cleric-basic-bolt", cooldown)) {
+            return false;
+        }
+        int range = getConfig().getInt("base-class-abilities.cleric-basic-bolt.range", 16);
+        LivingEntity target = firstLivingTargetInSight(player, range, 1.0);
+        if (target == null || !isAbilityTarget(player, target)) {
+            clearCooldown(player, "cleric-basic-bolt");
+            if (feedback) {
+                player.sendActionBar(Component.text("Mira a un objetivo para lanzar tu proyectil de luz.", NamedTextColor.YELLOW));
+            }
+            return false;
+        }
+        double damage = casterScaledDamage(
+                player,
+                weapon,
+                getConfig().getDouble("base-class-abilities.cleric-basic-bolt.base-damage", 2.0),
+                getConfig().getDouble("base-class-abilities.cleric-basic-bolt.tier-damage", 0.32),
+                getConfig().getDouble("base-class-abilities.cleric-basic-bolt.level-damage", 0.09));
+        player.swingMainHand();
+        dealAbilityDamage(player, target, damage);
+        playMageBoltEffect(player, target, Particle.END_ROD, Particle.TOTEM_OF_UNDYING,
+                Sound.BLOCK_BEACON_POWER_SELECT, 1.35f);
+        return true;
+    }
+
+    private void performClericBasicFallback(Player player, int slot) {
+        if (performClericBasicAttack(player)) {
+            player.sendActionBar(Component.text(
+                    clericSkillLabel(player, slot) + " en recarga -> proyectil de luz",
+                    NamedTextColor.YELLOW));
+            return;
+        }
+        player.sendActionBar(Component.text(
+                clericSkillLabel(player, slot) + " en recarga y tu proyectil de luz no esta listo.",
+                NamedTextColor.RED));
+    }
+
+    private boolean performClericBasicAttack(Player player) {
+        return useClericBasicBolt(player, false);
+    }
+
+    private double casterScaledDamage(Player player, ItemStack weapon, double baseDamage, double tierDamage, double levelDamage) {
+        PlayerProfile profile = profiles.get(player.getUniqueId());
+        int classLevel = profile == null ? 1 : Math.max(1, profile.level());
+        int tier = Math.max(0, tierIndex(casterWeaponTierId(weapon)));
+        return baseDamage + tier * tierDamage + Math.max(0, classLevel - 1) * levelDamage;
+    }
+
+    private String casterWeaponTierId(ItemStack weapon) {
+        String itemId = oraxenItemId(weapon);
+        if (itemId != null) {
+            String tierId = tierIdFromItemId(itemId);
+            if (tierId != null) {
+                return tierId;
+            }
+        }
+        return (isMageWeaponMaterial(weapon.getType()) || canOccupyClericWeaponSlot(weapon)) ? "wood" : null;
+    }
+
+    private void playMageBoltEffect(Player player, LivingEntity target, Particle trailParticle, Particle impactParticle,
+            Sound sound, float pitch) {
+        Location start = player.getEyeLocation();
+        Location end = target.getLocation().add(0, 1.0, 0);
+        Vector direction = end.toVector().subtract(start.toVector());
+        int steps = 12;
+        for (int step = 0; step <= steps; step++) {
+            Location particle = start.clone().add(direction.clone().multiply((double) step / steps));
+            player.getWorld().spawnParticle(trailParticle, particle, 1, 0, 0, 0, 0.0);
+        }
+        target.getWorld().spawnParticle(impactParticle, end, 14, 0.25, 0.35, 0.25, 0.01);
+        target.getWorld().playSound(end, sound, 0.9f, pitch);
+    }
+
+    private boolean isMageUtilityAttack(Player player) {
+        return isMageActionBarEnabled(player) && isWarriorUtilityHotbarSlot(player.getInventory().getHeldItemSlot());
+    }
+
+    private boolean isClericUtilityAttack(Player player) {
+        return isClericActionBarEnabled(player) && isWarriorUtilityHotbarSlot(player.getInventory().getHeldItemSlot());
+    }
+
+    private void refreshWarriorCooldownVisuals(Player player) {
+        for (int slot : WARRIOR_VIRTUAL_SKILL_SLOTS) {
+            long remainingMillis = warriorSkillCooldownRemainingMillis(player, slot);
+            Material material = warriorSkillIconMaterial(slot);
+            if (remainingMillis > 0L) {
+                player.setCooldown(material, (int) Math.max(1L, Math.ceil(remainingMillis / 50.0)));
+            } else if (player.getCooldown(material) > 0) {
+                player.setCooldown(material, 0);
+            }
+        }
+    }
+
+    private long warriorSkillCooldownRemainingMillis(Player player, int slot) {
+        return switch (slot) {
+            case 1 -> abilityCooldownRemainingMillis(player, "warrior-overwhelming-strike");
+            case 2 -> abilityCooldownRemainingMillis(player, "guardian-taunt");
+            case 3 -> Math.max(0L, shieldGuardCooldowns.getOrDefault(player.getUniqueId(), 0L) - System.currentTimeMillis());
+            case 4 -> abilityCooldownRemainingMillis(player, "warrior-desolating-leap");
+            default -> 0L;
+        };
+    }
+
+    private String warriorSkillStateLabel(Player player, int slot, boolean selected) {
+        if (slot == 3 && activeShieldGuards.containsKey(player.getUniqueId())) {
+            return selected ? "Activa | seleccionada" : "Activa";
+        }
+        if (slot == 3 && preferredShieldHand(player) == null) {
+            return selected ? "Sin escudo | seleccionada" : "Sin escudo";
+        }
+        long remainingMillis = warriorSkillCooldownRemainingMillis(player, slot);
+        if (remainingMillis > 0L) {
+            return (selected ? "Recargando | seleccionada | " : "Recargando | ") + shortCooldownLabel(remainingMillis);
+        }
+        return selected ? "Lista | seleccionada" : "Lista";
+    }
+
+    private NamedTextColor warriorSkillStateColor(Player player, int slot) {
+        if (slot == 3 && activeShieldGuards.containsKey(player.getUniqueId())) {
+            return NamedTextColor.AQUA;
+        }
+        if (slot == 3 && preferredShieldHand(player) == null) {
+            return NamedTextColor.YELLOW;
+        }
+        return warriorSkillCooldownRemainingMillis(player, slot) > 0L ? NamedTextColor.RED : NamedTextColor.GREEN;
+    }
+
+    private void refreshMageCooldownVisuals(Player player) {
+        for (int slot : MAGE_VIRTUAL_SKILL_SLOTS) {
+            long remainingMillis = mageSkillCooldownRemainingMillis(player, slot);
+            Material material = mageSkillIconMaterial(player, slot);
+            if (remainingMillis > 0L) {
+                player.setCooldown(material, (int) Math.max(1L, Math.ceil(remainingMillis / 50.0)));
+            } else if (player.getCooldown(material) > 0) {
+                player.setCooldown(material, 0);
+            }
+        }
+    }
+
+    private long mageSkillCooldownRemainingMillis(Player player, int slot) {
+        return switch (slot) {
+            case 1 -> abilityCooldownRemainingMillis(player, "mage-arcane-burst");
+            case 2 -> abilityCooldownRemainingMillis(player, "mage-barrier");
+            case 3 -> {
+                String abilityId = mageSpecializationAbilityId(player);
+                yield abilityId == null ? 0L : abilityCooldownRemainingMillis(player, abilityId);
+            }
+            default -> 0L;
+        };
+    }
+
+    private String mageSkillStateLabel(Player player, int slot, boolean selected) {
+        if (slot == 4) {
+            return selected ? "Reservada | seleccionada" : "Reservada";
+        }
+        if (slot == 3 && mageSpecializationAbilityId(player) == null) {
+            return selected ? "Sin especializacion | seleccionada" : "Sin especializacion";
+        }
+        long remainingMillis = mageSkillCooldownRemainingMillis(player, slot);
+        if (remainingMillis > 0L) {
+            return (selected ? "Recargando | seleccionada | " : "Recargando | ") + shortCooldownLabel(remainingMillis);
+        }
+        return selected ? "Lista | seleccionada" : "Lista";
+    }
+
+    private NamedTextColor mageSkillStateColor(Player player, int slot) {
+        if (slot == 4) {
+            return NamedTextColor.GRAY;
+        }
+        if (slot == 3 && mageSpecializationAbilityId(player) == null) {
+            return NamedTextColor.YELLOW;
+        }
+        return mageSkillCooldownRemainingMillis(player, slot) > 0L ? NamedTextColor.RED : NamedTextColor.GREEN;
+    }
+
+    private void refreshClericCooldownVisuals(Player player) {
+        for (int slot : CLERIC_VIRTUAL_SKILL_SLOTS) {
+            long remainingMillis = clericSkillCooldownRemainingMillis(player, slot);
+            Material material = clericSkillIconMaterial(player, slot);
+            if (remainingMillis > 0L) {
+                player.setCooldown(material, (int) Math.max(1L, Math.ceil(remainingMillis / 50.0)));
+            } else if (player.getCooldown(material) > 0) {
+                player.setCooldown(material, 0);
+            }
+        }
+    }
+
+    private long clericSkillCooldownRemainingMillis(Player player, int slot) {
+        return switch (slot) {
+            case 1 -> abilityCooldownRemainingMillis(player, "cleric-blessing");
+            case 2 -> abilityCooldownRemainingMillis(player, "minor-heal");
+            case 3 -> {
+                String abilityId = clericSpecializationAbilityId(player);
+                yield abilityId == null ? 0L : abilityCooldownRemainingMillis(player, abilityId);
+            }
+            case 4 -> Math.max(0L, shieldGuardCooldowns.getOrDefault(player.getUniqueId(), 0L) - System.currentTimeMillis());
+            default -> 0L;
+        };
+    }
+
+    private String clericSkillStateLabel(Player player, int slot, boolean selected) {
+        if (slot == 4 && activeShieldGuards.containsKey(player.getUniqueId())) {
+            return selected ? "Activa | seleccionada" : "Activa";
+        }
+        if (slot == 4 && preferredShieldHand(player) == null) {
+            return selected ? "Sin escudo | seleccionada" : "Sin escudo";
+        }
+        if (slot == 3 && clericSpecializationAbilityId(player) == null) {
+            return selected ? "Sin especializacion | seleccionada" : "Sin especializacion";
+        }
+        long remainingMillis = clericSkillCooldownRemainingMillis(player, slot);
+        if (remainingMillis > 0L) {
+            return (selected ? "Recargando | seleccionada | " : "Recargando | ") + shortCooldownLabel(remainingMillis);
+        }
+        return selected ? "Lista | seleccionada" : "Lista";
+    }
+
+    private NamedTextColor clericSkillStateColor(Player player, int slot) {
+        if (slot == 4 && activeShieldGuards.containsKey(player.getUniqueId())) {
+            return NamedTextColor.AQUA;
+        }
+        if (slot == 4 && preferredShieldHand(player) == null) {
+            return NamedTextColor.YELLOW;
+        }
+        if (slot == 3 && clericSpecializationAbilityId(player) == null) {
+            return NamedTextColor.YELLOW;
+        }
+        return clericSkillCooldownRemainingMillis(player, slot) > 0L ? NamedTextColor.RED : NamedTextColor.GREEN;
+    }
+
+    private String shortCooldownLabel(long remainingMillis) {
+        return String.format(Locale.US, "%.1f s", remainingMillis / 1000.0);
+    }
+
+    private ItemStack createOraxenItem(String itemId) {
+        if (itemId == null || itemId.isBlank()) {
+            return null;
+        }
+        Plugin oraxen = Bukkit.getPluginManager().getPlugin("Oraxen");
+        if (oraxen == null || !oraxen.isEnabled()) {
+            return null;
+        }
+        try {
+            ClassLoader loader = oraxen.getClass().getClassLoader();
+            Class<?> itemsClass = Class.forName("io.th0rgal.oraxen.api.OraxenItems", true, loader);
+            Object builder = itemsClass.getMethod("getItemById", String.class).invoke(null, itemId);
+            if (builder == null) {
+                return null;
+            }
+            Object built = builder.getClass().getMethod("build").invoke(builder);
+            return built instanceof ItemStack itemStack ? itemStack.clone() : null;
+        } catch (ReflectiveOperationException | LinkageError ex) {
+            if (!starterOraxenBridgeWarningLogged) {
+                starterOraxenBridgeWarningLogged = true;
+                getLogger().warning("No se pudo resolver el bridge de items Oraxen para kits iniciales. Se usara fallback vanilla.");
+            }
+            return null;
+        }
+    }
+
+    private String oraxenItemId(ItemStack stack) {
+        if (stack == null || stack.getType().isAir()) {
+            return null;
+        }
+        Plugin oraxen = Bukkit.getPluginManager().getPlugin("Oraxen");
+        if (oraxen == null || !oraxen.isEnabled()) {
+            return null;
+        }
+        try {
+            ClassLoader loader = oraxen.getClass().getClassLoader();
+            Class<?> itemsClass = Class.forName("io.th0rgal.oraxen.api.OraxenItems", true, loader);
+            Object resolved = itemsClass.getMethod("getIdByItem", ItemStack.class).invoke(null, stack);
+            return resolved instanceof String id && !id.isBlank() ? id : null;
+        } catch (ReflectiveOperationException | LinkageError ex) {
+            if (!oraxenItemLookupWarningLogged) {
+                oraxenItemLookupWarningLogged = true;
+                getLogger().warning("No se pudo consultar el id de items Oraxen. Algunas rutas custom usaran fallback.");
+            }
+            return null;
+        }
+    }
+
+    private String tierIdFromItemId(String itemId) {
+        if (itemId == null || itemId.isBlank()) {
+            return null;
+        }
+        String normalized = itemId.toLowerCase(Locale.ROOT);
+        for (String tierId : tierOrder()) {
+            if (normalized.startsWith(tierId + "_")) {
+                return tierId;
+            }
+        }
+        return null;
+    }
+
+    private boolean isTieredSmithEquipmentId(String itemId) {
+        if (itemId == null || itemId.isBlank()) {
+            return false;
+        }
+        String normalized = itemId.toLowerCase(Locale.ROOT);
+        return normalized.endsWith("_knife")
+                || normalized.endsWith("_hoe")
+                || normalized.endsWith("_scythe")
+                || normalized.endsWith("_shield")
+                || normalized.endsWith("_wand")
+                || normalized.endsWith("_staff")
+                || normalized.endsWith("_sword")
+                || normalized.endsWith("_axe")
+                || normalized.endsWith("_bow")
+                || normalized.endsWith("_greatsword")
+                || normalized.endsWith("_dagger")
+                || normalized.endsWith("_spellbook")
+                || normalized.endsWith("_relic")
+                || normalized.endsWith("_focus");
+    }
+
+    private boolean isKnifeItem(ItemStack stack) {
+        String itemId = oraxenItemId(stack);
+        return itemId != null && itemId.toLowerCase(Locale.ROOT).endsWith("_knife");
+    }
+
+    private String knifeTierId(ItemStack stack) {
+        return isKnifeItem(stack) ? tierIdFromItemId(oraxenItemId(stack)) : null;
+    }
+
+    private boolean isHarvestToolItem(ItemStack stack) {
+        String itemId = oraxenItemId(stack);
+        if (itemId != null) {
+            String normalized = itemId.toLowerCase(Locale.ROOT);
+            if (normalized.endsWith("_hoe") || normalized.endsWith("_scythe")) {
+                return true;
+            }
+        }
+        return switch (stack.getType()) {
+            case WOODEN_HOE, STONE_HOE, IRON_HOE, GOLDEN_HOE, DIAMOND_HOE, NETHERITE_HOE -> true;
+            default -> false;
+        };
+    }
+
+    private String harvestToolTierId(ItemStack stack) {
+        if (!isHarvestToolItem(stack)) {
+            return null;
+        }
+        String itemId = oraxenItemId(stack);
+        if (itemId != null) {
+            return tierIdFromItemId(itemId);
+        }
+        return switch (stack.getType()) {
+            case WOODEN_HOE, GOLDEN_HOE -> "wood";
+            case STONE_HOE -> "stone";
+            case IRON_HOE -> "iron";
+            case DIAMOND_HOE -> "diamond";
+            case NETHERITE_HOE -> "legendary";
+            default -> null;
+        };
     }
 
     private ItemStack createStarterGuideBook(String baseClass, String tierId) {
@@ -985,10 +2623,10 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
 
     private String starterBookClassPage(String baseClass) {
         return switch (baseClass) {
-            case "guerrero" -> "Guerrero:\nEspada, hacha y escudo.\nGuardia: 5 s, CD 10 s.\nDash: F al sprintar.\nGolpe: Shift + clic izquierdo.\nProvocar: Shift + clic derecho.";
-            case "explorador" -> "Explorador:\nArco y movilidad.\nRodar: Shift + clic izquierdo con arco.\nMantente a distancia y reposicionate.";
-            case "mago" -> "Mago:\nVarita de madera.\nBarrera: Shift + clic izquierdo.\nJuega seguro mientras subes de tier.";
-            case "clerigo" -> "Clerigo:\nStaff y escudo.\nGuardia: 5 s, CD 10 s.\nBendicion: Shift + clic izquierdo.\nCuracion Menor: clic derecho.";
+            case "guerrero" -> "Guerrero:\nEspada, hacha, espada ancha y escudo.\nQ: Golpe Abrumador.\nShift + click derecho con escudo: Provocar.\nClick derecho con escudo: Guardia.\nShift en el aire: Salto Desolador.";
+            case "explorador" -> "Explorador:\nArco, espada y daga.\nRodar: Shift + clic izquierdo con arco.\nLos arcos del cazador y dagas escalan por tier con herreria.";
+            case "mago" -> "Mago:\nFoco, varita, staff o grimorio.\nClick derecho: proyectil arcano.\nShift + clic izquierdo: Barrera.\nEspecializacion con su catalizador.";
+            case "clerigo" -> "Clerigo:\nReliquia, varita o staff con escudo.\nClick derecho: proyectil de luz.\nShift + clic izquierdo: Bendicion.\nClick derecho con escudo: Guardia.";
             default -> "Explora, sube profesiones y consulta /guia cuando necesites repasar controles.";
         };
     }
@@ -1014,6 +2652,11 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (section == null) {
             return null;
         }
+        ItemStack oraxen = createOraxenItem(id);
+        if (oraxen != null) {
+            oraxen.setAmount(Math.max(1, amount));
+            return oraxen;
+        }
         Material material;
         try {
             material = Material.valueOf(section.getString("material", "PAPER").toUpperCase(Locale.ROOT));
@@ -1036,6 +2679,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private boolean tryActivateShieldGuard(Player player, EquipmentSlot hand) {
+        if (isAbilitySilenced(player, true)) {
+            return false;
+        }
+        if (!requireBaseClassWeaponInMainHand(player, true)) {
+            return false;
+        }
         ItemStack shield = heldShield(player, hand);
         if (shield == null || shield.getType() != Material.SHIELD) {
             return false;
@@ -1222,6 +2871,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             saveProfiles();
             refreshPlayerBaseStats(target);
             updateTab(target);
+            syncClassCombatBar(target);
             sender.sendMessage("Clase reiniciada para " + target.getName() + ".");
             target.sendMessage(Component.text("Tu clase fue reiniciada para pruebas.", NamedTextColor.YELLOW));
             return true;
@@ -1282,6 +2932,18 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             mob.setCustomNameVisible(true);
             threatManager.markManaged(mob);
             sender.sendMessage("Bandido Corrompido invocado.");
+            return true;
+        }
+        if (args.length == 1 && args[0].equalsIgnoreCase("shieldbash")) {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("Ejecuta este comando dentro del juego.");
+                return true;
+            }
+            if (!useShieldBash(player)) {
+                sender.sendMessage("No se pudo ejecutar Golpe con Escudo.");
+                return true;
+            }
+            sender.sendMessage("Golpe con Escudo ejecutado.");
             return true;
         }
         if (args.length == 1 && args[0].equalsIgnoreCase("materiales")) {
@@ -1480,6 +3142,14 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             prepareAlphaArena(player);
             return true;
         }
+        if (args.length == 1 && args[0].equalsIgnoreCase("pochelado")) {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("Ejecuta este comando dentro del juego.");
+                return true;
+            }
+            teleportToFrozenPoc(player);
+            return true;
+        }
         if (args.length == 2 && args[0].equalsIgnoreCase("cofre")) {
             if (!(sender instanceof Player player)) {
                 sender.sendMessage("Ejecuta este comando dentro del juego.");
@@ -1487,6 +3157,76 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             }
             registerPersonalChest(player, args[1]);
             return true;
+        }
+        return false;
+    }
+
+    private void teleportToFrozenPoc(Player player) {
+        org.bukkit.World world = Bukkit.getWorld(NamespacedKey.fromString("servidro:poc_helado"));
+        if (world == null) {
+            world = Bukkit.getWorld("world_servidro_poc_helado");
+        }
+        if (world == null) {
+            player.sendMessage(Component.text("No encontre el mundo POC helado cargado. Reinicia el servidor con el datapack activo.", NamedTextColor.RED));
+            return;
+        }
+
+        Location target = new Location(world, 0.5, 170.0, 0.5, player.getLocation().getYaw(), player.getLocation().getPitch());
+        org.bukkit.World targetWorld = world;
+        targetWorld.getChunkAtAsync(target).thenRun(() -> Bukkit.getScheduler().runTask(this, () -> {
+            Location safe = targetWorld.getHighestBlockAt(target).getLocation().add(0.5, 2.0, 0.5);
+            safe.setYaw(target.getYaw());
+            safe.setPitch(target.getPitch());
+            player.teleport(safe);
+            player.sendMessage(Component.text("Teletransportado a Cordilleras Heladas POC.", NamedTextColor.AQUA));
+        }));
+    }
+
+    private void tickFrozenBiomes() {
+        NamespacedKey frozenRidge = NamespacedKey.fromString("servidro:cordilleras_heladas");
+        NamespacedKey frozenDepths = NamespacedKey.fromString("servidro:profundidades_heladas");
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Location location = player.getLocation();
+            NamespacedKey biomeKey = location.getBlock().getBiome().getKey();
+            boolean inFrozenBiome = frozenRidge.equals(biomeKey) || frozenDepths.equals(biomeKey)
+                    || "world_servidro_poc_helado".equals(location.getWorld().getName());
+            if (!inFrozenBiome) {
+                continue;
+            }
+
+            if (isNearHydrothermalMagma(location, 5)) {
+                player.setFreezeTicks(Math.max(0, player.getFreezeTicks() - 120));
+                player.removePotionEffect(PotionEffectType.SLOWNESS);
+                player.spawnParticle(Particle.CLOUD, location.clone().add(0, 0.3, 0), 8, 0.35, 0.2, 0.35, 0.01);
+                continue;
+            }
+
+            int freezeGain = location.getBlockY() < 64 ? 80 : 55;
+            int maxFreeze = Math.max(player.getMaxFreezeTicks(), 140);
+            player.setFreezeTicks(Math.min(maxFreeze, player.getFreezeTicks() + freezeGain));
+            player.spawnParticle(Particle.SNOWFLAKE, location.clone().add(0, 1.0, 0), 18, 0.8, 0.45, 0.8, 0.02);
+            if (player.getFreezeTicks() > player.getMaxFreezeTicks() / 2) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 60, 0, true, true, true));
+            }
+        }
+    }
+
+    private boolean isNearHydrothermalMagma(Location center, int radius) {
+        org.bukkit.World world = center.getWorld();
+        int baseX = center.getBlockX();
+        int baseY = center.getBlockY();
+        int baseZ = center.getBlockZ();
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -2; y <= 2; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (x * x + z * z > radius * radius) {
+                        continue;
+                    }
+                    if (world.getBlockAt(baseX + x, baseY + y, baseZ + z).getType() == Material.MAGMA_BLOCK) {
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }
@@ -1600,6 +3340,9 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useTauntAbility(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
         PlayerProfile profile = profiles.get(player.getUniqueId());
         if ("guerrero".equals(profile.baseClass())) {
             useGuardianTaunt(player);
@@ -1617,6 +3360,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useGuardianTaunt(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireWarriorWeaponInMainHand(player, true)) {
+            return;
+        }
         int cooldown = getConfig().getInt("threat.guardian-taunt.cooldown-seconds", 12);
         if (!startCooldown(player, "guardian-taunt", cooldown)) {
             return;
@@ -1637,6 +3386,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void usePaladinChallenge(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireClericWeaponInMainHand(player, true)) {
+            return;
+        }
         int cooldown = getConfig().getInt("threat.paladin-challenge.cooldown-seconds", 18);
         if (!startCooldown(player, "paladin-challenge", cooldown)) {
             return;
@@ -1657,20 +3412,138 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private boolean startCooldown(Player player, String ability, int seconds) {
+        return startCooldown(player, ability, (double) seconds);
+    }
+
+    private boolean startCooldown(Player player, String ability, double seconds) {
         long now = System.currentTimeMillis();
         String key = cooldownKey(player, ability);
         long availableAt = abilityCooldowns.getOrDefault(key, 0L);
         if (availableAt > now) {
-            long remaining = Math.max(1, (availableAt - now + 999) / 1000);
-            player.sendActionBar(Component.text("Habilidad disponible en " + remaining + " s", NamedTextColor.RED));
+            player.sendActionBar(Component.text("Habilidad disponible en " + shortCooldownLabel(availableAt - now), NamedTextColor.RED));
             return false;
         }
-        abilityCooldowns.put(key, now + seconds * 1000L);
+        abilityCooldowns.put(key, now + Math.max(1L, Math.round(seconds * 1000.0)));
         return true;
     }
 
     private void clearCooldown(Player player, String ability) {
         abilityCooldowns.remove(cooldownKey(player, ability));
+    }
+
+    private long silenceRemainingMillis(Player player) {
+        long now = System.currentTimeMillis();
+        long silencedUntil = silencedPlayers.getOrDefault(player.getUniqueId(), 0L);
+        if (silencedUntil <= now) {
+            silencedPlayers.remove(player.getUniqueId());
+            return 0L;
+        }
+        return silencedUntil - now;
+    }
+
+    private long silenceImmunityRemainingMillis(Player player) {
+        long now = System.currentTimeMillis();
+        long immuneUntil = silenceImmunityPlayers.getOrDefault(player.getUniqueId(), 0L);
+        if (immuneUntil <= now) {
+            silenceImmunityPlayers.remove(player.getUniqueId());
+            return 0L;
+        }
+        return immuneUntil - now;
+    }
+
+    private boolean isAbilitySilenced(Player player, boolean feedback) {
+        long remainingMillis = silenceRemainingMillis(player);
+        if (remainingMillis <= 0L) {
+            return false;
+        }
+        if (feedback) {
+            long now = System.currentTimeMillis();
+            long nextFeedback = silenceFeedbackCooldowns.getOrDefault(player.getUniqueId(), 0L);
+            if (nextFeedback <= now) {
+                silenceFeedbackCooldowns.put(player.getUniqueId(), now + 400L);
+                player.sendActionBar(Component.text("Silenciado: " + shortCooldownLabel(remainingMillis),
+                        NamedTextColor.RED));
+            }
+        }
+        return true;
+    }
+
+    private boolean applySilence(Player attacker, Player target, double durationSeconds, double immunitySeconds) {
+        long immunityRemaining = silenceImmunityRemainingMillis(target);
+        if (immunityRemaining > 0L) {
+            attacker.sendActionBar(Component.text(
+                    target.getName() + " resiste el silencio (" + shortCooldownLabel(immunityRemaining) + ")",
+                    NamedTextColor.YELLOW));
+            return false;
+        }
+        long now = System.currentTimeMillis();
+        long silenceDurationMillis = Math.max(250L, Math.round(durationSeconds * 1000.0));
+        long immunityDurationMillis = Math.max(silenceDurationMillis, Math.round(immunitySeconds * 1000.0));
+        silencedPlayers.put(target.getUniqueId(),
+                Math.max(silencedPlayers.getOrDefault(target.getUniqueId(), 0L), now + silenceDurationMillis));
+        silenceImmunityPlayers.put(target.getUniqueId(), now + immunityDurationMillis);
+        silenceFeedbackCooldowns.remove(target.getUniqueId());
+        showFloatingText(target, Component.text("Silenciado", NamedTextColor.DARK_PURPLE),
+                Math.max(20L, Math.round(durationSeconds * 20.0)));
+        target.getWorld().spawnParticle(Particle.SMOKE, target.getLocation().add(0, 1.0, 0), 18, 0.35, 0.5, 0.35, 0.02);
+        target.getWorld().playSound(target.getLocation(), Sound.ENTITY_EVOKER_PREPARE_ATTACK, 0.7f, 0.7f);
+        target.sendActionBar(Component.text("Silenciado durante " + shortCooldownLabel(silenceDurationMillis),
+                NamedTextColor.DARK_PURPLE));
+        return true;
+    }
+
+    private double playerTotalDamageValue(Player player) {
+        double attributeDamage = attributeValue(player, Attribute.ATTACK_DAMAGE);
+        double weaponBase = weaponDamage(mainHandItem(player));
+        return Math.max(1.0, Math.max(attributeDamage, weaponBase));
+    }
+
+    private boolean useShieldBash(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return false;
+        }
+        if (!requireBaseClassWeaponInMainHand(player, true)) {
+            return false;
+        }
+        ItemStack shield = heldShield(player, EquipmentSlot.OFF_HAND);
+        if (shield == null) {
+            player.sendActionBar(Component.text("Necesitas un escudo en la mano izquierda para Golpe con Escudo.",
+                    NamedTextColor.YELLOW));
+            return false;
+        }
+        double range = getConfig().getDouble("shared-abilities.shield-bash.range", 3.5);
+        LivingEntity target = firstLivingTargetInSight(player, (int) Math.ceil(range), 1.1);
+        if (target == null || !isAbilityTarget(player, target)
+                || target.getLocation().distanceSquared(player.getLocation()) > range * range) {
+            player.sendActionBar(Component.text("Golpe con Escudo: mira a un objetivo cercano.", NamedTextColor.YELLOW));
+            return false;
+        }
+        double cooldown = getConfig().getDouble("shared-abilities.shield-bash.cooldown-seconds", 12.0);
+        if (!startCooldown(player, "shield-bash", cooldown)) {
+            return false;
+        }
+        showSkillCast(player, Component.text("Golpe con Escudo", NamedTextColor.GRAY));
+        player.swingOffHand();
+        double damage = playerTotalDamageValue(player)
+                * getConfig().getDouble("shared-abilities.shield-bash.damage-ratio", 0.20);
+        dealAbilityDamage(player, target, damage);
+        double knockback = getConfig().getDouble("shared-abilities.shield-bash.knockback", 0.30);
+        Vector push = target.getLocation().toVector().subtract(player.getLocation().toVector());
+        if (push.lengthSquared() > 0.0001) {
+            target.setVelocity(push.normalize().multiply(knockback).setY(Math.max(0.12, target.getVelocity().getY())));
+        }
+        target.getWorld().spawnParticle(Particle.CRIT, target.getLocation().add(0, 1.0, 0), 14, 0.3, 0.35, 0.3, 0.03);
+        target.getWorld().spawnParticle(Particle.SMALL_GUST, target.getLocation().add(0, 1.0, 0), 8, 0.25, 0.25, 0.25, 0.02);
+        target.getWorld().playSound(target.getLocation(), Sound.ITEM_SHIELD_BLOCK, 0.95f, 0.9f);
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 0.9f, 0.9f);
+        if (target instanceof Player targetPlayer) {
+            applySilence(
+                    player,
+                    targetPlayer,
+                    getConfig().getDouble("shared-abilities.shield-bash.silence-seconds", 1.5),
+                    getConfig().getDouble("shared-abilities.shield-bash.silence-immunity-seconds", 5.0));
+        }
+        return true;
     }
 
     private void highlightTauntedMob(LivingEntity mob) {
@@ -1708,16 +3581,22 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useMinorHeal(Player player) {
-        showSkillCast(player, Component.text("Curacion Menor", NamedTextColor.GREEN));
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
         PlayerProfile profile = profiles.get(player.getUniqueId());
         if (!"clerigo".equals(profile.baseClass())) {
             player.sendMessage(Component.text("Curacion menor requiere la clase clerigo.", NamedTextColor.RED));
+            return;
+        }
+        if (!requireClericWeaponInMainHand(player, true)) {
             return;
         }
         int cooldown = getConfig().getInt("cleric.minor-heal.cooldown-seconds", 8);
         if (!startCooldown(player, "minor-heal", cooldown)) {
             return;
         }
+        showSkillCast(player, Component.text("Curacion Menor", NamedTextColor.GREEN));
         int range = getConfig().getInt("cleric.minor-heal.range", 12);
         Player target = player.getTargetEntity(range) instanceof Player selected ? selected : player;
         if (target.isDead() || downed.containsKey(target.getUniqueId())) {
@@ -1804,13 +3683,18 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             event.setCancelled(true);
             return;
         }
-        if (attacker != null && deny(attacker, attacker.getInventory().getItemInMainHand().getType(),
-                ProgressionGate.Action.EQUIP_OR_USE)) {
+        if (attacker != null && (denyTieredEquipOrUse(attacker, attacker.getInventory().getItemInMainHand())
+                || deny(attacker, attacker.getInventory().getItemInMainHand().getType(),
+                ProgressionGate.Action.EQUIP_OR_USE))) {
             event.setCancelled(true);
             return;
         }
         if (attacker != null && event.getEntity() instanceof org.bukkit.entity.LivingEntity mob) {
             applyDamagePassives(event, attacker, mob);
+            if (event.getDamager() instanceof Player player
+                    && (isWarriorUtilityAttack(player) || isMageUtilityAttack(player) || isClericUtilityAttack(player))) {
+                event.setDamage(1.0);
+            }
             double multiplier = threatMultiplier(attacker);
             threatManager.addThreat(mob, attacker, event.getFinalDamage() * multiplier);
         }
@@ -1866,20 +3750,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onWarriorHeavyStrikeMelee(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player player)
-                || !(event.getEntity() instanceof LivingEntity target)
-                || downed.containsKey(player.getUniqueId())
-                || !player.isSneaking()) {
-            return;
-        }
-        PlayerProfile profile = profiles.get(player.getUniqueId());
-        if (!"guerrero".equals(profile.baseClass())
-                || !isWarriorWeapon(player.getInventory().getItemInMainHand().getType())
-                || !isAbilityTarget(player, target)) {
-            return;
-        }
-        event.setCancelled(true);
-        useWarriorOverwhelmingStrike(player, target);
+        return;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -1961,6 +3832,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (killer == null) {
             return;
         }
+        grantKnifeHarvestDrops(killer, mob, event);
         MobRarity rarity = scaledMobRarity(mob);
         int classXpGained = 0;
         long crownsGained = 0;
@@ -1980,6 +3852,73 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (reward != null) {
             event.getDrops().add(reward);
         }
+    }
+
+    private void grantKnifeHarvestDrops(Player killer, LivingEntity mob, EntityDeathEvent event) {
+        String tierId = knifeTierId(killer.getInventory().getItemInMainHand());
+        if (tierId == null) {
+            return;
+        }
+        boolean animalSource = isAnimalHarvestSource(mob);
+        boolean humanoidSource = isHumanoidClothSource(mob);
+        if (!animalSource && !humanoidSource) {
+            return;
+        }
+        int tierPower = Math.max(0, tierIndex(tierId));
+        String materialId = tierId + (animalSource ? "_hide" : "_cloth");
+        int amount = animalSource
+                ? animalHarvestAmount(mob.getType(), tierPower)
+                : clothHarvestAmount(mob.getType(), tierPower);
+        ItemStack harvested = createCustomMaterialItem(materialId, amount);
+        if (harvested != null) {
+            event.getDrops().add(harvested);
+        }
+        int baseXp = getConfig().getInt(
+                animalSource ? "profession-xp.explorador.animal-harvest" : "profession-xp.explorador.humanoid-salvage",
+                animalSource ? 6 : 8);
+        grantProfessionExperience(killer, "explorador", Math.max(1, baseXp + tierPower));
+    }
+
+    private boolean isAnimalHarvestSource(LivingEntity mob) {
+        if (mob instanceof Animals) {
+            return true;
+        }
+        return switch (mob.getType()) {
+            case SQUID, GLOW_SQUID,
+                    COD, SALMON, TROPICAL_FISH, PUFFERFISH,
+                    DOLPHIN, AXOLOTL, FROG, TURTLE,
+                    STRIDER, HOGLIN, ZOGLIN, SNIFFER, CAMEL -> true;
+            default -> false;
+        };
+    }
+
+    private boolean isHumanoidClothSource(LivingEntity mob) {
+        if (mob instanceof Zombie || mob instanceof AbstractVillager) {
+            return true;
+        }
+        return switch (mob.getType()) {
+            case PILLAGER, VINDICATOR, EVOKER, ILLUSIONER, WITCH,
+                    PIGLIN, PIGLIN_BRUTE, ZOMBIFIED_PIGLIN,
+                    HUSK, DROWNED, ZOMBIE_VILLAGER -> true;
+            default -> false;
+        };
+    }
+
+    private int animalHarvestAmount(EntityType type, int tierPower) {
+        int base = switch (type) {
+            case COW, MOOSHROOM, SHEEP, GOAT, HORSE, DONKEY, MULE,
+                    LLAMA, TRADER_LLAMA, CAMEL, HOGLIN, ZOGLIN, SNIFFER -> 2;
+            default -> 1;
+        };
+        return Math.min(6, base + 1 + tierPower / 2 + ThreadLocalRandom.current().nextInt(0, 2));
+    }
+
+    private int clothHarvestAmount(EntityType type, int tierPower) {
+        int base = switch (type) {
+            case EVOKER, PILLAGER, VINDICATOR, PIGLIN_BRUTE, WITCH -> 2;
+            default -> 1;
+        };
+        return Math.min(5, base + tierPower / 3 + ThreadLocalRandom.current().nextInt(1, 3));
     }
 
     @EventHandler
@@ -2241,38 +4180,68 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
+    public void onMoveDebug(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        if (!player.getName().equalsIgnoreCase("valtroc") || !movedPosition(event.getFrom(), event.getTo())) {
+            return;
+        }
+        long now = System.currentTimeMillis();
+        long nextAt = moveDebugCooldowns.getOrDefault(player.getUniqueId(), 0L);
+        if (nextAt > now) {
+            return;
+        }
+        moveDebugCooldowns.put(player.getUniqueId(), now + 1000L);
+        getLogger().info(String.format(Locale.US,
+                "MOVEDEBUG player=%s cancelled=%s downed=%s shield=%s gm=%s pose=%s swimming=%s flying=%s allowFlight=%s onGround=%s sprinting=%s sneaking=%s blocking=%s from=(%.2f,%.2f,%.2f) to=(%.2f,%.2f,%.2f) vel=(%.3f,%.3f,%.3f)",
+                player.getName(),
+                event.isCancelled(),
+                downed.containsKey(player.getUniqueId()),
+                activeShieldGuards.containsKey(player.getUniqueId()),
+                player.getGameMode(),
+                player.getPose(),
+                player.isSwimming(),
+                player.isFlying(),
+                player.getAllowFlight(),
+                player.isOnGround(),
+                player.isSprinting(),
+                player.isSneaking(),
+                player.isBlocking(),
+                event.getFrom().getX(), event.getFrom().getY(), event.getFrom().getZ(),
+                event.getTo() == null ? event.getFrom().getX() : event.getTo().getX(),
+                event.getTo() == null ? event.getFrom().getY() : event.getTo().getY(),
+                event.getTo() == null ? event.getFrom().getZ() : event.getTo().getZ(),
+                player.getVelocity().getX(), player.getVelocity().getY(), player.getVelocity().getZ()));
+    }
+
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (downed.containsKey(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
             return;
         }
-        if (event.getItem() != null && deny(event.getPlayer(), event.getItem().getType(), ProgressionGate.Action.EQUIP_OR_USE)) {
+        if (event.getItem() != null
+                && (denyTieredEquipOrUse(event.getPlayer(), event.getItem())
+                || deny(event.getPlayer(), event.getItem().getType(), ProgressionGate.Action.EQUIP_OR_USE))) {
             event.setCancelled(true);
+            return;
+        }
+        if (handleCasterPrimaryBasicInteract(event)) {
             return;
         }
         if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 && event.getItem() != null
                 && event.getItem().getType() == Material.SHIELD) {
-            PlayerProfile profile = profiles.get(event.getPlayer().getUniqueId());
-            if (canTaunt(profile) && event.getPlayer().isSneaking()) {
+            Player player = event.getPlayer();
+            PlayerProfile profile = profiles.get(player.getUniqueId());
+            if (canTaunt(profile) && player.isSneaking()) {
                 event.setCancelled(true);
-                useTauntAbility(event.getPlayer());
+                useTauntAbility(player);
                 return;
             }
             EquipmentSlot hand = event.getHand();
-            if (hand != null && !tryActivateShieldGuard(event.getPlayer(), hand)) {
+            if (hand != null && !tryActivateShieldGuard(player, hand)) {
                 event.setCancelled(true);
-            }
-            return;
-        }
-        if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-                && event.getItem() != null
-                && event.getItem().getType() == Material.BLAZE_ROD) {
-            PlayerProfile profile = profiles.get(event.getPlayer().getUniqueId());
-            if ("clerigo".equals(profile.baseClass())) {
-                event.setCancelled(true);
-                useMinorHeal(event.getPlayer());
             }
             return;
         }
@@ -2309,15 +4278,13 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onSwapHands(PlayerSwapHandItemsEvent event) {
         Player player = event.getPlayer();
-        if (downed.containsKey(player.getUniqueId())
-                || !"guerrero".equals(profiles.get(player.getUniqueId()).baseClass())) {
+        if (downed.containsKey(player.getUniqueId())) {
             return;
         }
-        if (!player.isSprinting()) {
+        if (!isWarriorActionBarEnabled(player)) {
             return;
         }
         event.setCancelled(true);
-        useWarriorDash(player);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -2327,6 +4294,9 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (state != null) {
             event.setCancelled(true);
             applyDownedVisuals(state);
+            return;
+        }
+        if (isWarriorActionBarEnabled(player)) {
             return;
         }
         if (!event.isSneaking() || player.isOnGround()
@@ -2345,6 +4315,34 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onHotbarSelect(PlayerItemHeldEvent event) {
+        return;
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        if (downed.containsKey(player.getUniqueId())) {
+            return;
+        }
+        PlayerProfile profile = profiles.get(player.getUniqueId());
+        if (profile == null || !"guerrero".equals(profile.baseClass())) {
+            return;
+        }
+        ItemStack dropped = event.getItemDrop().getItemStack();
+        if (!isWarriorWeapon(dropped.getType())) {
+            return;
+        }
+        event.setCancelled(true);
+        useWarriorOverwhelmingStrike(player);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onInventoryDrag(InventoryDragEvent event) {
+        return;
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) {
@@ -2355,7 +4353,8 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             return;
         }
         if ((isArmorSlot(event.getSlotType()) || event.isShiftClick())
-                && deny(player, item.getType(), ProgressionGate.Action.EQUIP_OR_USE)) {
+                && (denyTieredEquipOrUse(player, item)
+                || deny(player, item.getType(), ProgressionGate.Action.EQUIP_OR_USE))) {
             event.setCancelled(true);
             return;
         }
@@ -2363,9 +4362,169 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (isArmorSlot(event.getSlotType())
                 && cursor != null
                 && !cursor.getType().isAir()
-                && deny(player, cursor.getType(), ProgressionGate.Action.EQUIP_OR_USE)) {
+                && (denyTieredEquipOrUse(player, cursor)
+                || deny(player, cursor.getType(), ProgressionGate.Action.EQUIP_OR_USE))) {
             event.setCancelled(true);
         }
+    }
+
+    private boolean handleWarriorCombatBarInventoryClick(InventoryClickEvent event, Player player) {
+        if (!"guerrero".equals(profiles.get(player.getUniqueId()).baseClass())) {
+            return false;
+        }
+        ItemStack current = event.getCurrentItem();
+        ItemStack cursor = event.getCursor();
+        if (isActionBarSkillItem(current) || isActionBarSkillItem(cursor)) {
+            event.setCancelled(true);
+            scheduleWarriorCombatBarSync(player);
+            player.sendActionBar(Component.text("Los slots 2-5 del guerrero son virtuales.", NamedTextColor.YELLOW));
+            return true;
+        }
+        boolean clickedPlayerInventory = event.getClickedInventory() instanceof PlayerInventory;
+        boolean clickedQuickbar = clickedPlayerInventory && event.getSlotType() == InventoryType.SlotType.QUICKBAR;
+        int clickedSlot = event.getSlot();
+        if (clickedQuickbar && isWarriorVirtualSkillSlot(clickedSlot)) {
+            event.setCancelled(true);
+            scheduleWarriorCombatBarSync(player);
+            player.sendActionBar(Component.text("Los slots 2-5 del guerrero estan reservados para habilidades.", NamedTextColor.YELLOW));
+            return true;
+        }
+        if (clickedQuickbar
+                && clickedSlot == WARRIOR_WEAPON_SLOT
+                && cursor != null
+                && !cursor.getType().isAir()
+                && !canOccupyWarriorWeaponSlot(cursor)) {
+            event.setCancelled(true);
+            player.sendActionBar(Component.text("El slot 1 del guerrero solo acepta espada o hacha.", NamedTextColor.RED));
+            return true;
+        }
+        if (event.getClick() == ClickType.NUMBER_KEY) {
+            int hotbarButton = event.getHotbarButton();
+            if (isWarriorVirtualSkillSlot(hotbarButton)) {
+                event.setCancelled(true);
+                scheduleWarriorCombatBarSync(player);
+                player.sendActionBar(Component.text("Los slots 2-5 del guerrero estan reservados para habilidades.", NamedTextColor.YELLOW));
+                return true;
+            }
+            if (hotbarButton == WARRIOR_WEAPON_SLOT
+                    && current != null
+                    && !current.getType().isAir()
+                    && !canOccupyWarriorWeaponSlot(current)) {
+                event.setCancelled(true);
+                player.sendActionBar(Component.text("El slot 1 del guerrero solo acepta espada o hacha.", NamedTextColor.RED));
+                return true;
+            }
+        }
+        if (clickedQuickbar || clickedPlayerInventory || event.isShiftClick() || event.getClick() == ClickType.NUMBER_KEY) {
+            scheduleWarriorCombatBarSync(player);
+        }
+        return false;
+    }
+
+    private boolean handleMageCombatBarInventoryClick(InventoryClickEvent event, Player player) {
+        if (!"mago".equals(profiles.get(player.getUniqueId()).baseClass())) {
+            return false;
+        }
+        ItemStack current = event.getCurrentItem();
+        ItemStack cursor = event.getCursor();
+        if (isActionBarSkillItem(current) || isActionBarSkillItem(cursor)) {
+            event.setCancelled(true);
+            scheduleClassCombatBarSync(player);
+            player.sendActionBar(Component.text("Los slots 2-5 del mago son virtuales.", NamedTextColor.YELLOW));
+            return true;
+        }
+        boolean clickedPlayerInventory = event.getClickedInventory() instanceof PlayerInventory;
+        boolean clickedQuickbar = clickedPlayerInventory && event.getSlotType() == InventoryType.SlotType.QUICKBAR;
+        int clickedSlot = event.getSlot();
+        if (clickedQuickbar && isMageVirtualSkillSlot(clickedSlot)) {
+            event.setCancelled(true);
+            scheduleClassCombatBarSync(player);
+            player.sendActionBar(Component.text("Los slots 2-5 del mago estan reservados para hechizos.", NamedTextColor.YELLOW));
+            return true;
+        }
+        if (clickedQuickbar
+                && clickedSlot == WARRIOR_WEAPON_SLOT
+                && cursor != null
+                && !cursor.getType().isAir()
+                && !canOccupyMageWeaponSlot(cursor)) {
+            event.setCancelled(true);
+            player.sendActionBar(Component.text("El slot 1 del mago solo acepta foco, varita, staff o grimorio.", NamedTextColor.RED));
+            return true;
+        }
+        if (event.getClick() == ClickType.NUMBER_KEY) {
+            int hotbarButton = event.getHotbarButton();
+            if (isMageVirtualSkillSlot(hotbarButton)) {
+                event.setCancelled(true);
+                scheduleClassCombatBarSync(player);
+                player.sendActionBar(Component.text("Los slots 2-5 del mago estan reservados para hechizos.", NamedTextColor.YELLOW));
+                return true;
+            }
+            if (hotbarButton == WARRIOR_WEAPON_SLOT
+                    && current != null
+                    && !current.getType().isAir()
+                    && !canOccupyMageWeaponSlot(current)) {
+                event.setCancelled(true);
+                player.sendActionBar(Component.text("El slot 1 del mago solo acepta foco, varita, staff o grimorio.", NamedTextColor.RED));
+                return true;
+            }
+        }
+        if (clickedQuickbar || clickedPlayerInventory || event.isShiftClick() || event.getClick() == ClickType.NUMBER_KEY) {
+            scheduleClassCombatBarSync(player);
+        }
+        return false;
+    }
+
+    private boolean handleClericCombatBarInventoryClick(InventoryClickEvent event, Player player) {
+        if (!"clerigo".equals(profiles.get(player.getUniqueId()).baseClass())) {
+            return false;
+        }
+        ItemStack current = event.getCurrentItem();
+        ItemStack cursor = event.getCursor();
+        if (isActionBarSkillItem(current) || isActionBarSkillItem(cursor)) {
+            event.setCancelled(true);
+            scheduleClassCombatBarSync(player);
+            player.sendActionBar(Component.text("Los slots 2-5 del clerigo son virtuales.", NamedTextColor.YELLOW));
+            return true;
+        }
+        boolean clickedPlayerInventory = event.getClickedInventory() instanceof PlayerInventory;
+        boolean clickedQuickbar = clickedPlayerInventory && event.getSlotType() == InventoryType.SlotType.QUICKBAR;
+        int clickedSlot = event.getSlot();
+        if (clickedQuickbar && isClericVirtualSkillSlot(clickedSlot)) {
+            event.setCancelled(true);
+            scheduleClassCombatBarSync(player);
+            player.sendActionBar(Component.text("Los slots 2-5 del clerigo estan reservados para milagros.", NamedTextColor.YELLOW));
+            return true;
+        }
+        if (clickedQuickbar
+                && clickedSlot == WARRIOR_WEAPON_SLOT
+                && cursor != null
+                && !cursor.getType().isAir()
+                && !canOccupyClericWeaponSlot(cursor)) {
+            event.setCancelled(true);
+            player.sendActionBar(Component.text("El slot 1 del clerigo solo acepta reliquia, varita, staff o grimorio.", NamedTextColor.RED));
+            return true;
+        }
+        if (event.getClick() == ClickType.NUMBER_KEY) {
+            int hotbarButton = event.getHotbarButton();
+            if (isClericVirtualSkillSlot(hotbarButton)) {
+                event.setCancelled(true);
+                scheduleClassCombatBarSync(player);
+                player.sendActionBar(Component.text("Los slots 2-5 del clerigo estan reservados para milagros.", NamedTextColor.YELLOW));
+                return true;
+            }
+            if (hotbarButton == WARRIOR_WEAPON_SLOT
+                    && current != null
+                    && !current.getType().isAir()
+                    && !canOccupyClericWeaponSlot(current)) {
+                event.setCancelled(true);
+                player.sendActionBar(Component.text("El slot 1 del clerigo solo acepta reliquia, varita, staff o grimorio.", NamedTextColor.RED));
+                return true;
+            }
+        }
+        if (clickedQuickbar || clickedPlayerInventory || event.isShiftClick() || event.getClick() == ClickType.NUMBER_KEY) {
+            scheduleClassCombatBarSync(player);
+        }
+        return false;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -2386,7 +4545,11 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        ItemStack resultItem = event.getRecipe().getResult();
+        ItemStack resultItem = event.getCurrentItem();
+        if (resultItem == null || resultItem.getType().isAir()) {
+            resultItem = event.getRecipe().getResult();
+        }
+        String craftedOraxenId = oraxenItemId(resultItem);
         Material result = resultItem.getType();
         if (isClassXpFlask(resultItem)) {
             String tierId = customFlaskTier(resultItem);
@@ -2403,7 +4566,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             }
             return;
         }
-        if (deny(player, result, ProgressionGate.Action.CRAFT)) {
+        if (denyTieredSmithCraft(player, craftedOraxenId)) {
+            event.setCancelled(true);
+            return;
+        }
+        if ((craftedOraxenId == null || !isTieredSmithEquipmentId(craftedOraxenId))
+                && deny(player, result, ProgressionGate.Action.CRAFT)) {
             event.setCancelled(true);
             return;
         }
@@ -2423,6 +4591,10 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             event.setCancelled(true);
             return;
         }
+        ElementalSapling sapling = elementalSaplingFromItem(event.getItemInHand());
+        if (sapling != null) {
+            elementalSaplings.put(blockKey(event.getBlockPlaced()), sapling);
+        }
         if (miningExperience(event.getBlockPlaced().getType()) > 0) {
             playerPlacedMiningBlocks.add(blockKey(event.getBlockPlaced()));
         }
@@ -2433,6 +4605,11 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (personalChests.get(event.getBlock().getLocation()) != null) {
             event.setCancelled(true);
             event.getPlayer().sendActionBar(Component.text("Este cofre pertenece al mundo.", NamedTextColor.RED));
+            return;
+        }
+        elementalSaplings.remove(blockKey(event.getBlock()));
+        if (requiresScytheHarvest(event.getBlock())) {
+            handleScytheHarvest(event);
             return;
         }
         int miningXp = miningExperience(event.getBlock().getType());
@@ -2447,6 +4624,313 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
                     getConfig().getInt("profession-xp.agricultor.harvest", 4));
             progressDailyMission(event.getPlayer(), DailyMissionStore.Activity.HARVEST, event.getBlock().getType(), 1);
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onElementalSaplingBonemeal(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) {
+            return;
+        }
+        ItemStack item = event.getItem();
+        if (item == null || item.getType() != Material.BONE_MEAL) {
+            return;
+        }
+        Block block = event.getClickedBlock();
+        ElementalSapling sapling = elementalSaplingAt(block);
+        if (sapling == null) {
+            return;
+        }
+        event.setCancelled(true);
+        if (ThreadLocalRandom.current().nextDouble() > 0.45) {
+            block.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, block.getLocation().add(0.5, 0.35, 0.5), 8, 0.25, 0.15, 0.25, 0.0);
+            consumeBonemeal(event.getPlayer(), item);
+            return;
+        }
+        consumeBonemeal(event.getPlayer(), item);
+        growElementalTree(block, sapling);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onElementalSaplingFertilize(BlockFertilizeEvent event) {
+        ElementalSapling sapling = elementalSaplingAt(event.getBlock());
+        if (sapling == null) {
+            return;
+        }
+        event.setCancelled(true);
+        growElementalTree(event.getBlock(), sapling);
+    }
+
+    private void tickElementalSaplings() {
+        if (elementalSaplings.isEmpty()) {
+            return;
+        }
+        for (Map.Entry<String, ElementalSapling> entry : new ArrayList<>(elementalSaplings.entrySet())) {
+            Block block = blockFromKey(entry.getKey());
+            if (block == null || !isLikelyPlacedOraxenBlock(block)) {
+                elementalSaplings.remove(entry.getKey());
+                continue;
+            }
+            if (ThreadLocalRandom.current().nextDouble() <= 0.08) {
+                growElementalTree(block, entry.getValue());
+            }
+        }
+    }
+
+    private ElementalSapling elementalSaplingFromItem(ItemStack item) {
+        String itemId = oraxenItemId(item);
+        if (itemId == null || !itemId.endsWith("_sapling")) {
+            return null;
+        }
+        String[] parts = itemId.split("_");
+        if (parts.length < 3 || (!parts[0].equals("ice") && !parts[0].equals("fire"))) {
+            return null;
+        }
+        String family = itemId.substring(parts[0].length() + 1, itemId.length() - "_sapling".length());
+        if (family.isBlank()) {
+            return null;
+        }
+        return new ElementalSapling(parts[0], family);
+    }
+
+    private ElementalSapling elementalSaplingAt(Block block) {
+        ElementalSapling tracked = elementalSaplings.get(blockKey(block));
+        if (tracked != null) {
+            return tracked;
+        }
+        String id = oraxenBlockId(block);
+        if (id == null || !id.endsWith("_sapling")) {
+            return null;
+        }
+        String[] parts = id.split("_");
+        if (parts.length < 3 || (!parts[0].equals("ice") && !parts[0].equals("fire"))) {
+            return null;
+        }
+        String family = id.substring(parts[0].length() + 1, id.length() - "_sapling".length());
+        ElementalSapling sapling = new ElementalSapling(parts[0], family);
+        elementalSaplings.put(blockKey(block), sapling);
+        return sapling;
+    }
+
+    private void growElementalTree(Block saplingBlock, ElementalSapling sapling) {
+        elementalSaplings.remove(blockKey(saplingBlock));
+        Location base = saplingBlock.getLocation();
+        if (!hasTreeSpace(base)) {
+            saplingBlock.getWorld().spawnParticle(Particle.SMOKE, base.add(0.5, 0.3, 0.5), 8, 0.2, 0.1, 0.2, 0.0);
+            return;
+        }
+        String logId = sapling.element() + "_" + sapling.family() + "_log";
+        String leavesId = sapling.element() + "_" + sapling.family() + "_leaves";
+        int height = ThreadLocalRandom.current().nextInt(4, 7);
+        for (int y = 0; y < height; y++) {
+            placeOraxenBlock(logId, base.clone().add(0, y, 0));
+        }
+        int top = height - 1;
+        for (int y = top - 2; y <= top + 1; y++) {
+            int radius = y >= top ? 1 : 2;
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (x == 0 && z == 0 && y <= top) {
+                        continue;
+                    }
+                    if (Math.abs(x) == radius && Math.abs(z) == radius && ThreadLocalRandom.current().nextBoolean()) {
+                        continue;
+                    }
+                    Location leafLocation = base.clone().add(x, y, z);
+                    if (leafLocation.getBlock().getType().isAir() || isLikelyPlacedOraxenBlock(leafLocation.getBlock())) {
+                        placeOraxenBlock(leavesId, leafLocation);
+                    }
+                }
+            }
+        }
+        saplingBlock.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, base.clone().add(0.5, 1.0, 0.5), 24, 1.2, 1.2, 1.2, 0.0);
+        saplingBlock.getWorld().playSound(base, Sound.ITEM_BONE_MEAL_USE, 1.0f, 0.8f);
+    }
+
+    private boolean hasTreeSpace(Location base) {
+        for (int y = 0; y <= 7; y++) {
+            int radius = y < 3 ? 0 : 2;
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    Block block = base.clone().add(x, y, z).getBlock();
+                    if (!block.getType().isAir() && !isLikelyPlacedOraxenBlock(block)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private void consumeBonemeal(Player player, ItemStack item) {
+        if (player.getGameMode() == org.bukkit.GameMode.CREATIVE) {
+            return;
+        }
+        item.setAmount(item.getAmount() - 1);
+    }
+
+    private boolean isLikelyPlacedOraxenBlock(Block block) {
+        return oraxenBlockId(block) != null;
+    }
+
+    private void placeOraxenBlock(String itemId, Location location) {
+        Plugin oraxen = Bukkit.getPluginManager().getPlugin("Oraxen");
+        if (oraxen == null || !oraxen.isEnabled()) {
+            location.getBlock().setType(Material.OAK_LOG, false);
+            return;
+        }
+        try {
+            ClassLoader loader = oraxen.getClass().getClassLoader();
+            Class<?> blocksClass = Class.forName("io.th0rgal.oraxen.api.OraxenBlocks", true, loader);
+            blocksClass.getMethod("place", String.class, Location.class).invoke(null, itemId, location);
+        } catch (ReflectiveOperationException | LinkageError ex) {
+            if (!oraxenBlockBridgeWarningLogged) {
+                oraxenBlockBridgeWarningLogged = true;
+                getLogger().warning("No se pudo resolver el bridge de bloques Oraxen. Los arboles elementales usaran fallback vanilla.");
+            }
+            location.getBlock().setType(itemId.endsWith("_leaves") ? Material.OAK_LEAVES : Material.OAK_LOG, false);
+        }
+    }
+
+    private String oraxenBlockId(Block block) {
+        Plugin oraxen = Bukkit.getPluginManager().getPlugin("Oraxen");
+        if (oraxen == null || !oraxen.isEnabled()) {
+            return null;
+        }
+        try {
+            ClassLoader loader = oraxen.getClass().getClassLoader();
+            Class<?> blocksClass = Class.forName("io.th0rgal.oraxen.api.OraxenBlocks", true, loader);
+            Object mechanic = blocksClass.getMethod("getOraxenBlock", Location.class).invoke(null, block.getLocation());
+            if (mechanic == null) {
+                return null;
+            }
+            Object itemId = mechanic.getClass().getMethod("getItemID").invoke(mechanic);
+            return itemId instanceof String id && !id.isBlank() ? id : null;
+        } catch (ReflectiveOperationException | LinkageError ex) {
+            return null;
+        }
+    }
+
+    private Block blockFromKey(String key) {
+        String[] parts = key.split(":", 4);
+        if (parts.length != 4) {
+            return null;
+        }
+        org.bukkit.World world;
+        try {
+            world = Bukkit.getWorld(UUID.fromString(parts[0]));
+        } catch (IllegalArgumentException exception) {
+            world = Bukkit.getWorld(parts[0]);
+        }
+        if (world == null) {
+            return null;
+        }
+        try {
+            return world.getBlockAt(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
+        } catch (NumberFormatException exception) {
+            return null;
+        }
+    }
+
+    private void handleScytheHarvest(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        String tierId = harvestToolTierId(player.getInventory().getItemInMainHand());
+        if (tierId == null) {
+            event.setCancelled(true);
+            player.sendActionBar(Component.text("Necesitas una azada para recolectar esta cosecha.", NamedTextColor.YELLOW));
+            return;
+        }
+        List<ItemStack> drops = scytheHarvestDrops(block, player, tierId);
+        event.setDropItems(false);
+        for (ItemStack drop : drops) {
+            if (drop != null && !drop.getType().isAir() && drop.getAmount() > 0) {
+                block.getWorld().dropItemNaturally(block.getLocation(), drop);
+            }
+        }
+        int xp = isMatureCropBlock(block)
+                ? getConfig().getInt("profession-xp.agricultor.harvest", 4)
+                : getConfig().getInt("profession-xp.agricultor.forage", 2);
+        grantProfessionExperience(player, "agricultor", xp);
+        progressDailyMission(player, DailyMissionStore.Activity.HARVEST, block.getType(), 1);
+    }
+
+    private List<ItemStack> scytheHarvestDrops(Block block, Player player, String tierId) {
+        List<ItemStack> drops = new ArrayList<>();
+        for (ItemStack stack : block.getDrops(player.getInventory().getItemInMainHand(), player)) {
+            if (stack != null && !stack.getType().isAir() && stack.getAmount() > 0) {
+                drops.add(stack.clone());
+            }
+        }
+        if (drops.isEmpty()) {
+            ItemStack fallback = fallbackScytheDrop(block.getType());
+            if (fallback != null) {
+                drops.add(fallback);
+            }
+        }
+        applyScytheDropBonus(drops, tierId);
+        return drops;
+    }
+
+    private void applyScytheDropBonus(List<ItemStack> drops, String tierId) {
+        int tierPower = Math.max(0, tierIndex(tierId));
+        int guaranteed = tierPower / 3;
+        double bonusChance = Math.min(0.75, 0.12 + tierPower * 0.11);
+        for (ItemStack stack : drops) {
+            int bonus = guaranteed;
+            if (ThreadLocalRandom.current().nextDouble() < bonusChance) {
+                bonus++;
+            }
+            if (bonus > 0) {
+                stack.setAmount(Math.min(stack.getMaxStackSize(), stack.getAmount() + bonus));
+            }
+        }
+    }
+
+    private ItemStack fallbackScytheDrop(Material material) {
+        return switch (material) {
+            case SHORT_GRASS -> new ItemStack(Material.SHORT_GRASS, 1);
+            case TALL_GRASS -> new ItemStack(Material.SHORT_GRASS, 2);
+            case FERN -> new ItemStack(Material.FERN, 1);
+            case LARGE_FERN -> new ItemStack(Material.FERN, 2);
+            case DEAD_BUSH, VINE, GLOW_LICHEN, SUGAR_CANE, BAMBOO, CACTUS,
+                    RED_MUSHROOM, BROWN_MUSHROOM,
+                    DANDELION, POPPY, BLUE_ORCHID, ALLIUM, AZURE_BLUET,
+                    RED_TULIP, ORANGE_TULIP, WHITE_TULIP, PINK_TULIP,
+                    OXEYE_DAISY, CORNFLOWER, LILY_OF_THE_VALLEY, WITHER_ROSE,
+                    SUNFLOWER, LILAC, ROSE_BUSH, PEONY, TORCHFLOWER,
+                    PITCHER_PLANT, SPORE_BLOSSOM -> new ItemStack(material, 1);
+            default -> null;
+        };
+    }
+
+    private boolean requiresScytheHarvest(Block block) {
+        Material material = block.getType();
+        if (isCropHarvestBlock(material)) {
+            return true;
+        }
+        return switch (material) {
+            case SHORT_GRASS, TALL_GRASS, FERN, LARGE_FERN, DEAD_BUSH,
+                    DANDELION, POPPY, BLUE_ORCHID, ALLIUM, AZURE_BLUET,
+                    RED_TULIP, ORANGE_TULIP, WHITE_TULIP, PINK_TULIP,
+                    OXEYE_DAISY, CORNFLOWER, LILY_OF_THE_VALLEY, WITHER_ROSE,
+                    SUNFLOWER, LILAC, ROSE_BUSH, PEONY, TORCHFLOWER,
+                    PITCHER_PLANT, SPORE_BLOSSOM, RED_MUSHROOM, BROWN_MUSHROOM,
+                    VINE, GLOW_LICHEN, SUGAR_CANE, BAMBOO, CACTUS -> true;
+            default -> false;
+        };
+    }
+
+    private boolean isCropHarvestBlock(Material material) {
+        return switch (material) {
+            case WHEAT, CARROTS, POTATOES, BEETROOTS, NETHER_WART, COCOA,
+                    SWEET_BERRY_BUSH, TORCHFLOWER_CROP, PITCHER_CROP -> true;
+            default -> false;
+        };
+    }
+
+    private boolean isMatureCropBlock(Block block) {
+        return block.getBlockData() instanceof Ageable ageable
+                && ageable.getAge() >= ageable.getMaximumAge();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -5138,6 +7622,43 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         return true;
     }
 
+    private boolean denyTieredSmithCraft(Player player, String itemId) {
+        if (!isTieredSmithEquipmentId(itemId)) {
+            return false;
+        }
+        String tierId = tierIdFromItemId(itemId);
+        if (tierId == null) {
+            return false;
+        }
+        int requiredLevel = tierRequirement(tierId, "smith-level", 0);
+        int currentLevel = profiles.get(player.getUniqueId()).professionLevel("herrero");
+        if (currentLevel >= requiredLevel) {
+            return false;
+        }
+        player.sendActionBar(Component.text("Requiere herrero nivel "
+                + requiredLevel + " | Tienes " + currentLevel, NamedTextColor.RED));
+        return true;
+    }
+
+    private boolean denyTieredEquipOrUse(Player player, ItemStack stack) {
+        String itemId = oraxenItemId(stack);
+        if (!isTieredSmithEquipmentId(itemId)) {
+            return false;
+        }
+        String tierId = tierIdFromItemId(itemId);
+        if (tierId == null) {
+            return false;
+        }
+        int requiredLevel = tierRequirement(tierId, "equip-level", 0);
+        int currentLevel = profiles.get(player.getUniqueId()).level();
+        if (currentLevel >= requiredLevel) {
+            return false;
+        }
+        player.sendActionBar(Component.text("Requiere nivel de clase "
+                + requiredLevel + " | Tienes " + currentLevel, NamedTextColor.RED));
+        return true;
+    }
+
     private boolean isArmorSlot(InventoryType.SlotType slotType) {
         return slotType == InventoryType.SlotType.ARMOR;
     }
@@ -5151,11 +7672,14 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         if (baseClass == null) {
             return;
         }
+        if ("mago".equals(baseClass) && isMageActionBarEnabled(player)) {
+            return;
+        }
+        if ("clerigo".equals(baseClass) && isClericActionBarEnabled(player)) {
+            return;
+        }
         Material item = event.getItem().getType();
-        if ("guerrero".equals(baseClass) && isWarriorWeapon(item)) {
-            event.setCancelled(true);
-            useWarriorOverwhelmingStrike(player);
-        } else if ("explorador".equals(baseClass) && item == Material.BOW) {
+        if ("explorador".equals(baseClass) && item == Material.BOW) {
             event.setCancelled(true);
             useExplorerRoll(player);
         } else if ("mago".equals(baseClass) && item == Material.STICK) {
@@ -5168,6 +7692,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useWarriorDash(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireWarriorWeaponInMainHand(player, true)) {
+            return;
+        }
         int range = getConfig().getInt("base-class-abilities.warrior-dash.max-range", 7);
         if (!(player.getTargetEntity(range) instanceof LivingEntity target) || !isAbilityTarget(player, target)) {
             player.sendActionBar(Component.text("Dash: mira a un enemigo a menos de " + range + " bloques.",
@@ -5187,6 +7717,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useWarriorDesolatingLeap(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireWarriorWeaponInMainHand(player, true)) {
+            return;
+        }
         int cooldown = getConfig().getInt("base-class-abilities.warrior-desolating-leap.cooldown-seconds", 6);
         if (!startCooldown(player, "warrior-desolating-leap", cooldown)) {
             return;
@@ -5218,9 +7754,17 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useWarriorOverwhelmingStrike(Player player, LivingEntity preferredTarget) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
         PlayerProfile profile = profiles.get(player.getUniqueId());
         if ("berserker".equals(profile.specialization())) {
             useBerserkerWhirlwind(player);
+            return;
+        }
+        ItemStack weapon = mainHandItem(player);
+        if (!isWarriorAbilityWeapon(weapon)) {
+            requireWarriorWeaponInMainHand(player, true);
             return;
         }
         int range = getConfig().getInt("base-class-abilities.warrior-overwhelming-strike.range", 5);
@@ -5239,7 +7783,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
         boolean guardian = "guardian".equals(profile.specialization());
         double multiplier = getConfig().getDouble("base-class-abilities.warrior-overwhelming-strike."
                 + (guardian ? "guardian-damage-multiplier" : "warrior-damage-multiplier"), guardian ? 1.5 : 1.7);
-        double damage = weaponDamage(player.getInventory().getItemInMainHand()) * multiplier;
+        double damage = weaponDamage(weapon) * multiplier;
         double dealt = dealAbilityDamage(player, target, damage);
         applyOverwhelmingSlow(target);
         if (guardian) {
@@ -5376,6 +7920,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useExplorerRoll(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireExplorerWeaponInMainHand(player, true)) {
+            return;
+        }
         int cooldown = getConfig().getInt("base-class-abilities.explorer-roll.cooldown-seconds", 6);
         if (!startCooldown(player, "explorer-roll", cooldown)) {
             return;
@@ -5389,6 +7939,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useMageBarrier(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireMageWeaponInMainHand(player, true)) {
+            return;
+        }
         int cooldown = getConfig().getInt("base-class-abilities.mage-barrier.cooldown-seconds", 16);
         if (!startCooldown(player, "mage-barrier", cooldown)) {
             return;
@@ -5402,6 +7958,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useClericBlessing(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireClericWeaponInMainHand(player, true)) {
+            return;
+        }
         int range = getConfig().getInt("base-class-abilities.cleric-blessing.range", 12);
         Player target = player.getTargetEntity(range) instanceof Player selected ? selected : player;
         int cooldown = getConfig().getInt("base-class-abilities.cleric-blessing.cooldown-seconds", 14);
@@ -5416,13 +7978,19 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useBerserkerWhirlwind(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireWarriorWeaponInMainHand(player, true)) {
+            return;
+        }
         int cooldown = getConfig().getInt("base-class-abilities.warrior-overwhelming-strike.cooldown-seconds", 15);
         if (!startCooldown(player, "warrior-overwhelming-strike", cooldown)) {
             return;
         }
         showSkillCast(player, Component.text("Torbellino", NamedTextColor.RED));
         double radius = getConfig().getDouble("specialization-abilities.berserker-whirlwind.radius", 4.0);
-        double mainDamage = weaponDamage(player.getInventory().getItemInMainHand());
+        double mainDamage = weaponDamage(mainHandItem(player));
         double offhandDamage = weaponDamage(player.getInventory().getItemInOffHand());
         double damage = mainDamage * getConfig().getDouble("specialization-abilities.berserker-whirlwind.main-hand-multiplier", 1.7)
                 + offhandDamage * getConfig().getDouble("specialization-abilities.berserker-whirlwind.offhand-multiplier", 0.7);
@@ -5504,6 +8072,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useHunterMark(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireExplorerWeaponInMainHand(player, true)) {
+            return;
+        }
         int range = getConfig().getInt("specialization-abilities.hunter-mark.range", 18);
         if (!(player.getTargetEntity(range) instanceof org.bukkit.entity.LivingEntity mob)
                 || !isAbilityTarget(player, mob)) {
@@ -5523,6 +8097,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useRogueVanish(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireExplorerWeaponInMainHand(player, true)) {
+            return;
+        }
         int cooldown = getConfig().getInt("specialization-abilities.rogue-vanish.cooldown-seconds", 16);
         if (!startCooldown(player, "rogue-vanish", cooldown)) {
             return;
@@ -5537,6 +8117,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void usePyromancerFireball(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireMageWeaponInMainHand(player, true)) {
+            return;
+        }
         int range = getConfig().getInt("specialization-abilities.pyromancer-fireball.range", 18);
         if (!(player.getTargetEntity(range) instanceof org.bukkit.entity.LivingEntity target)
                 || !isAbilityTarget(player, target)) {
@@ -5564,6 +8150,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useArcanistLink(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireMageWeaponInMainHand(player, true)) {
+            return;
+        }
         double radius = getConfig().getDouble("specialization-abilities.arcanist-link.radius", 12.0);
         Player tank = nearestTank(player, radius);
         if (tank == null) {
@@ -5616,6 +8208,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void useDruidBloom(Player player) {
+        if (isAbilitySilenced(player, true)) {
+            return;
+        }
+        if (!requireClericWeaponInMainHand(player, true)) {
+            return;
+        }
         int cooldown = getConfig().getInt("specialization-abilities.druid-bloom.cooldown-seconds", 14);
         if (!startCooldown(player, "druid-bloom", cooldown)) {
             return;
@@ -5678,6 +8276,12 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         activeShieldGuards.remove(event.getPlayer().getUniqueId());
         shieldGuardCooldowns.remove(event.getPlayer().getUniqueId());
+        silencedPlayers.remove(event.getPlayer().getUniqueId());
+        silenceImmunityPlayers.remove(event.getPlayer().getUniqueId());
+        silenceFeedbackCooldowns.remove(event.getPlayer().getUniqueId());
+        warriorSelectedSkillSlots.remove(event.getPlayer().getUniqueId());
+        mageSelectedSkillSlots.remove(event.getPlayer().getUniqueId());
+        clericSelectedSkillSlots.remove(event.getPlayer().getUniqueId());
         DownedState state = downed.remove(event.getPlayer().getUniqueId());
         if (state != null) {
             state.cancel();
@@ -5694,6 +8298,9 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             staleState.cancel();
         }
         finishShieldGuard(player, false, false);
+        silencedPlayers.remove(player.getUniqueId());
+        silenceImmunityPlayers.remove(player.getUniqueId());
+        silenceFeedbackCooldowns.remove(player.getUniqueId());
         resetPlayerMobilityState(player);
         refreshPlayerBaseStats(player);
         updateTab(player);
@@ -5716,6 +8323,7 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             if (updated) {
                 saveProfiles();
             }
+            syncClassCombatBar(player);
             player.showTitle(net.kyori.adventure.title.Title.title(
                     Component.text("Servidro MX", NamedTextColor.GOLD),
                     Component.text("Reino Corrompido", NamedTextColor.DARK_RED)));
@@ -5971,9 +8579,9 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             case "guerrero" -> {
                 player.sendMessage(Component.text("Guerrero | Rol: frente de combate y presion.", NamedTextColor.GOLD));
                 player.sendMessage(Component.text("Armas base: espada, hacha y escudo.", NamedTextColor.YELLOW));
-                player.sendMessage(Component.text("Dash: F al sprintar | Golpe Abrumador: Shift + clic izquierdo | Salto Desolador: saltar + Shift", NamedTextColor.YELLOW));
-                player.sendMessage(Component.text("Guardia de escudo: 5 s activos | 10 s de enfriamiento al soltar.", NamedTextColor.YELLOW));
-                player.sendMessage(Component.text("Provocar: Shift + clic derecho con escudo.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Q: Golpe Abrumador.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Shift + click derecho con escudo: Provocar | click derecho con escudo: Guardia.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Shift en el aire: Salto Desolador. Guardia dura 5 s y luego entra en 10 s de enfriamiento.", NamedTextColor.YELLOW));
             }
             case "explorador" -> {
                 player.sendMessage(Component.text("Explorador | Rol: movilidad, persecucion y precision.", NamedTextColor.GREEN));
@@ -5982,14 +8590,16 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             }
             case "mago" -> {
                 player.sendMessage(Component.text("Mago | Rol: dano magico y control.", NamedTextColor.LIGHT_PURPLE));
-                player.sendMessage(Component.text("Arma base: varita.", NamedTextColor.YELLOW));
-                player.sendMessage(Component.text("Barrera: Shift + clic izquierdo con varita. Especializaciones: Piromante y Arcanista.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Armas base: foco, varita, staff o grimorio.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Click derecho: proyectil basico a distancia.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Shift + clic izquierdo: Barrera.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Especializaciones: Piromante y Arcanista.", NamedTextColor.YELLOW));
             }
             case "clerigo" -> {
                 player.sendMessage(Component.text("Clerigo | Rol: apoyo, curacion y utilidad.", NamedTextColor.YELLOW));
-                player.sendMessage(Component.text("Armas base: staff y escudo.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Armas base: reliquia, varita o staff con escudo.", NamedTextColor.YELLOW));
                 player.sendMessage(Component.text("Guardia de escudo: 5 s activos | 10 s de enfriamiento al soltar.", NamedTextColor.YELLOW));
-                player.sendMessage(Component.text("Bendicion: Shift + clic izquierdo con staff | Curacion Menor: clic derecho con staff.", NamedTextColor.YELLOW));
+                player.sendMessage(Component.text("Click derecho: proyectil de luz | Shift + clic izquierdo: Bendicion.", NamedTextColor.YELLOW));
             }
             default -> player.sendMessage(Component.text("No tienes una clase base elegida todavia.", NamedTextColor.RED));
         }
@@ -6085,6 +8695,9 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
             long startedAtMillis,
             long expiresAtMillis,
             long releaseDetectionAtMillis) {
+    }
+
+    private record ElementalSapling(String element, String family) {
     }
 
     private static final class DownedState {

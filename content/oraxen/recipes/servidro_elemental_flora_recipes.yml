@@ -1,0 +1,722 @@
+# Generado por tools/generate_elemental_flora_recipes.py
+# Recetas para que las variantes elementales mantengan su cadena de madera.
+
+ice_oak_log_to_planks:
+  result:
+    oraxen_item: ice_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_oak_log
+  shape:
+    - "A"
+
+ice_oak_stripped_log_to_planks:
+  result:
+    oraxen_item: ice_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_oak_stripped_log
+  shape:
+    - "A"
+
+ice_spruce_log_to_planks:
+  result:
+    oraxen_item: ice_spruce_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_spruce_log
+  shape:
+    - "A"
+
+ice_spruce_stripped_log_to_planks:
+  result:
+    oraxen_item: ice_spruce_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_spruce_stripped_log
+  shape:
+    - "A"
+
+ice_birch_log_to_planks:
+  result:
+    oraxen_item: ice_birch_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_birch_log
+  shape:
+    - "A"
+
+ice_birch_stripped_log_to_planks:
+  result:
+    oraxen_item: ice_birch_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_birch_stripped_log
+  shape:
+    - "A"
+
+ice_jungle_log_to_planks:
+  result:
+    oraxen_item: ice_jungle_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_jungle_log
+  shape:
+    - "A"
+
+ice_jungle_stripped_log_to_planks:
+  result:
+    oraxen_item: ice_jungle_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_jungle_stripped_log
+  shape:
+    - "A"
+
+ice_acacia_log_to_planks:
+  result:
+    oraxen_item: ice_acacia_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_acacia_log
+  shape:
+    - "A"
+
+ice_acacia_stripped_log_to_planks:
+  result:
+    oraxen_item: ice_acacia_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_acacia_stripped_log
+  shape:
+    - "A"
+
+ice_dark_oak_log_to_planks:
+  result:
+    oraxen_item: ice_dark_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_dark_oak_log
+  shape:
+    - "A"
+
+ice_dark_oak_stripped_log_to_planks:
+  result:
+    oraxen_item: ice_dark_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_dark_oak_stripped_log
+  shape:
+    - "A"
+
+ice_mangrove_log_to_planks:
+  result:
+    oraxen_item: ice_mangrove_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_mangrove_log
+  shape:
+    - "A"
+
+ice_mangrove_stripped_log_to_planks:
+  result:
+    oraxen_item: ice_mangrove_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_mangrove_stripped_log
+  shape:
+    - "A"
+
+ice_cherry_log_to_planks:
+  result:
+    oraxen_item: ice_cherry_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_cherry_log
+  shape:
+    - "A"
+
+ice_cherry_stripped_log_to_planks:
+  result:
+    oraxen_item: ice_cherry_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_cherry_stripped_log
+  shape:
+    - "A"
+
+ice_pale_oak_log_to_planks:
+  result:
+    oraxen_item: ice_pale_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_pale_oak_log
+  shape:
+    - "A"
+
+ice_pale_oak_stripped_log_to_planks:
+  result:
+    oraxen_item: ice_pale_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: ice_pale_oak_stripped_log
+  shape:
+    - "A"
+
+ice_dandelion_to_dye:
+  result:
+    minecraft_type: YELLOW_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_dandelion
+  shape:
+    - "A"
+
+ice_poppy_to_dye:
+  result:
+    minecraft_type: RED_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_poppy
+  shape:
+    - "A"
+
+ice_blue_orchid_to_dye:
+  result:
+    minecraft_type: LIGHT_BLUE_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_blue_orchid
+  shape:
+    - "A"
+
+ice_allium_to_dye:
+  result:
+    minecraft_type: MAGENTA_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_allium
+  shape:
+    - "A"
+
+ice_azure_bluet_to_dye:
+  result:
+    minecraft_type: LIGHT_GRAY_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_azure_bluet
+  shape:
+    - "A"
+
+ice_red_tulip_to_dye:
+  result:
+    minecraft_type: RED_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_red_tulip
+  shape:
+    - "A"
+
+ice_orange_tulip_to_dye:
+  result:
+    minecraft_type: ORANGE_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_orange_tulip
+  shape:
+    - "A"
+
+ice_white_tulip_to_dye:
+  result:
+    minecraft_type: LIGHT_GRAY_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_white_tulip
+  shape:
+    - "A"
+
+ice_pink_tulip_to_dye:
+  result:
+    minecraft_type: PINK_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_pink_tulip
+  shape:
+    - "A"
+
+ice_oxeye_daisy_to_dye:
+  result:
+    minecraft_type: LIGHT_GRAY_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_oxeye_daisy
+  shape:
+    - "A"
+
+ice_cornflower_to_dye:
+  result:
+    minecraft_type: BLUE_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_cornflower
+  shape:
+    - "A"
+
+ice_lily_of_the_valley_to_dye:
+  result:
+    minecraft_type: WHITE_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_lily_of_the_valley
+  shape:
+    - "A"
+
+ice_sunflower_front_to_dye:
+  result:
+    minecraft_type: YELLOW_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_sunflower_front
+  shape:
+    - "A"
+
+ice_rose_bush_top_to_dye:
+  result:
+    minecraft_type: RED_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_rose_bush_top
+  shape:
+    - "A"
+
+ice_peony_top_to_dye:
+  result:
+    minecraft_type: PINK_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_peony_top
+  shape:
+    - "A"
+
+ice_lilac_top_to_dye:
+  result:
+    minecraft_type: MAGENTA_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_lilac_top
+  shape:
+    - "A"
+
+ice_torchflower_to_dye:
+  result:
+    minecraft_type: ORANGE_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_torchflower
+  shape:
+    - "A"
+
+ice_wildflowers_to_dye:
+  result:
+    minecraft_type: YELLOW_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: ice_wildflowers
+  shape:
+    - "A"
+
+fire_oak_log_to_planks:
+  result:
+    oraxen_item: fire_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_oak_log
+  shape:
+    - "A"
+
+fire_oak_stripped_log_to_planks:
+  result:
+    oraxen_item: fire_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_oak_stripped_log
+  shape:
+    - "A"
+
+fire_spruce_log_to_planks:
+  result:
+    oraxen_item: fire_spruce_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_spruce_log
+  shape:
+    - "A"
+
+fire_spruce_stripped_log_to_planks:
+  result:
+    oraxen_item: fire_spruce_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_spruce_stripped_log
+  shape:
+    - "A"
+
+fire_birch_log_to_planks:
+  result:
+    oraxen_item: fire_birch_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_birch_log
+  shape:
+    - "A"
+
+fire_birch_stripped_log_to_planks:
+  result:
+    oraxen_item: fire_birch_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_birch_stripped_log
+  shape:
+    - "A"
+
+fire_jungle_log_to_planks:
+  result:
+    oraxen_item: fire_jungle_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_jungle_log
+  shape:
+    - "A"
+
+fire_jungle_stripped_log_to_planks:
+  result:
+    oraxen_item: fire_jungle_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_jungle_stripped_log
+  shape:
+    - "A"
+
+fire_acacia_log_to_planks:
+  result:
+    oraxen_item: fire_acacia_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_acacia_log
+  shape:
+    - "A"
+
+fire_acacia_stripped_log_to_planks:
+  result:
+    oraxen_item: fire_acacia_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_acacia_stripped_log
+  shape:
+    - "A"
+
+fire_dark_oak_log_to_planks:
+  result:
+    oraxen_item: fire_dark_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_dark_oak_log
+  shape:
+    - "A"
+
+fire_dark_oak_stripped_log_to_planks:
+  result:
+    oraxen_item: fire_dark_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_dark_oak_stripped_log
+  shape:
+    - "A"
+
+fire_mangrove_log_to_planks:
+  result:
+    oraxen_item: fire_mangrove_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_mangrove_log
+  shape:
+    - "A"
+
+fire_mangrove_stripped_log_to_planks:
+  result:
+    oraxen_item: fire_mangrove_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_mangrove_stripped_log
+  shape:
+    - "A"
+
+fire_cherry_log_to_planks:
+  result:
+    oraxen_item: fire_cherry_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_cherry_log
+  shape:
+    - "A"
+
+fire_cherry_stripped_log_to_planks:
+  result:
+    oraxen_item: fire_cherry_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_cherry_stripped_log
+  shape:
+    - "A"
+
+fire_pale_oak_log_to_planks:
+  result:
+    oraxen_item: fire_pale_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_pale_oak_log
+  shape:
+    - "A"
+
+fire_pale_oak_stripped_log_to_planks:
+  result:
+    oraxen_item: fire_pale_oak_planks
+    amount: 4
+  ingredients:
+    A:
+      oraxen_item: fire_pale_oak_stripped_log
+  shape:
+    - "A"
+
+fire_dandelion_to_dye:
+  result:
+    minecraft_type: YELLOW_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_dandelion
+  shape:
+    - "A"
+
+fire_poppy_to_dye:
+  result:
+    minecraft_type: RED_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_poppy
+  shape:
+    - "A"
+
+fire_blue_orchid_to_dye:
+  result:
+    minecraft_type: LIGHT_BLUE_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_blue_orchid
+  shape:
+    - "A"
+
+fire_allium_to_dye:
+  result:
+    minecraft_type: MAGENTA_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_allium
+  shape:
+    - "A"
+
+fire_azure_bluet_to_dye:
+  result:
+    minecraft_type: LIGHT_GRAY_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_azure_bluet
+  shape:
+    - "A"
+
+fire_red_tulip_to_dye:
+  result:
+    minecraft_type: RED_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_red_tulip
+  shape:
+    - "A"
+
+fire_orange_tulip_to_dye:
+  result:
+    minecraft_type: ORANGE_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_orange_tulip
+  shape:
+    - "A"
+
+fire_white_tulip_to_dye:
+  result:
+    minecraft_type: LIGHT_GRAY_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_white_tulip
+  shape:
+    - "A"
+
+fire_pink_tulip_to_dye:
+  result:
+    minecraft_type: PINK_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_pink_tulip
+  shape:
+    - "A"
+
+fire_oxeye_daisy_to_dye:
+  result:
+    minecraft_type: LIGHT_GRAY_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_oxeye_daisy
+  shape:
+    - "A"
+
+fire_cornflower_to_dye:
+  result:
+    minecraft_type: BLUE_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_cornflower
+  shape:
+    - "A"
+
+fire_lily_of_the_valley_to_dye:
+  result:
+    minecraft_type: WHITE_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_lily_of_the_valley
+  shape:
+    - "A"
+
+fire_sunflower_front_to_dye:
+  result:
+    minecraft_type: YELLOW_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_sunflower_front
+  shape:
+    - "A"
+
+fire_rose_bush_top_to_dye:
+  result:
+    minecraft_type: RED_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_rose_bush_top
+  shape:
+    - "A"
+
+fire_peony_top_to_dye:
+  result:
+    minecraft_type: PINK_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_peony_top
+  shape:
+    - "A"
+
+fire_lilac_top_to_dye:
+  result:
+    minecraft_type: MAGENTA_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_lilac_top
+  shape:
+    - "A"
+
+fire_torchflower_to_dye:
+  result:
+    minecraft_type: ORANGE_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_torchflower
+  shape:
+    - "A"
+
+fire_wildflowers_to_dye:
+  result:
+    minecraft_type: YELLOW_DYE
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: fire_wildflowers
+  shape:
+    - "A"

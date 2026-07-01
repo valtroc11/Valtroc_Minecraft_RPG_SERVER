@@ -1,0 +1,3598 @@
+# Generado por tools/generate_elemental_flora_oraxen_items.py
+# Bloques elementales de arboles y flores.
+
+ice_oak_log:
+  displayname: "<#9edfff>Tronco de Roble de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/oak/oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 120
+      model: ice_oak_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_oak_log, probability: 1.0}
+
+ice_oak_stripped_log:
+  displayname: "<#9edfff>Tronco Pelado de Roble de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/oak/stripped_oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 121
+      model: ice_oak_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_oak_stripped_log, probability: 1.0}
+
+ice_oak_planks:
+  displayname: "<#9edfff>Tablones de Roble de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/oak/oak_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 122
+      model: ice_oak_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_oak_planks, probability: 1.0}
+
+ice_oak_leaves:
+  displayname: "<#9edfff>Hojas de Roble de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/oak/oak_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 123
+      model: ice_oak_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: ice_oak_leaves, probability: 1.0}
+
+ice_oak_sapling:
+  displayname: "<#9edfff>Retoño de Roble de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/oak/oak_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 124
+      model: ice_oak_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_oak_sapling, probability: 1.0}
+
+ice_spruce_log:
+  displayname: "<#9edfff>Tronco de Abeto de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/spruce/spruce_log
+  Mechanics:
+    noteblock:
+      custom_variation: 125
+      model: ice_spruce_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_spruce_log, probability: 1.0}
+
+ice_spruce_stripped_log:
+  displayname: "<#9edfff>Tronco Pelado de Abeto de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/spruce/stripped_spruce_log
+  Mechanics:
+    noteblock:
+      custom_variation: 126
+      model: ice_spruce_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_spruce_stripped_log, probability: 1.0}
+
+ice_spruce_planks:
+  displayname: "<#9edfff>Tablones de Abeto de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/spruce/spruce_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 127
+      model: ice_spruce_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_spruce_planks, probability: 1.0}
+
+ice_spruce_leaves:
+  displayname: "<#9edfff>Hojas de Abeto de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/spruce/spruce_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 128
+      model: ice_spruce_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: ice_spruce_leaves, probability: 1.0}
+
+ice_spruce_sapling:
+  displayname: "<#9edfff>Retoño de Abeto de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/spruce/spruce_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 129
+      model: ice_spruce_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_spruce_sapling, probability: 1.0}
+
+ice_birch_log:
+  displayname: "<#9edfff>Tronco de Abedul de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/birch/birch_log
+  Mechanics:
+    noteblock:
+      custom_variation: 130
+      model: ice_birch_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_birch_log, probability: 1.0}
+
+ice_birch_stripped_log:
+  displayname: "<#9edfff>Tronco Pelado de Abedul de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/birch/stripped_birch_log
+  Mechanics:
+    noteblock:
+      custom_variation: 131
+      model: ice_birch_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_birch_stripped_log, probability: 1.0}
+
+ice_birch_planks:
+  displayname: "<#9edfff>Tablones de Abedul de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/birch/birch_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 132
+      model: ice_birch_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_birch_planks, probability: 1.0}
+
+ice_birch_leaves:
+  displayname: "<#9edfff>Hojas de Abedul de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/birch/birch_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 133
+      model: ice_birch_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: ice_birch_leaves, probability: 1.0}
+
+ice_birch_sapling:
+  displayname: "<#9edfff>Retoño de Abedul de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/birch/birch_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 134
+      model: ice_birch_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_birch_sapling, probability: 1.0}
+
+ice_jungle_log:
+  displayname: "<#9edfff>Tronco de Jungla de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/jungle/jungle_log
+  Mechanics:
+    noteblock:
+      custom_variation: 135
+      model: ice_jungle_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_jungle_log, probability: 1.0}
+
+ice_jungle_stripped_log:
+  displayname: "<#9edfff>Tronco Pelado de Jungla de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/jungle/stripped_jungle_log
+  Mechanics:
+    noteblock:
+      custom_variation: 136
+      model: ice_jungle_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_jungle_stripped_log, probability: 1.0}
+
+ice_jungle_planks:
+  displayname: "<#9edfff>Tablones de Jungla de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/jungle/jungle_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 137
+      model: ice_jungle_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_jungle_planks, probability: 1.0}
+
+ice_jungle_leaves:
+  displayname: "<#9edfff>Hojas de Jungla de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/jungle/jungle_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 138
+      model: ice_jungle_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: ice_jungle_leaves, probability: 1.0}
+
+ice_jungle_sapling:
+  displayname: "<#9edfff>Retoño de Jungla de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/jungle/jungle_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 139
+      model: ice_jungle_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_jungle_sapling, probability: 1.0}
+
+ice_acacia_log:
+  displayname: "<#9edfff>Tronco de Acacia de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/acacia/acacia_log
+  Mechanics:
+    noteblock:
+      custom_variation: 140
+      model: ice_acacia_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_acacia_log, probability: 1.0}
+
+ice_acacia_stripped_log:
+  displayname: "<#9edfff>Tronco Pelado de Acacia de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/acacia/stripped_acacia_log
+  Mechanics:
+    noteblock:
+      custom_variation: 141
+      model: ice_acacia_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_acacia_stripped_log, probability: 1.0}
+
+ice_acacia_planks:
+  displayname: "<#9edfff>Tablones de Acacia de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/acacia/acacia_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 142
+      model: ice_acacia_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_acacia_planks, probability: 1.0}
+
+ice_acacia_leaves:
+  displayname: "<#9edfff>Hojas de Acacia de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/acacia/acacia_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 143
+      model: ice_acacia_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: ice_acacia_leaves, probability: 1.0}
+
+ice_acacia_sapling:
+  displayname: "<#9edfff>Retoño de Acacia de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/acacia/acacia_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 144
+      model: ice_acacia_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_acacia_sapling, probability: 1.0}
+
+ice_dark_oak_log:
+  displayname: "<#9edfff>Tronco de Roble Oscuro de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/dark_oak/dark_oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 145
+      model: ice_dark_oak_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_dark_oak_log, probability: 1.0}
+
+ice_dark_oak_stripped_log:
+  displayname: "<#9edfff>Tronco Pelado de Roble Oscuro de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/dark_oak/stripped_dark_oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 146
+      model: ice_dark_oak_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_dark_oak_stripped_log, probability: 1.0}
+
+ice_dark_oak_planks:
+  displayname: "<#9edfff>Tablones de Roble Oscuro de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/dark_oak/dark_oak_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 147
+      model: ice_dark_oak_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_dark_oak_planks, probability: 1.0}
+
+ice_dark_oak_leaves:
+  displayname: "<#9edfff>Hojas de Roble Oscuro de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/dark_oak/dark_oak_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 148
+      model: ice_dark_oak_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: ice_dark_oak_leaves, probability: 1.0}
+
+ice_dark_oak_sapling:
+  displayname: "<#9edfff>Retoño de Roble Oscuro de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/dark_oak/dark_oak_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 149
+      model: ice_dark_oak_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_dark_oak_sapling, probability: 1.0}
+
+ice_mangrove_log:
+  displayname: "<#9edfff>Tronco de Mangle de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/mangrove/mangrove_log
+  Mechanics:
+    noteblock:
+      custom_variation: 150
+      model: ice_mangrove_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_mangrove_log, probability: 1.0}
+
+ice_mangrove_stripped_log:
+  displayname: "<#9edfff>Tronco Pelado de Mangle de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/mangrove/stripped_mangrove_log
+  Mechanics:
+    noteblock:
+      custom_variation: 151
+      model: ice_mangrove_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_mangrove_stripped_log, probability: 1.0}
+
+ice_mangrove_planks:
+  displayname: "<#9edfff>Tablones de Mangle de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/mangrove/mangrove_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 152
+      model: ice_mangrove_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_mangrove_planks, probability: 1.0}
+
+ice_mangrove_leaves:
+  displayname: "<#9edfff>Hojas de Mangle de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/mangrove/mangrove_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 153
+      model: ice_mangrove_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: ice_mangrove_leaves, probability: 1.0}
+
+ice_cherry_log:
+  displayname: "<#9edfff>Tronco de Cerezo de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/cherry/cherry_log
+  Mechanics:
+    noteblock:
+      custom_variation: 154
+      model: ice_cherry_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_cherry_log, probability: 1.0}
+
+ice_cherry_stripped_log:
+  displayname: "<#9edfff>Tronco Pelado de Cerezo de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/cherry/stripped_cherry_log
+  Mechanics:
+    noteblock:
+      custom_variation: 155
+      model: ice_cherry_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_cherry_stripped_log, probability: 1.0}
+
+ice_cherry_planks:
+  displayname: "<#9edfff>Tablones de Cerezo de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/cherry/cherry_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 156
+      model: ice_cherry_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_cherry_planks, probability: 1.0}
+
+ice_cherry_leaves:
+  displayname: "<#9edfff>Hojas de Cerezo de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/cherry/cherry_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 157
+      model: ice_cherry_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: ice_cherry_leaves, probability: 1.0}
+
+ice_cherry_sapling:
+  displayname: "<#9edfff>Retoño de Cerezo de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/cherry/cherry_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 158
+      model: ice_cherry_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_cherry_sapling, probability: 1.0}
+
+ice_pale_oak_log:
+  displayname: "<#9edfff>Tronco de Roble Palido de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/pale_oak/pale_oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 159
+      model: ice_pale_oak_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_pale_oak_log, probability: 1.0}
+
+ice_pale_oak_stripped_log:
+  displayname: "<#9edfff>Tronco Pelado de Roble Palido de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/pale_oak/stripped_pale_oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 160
+      model: ice_pale_oak_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_pale_oak_stripped_log, probability: 1.0}
+
+ice_pale_oak_planks:
+  displayname: "<#9edfff>Tablones de Roble Palido de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/pale_oak/pale_oak_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 161
+      model: ice_pale_oak_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_pale_oak_planks, probability: 1.0}
+
+ice_pale_oak_leaves:
+  displayname: "<#9edfff>Hojas de Roble Palido de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/pale_oak/pale_oak_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 162
+      model: ice_pale_oak_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: ice_pale_oak_leaves, probability: 1.0}
+
+ice_pale_oak_sapling:
+  displayname: "<#9edfff>Retoño de Roble Palido de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/ice/pale_oak/pale_oak_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 163
+      model: ice_pale_oak_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: ice_pale_oak_sapling, probability: 1.0}
+
+ice_dandelion:
+  displayname: "<#9edfff>Diente de Leon de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/dandelion
+  Mechanics:
+    noteblock:
+      custom_variation: 164
+      model: ice_dandelion
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_dandelion, probability: 1.0}
+
+ice_poppy:
+  displayname: "<#9edfff>Amapola de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/poppy
+  Mechanics:
+    noteblock:
+      custom_variation: 165
+      model: ice_poppy
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_poppy, probability: 1.0}
+
+ice_blue_orchid:
+  displayname: "<#9edfff>Orquidea Azul de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/blue_orchid
+  Mechanics:
+    noteblock:
+      custom_variation: 166
+      model: ice_blue_orchid
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_blue_orchid, probability: 1.0}
+
+ice_allium:
+  displayname: "<#9edfff>Allium de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/allium
+  Mechanics:
+    noteblock:
+      custom_variation: 167
+      model: ice_allium
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_allium, probability: 1.0}
+
+ice_azure_bluet:
+  displayname: "<#9edfff>Azure Bluet de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/azure_bluet
+  Mechanics:
+    noteblock:
+      custom_variation: 168
+      model: ice_azure_bluet
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_azure_bluet, probability: 1.0}
+
+ice_red_tulip:
+  displayname: "<#9edfff>Tulipan Rojo de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/red_tulip
+  Mechanics:
+    noteblock:
+      custom_variation: 169
+      model: ice_red_tulip
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_red_tulip, probability: 1.0}
+
+ice_orange_tulip:
+  displayname: "<#9edfff>Tulipan Naranja de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/orange_tulip
+  Mechanics:
+    noteblock:
+      custom_variation: 170
+      model: ice_orange_tulip
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_orange_tulip, probability: 1.0}
+
+ice_white_tulip:
+  displayname: "<#9edfff>Tulipan Blanco de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/white_tulip
+  Mechanics:
+    noteblock:
+      custom_variation: 171
+      model: ice_white_tulip
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_white_tulip, probability: 1.0}
+
+ice_pink_tulip:
+  displayname: "<#9edfff>Tulipan Rosa de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/pink_tulip
+  Mechanics:
+    noteblock:
+      custom_variation: 172
+      model: ice_pink_tulip
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_pink_tulip, probability: 1.0}
+
+ice_oxeye_daisy:
+  displayname: "<#9edfff>Margarita de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/oxeye_daisy
+  Mechanics:
+    noteblock:
+      custom_variation: 173
+      model: ice_oxeye_daisy
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_oxeye_daisy, probability: 1.0}
+
+ice_cornflower:
+  displayname: "<#9edfff>Aciano de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/cornflower
+  Mechanics:
+    noteblock:
+      custom_variation: 174
+      model: ice_cornflower
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_cornflower, probability: 1.0}
+
+ice_lily_of_the_valley:
+  displayname: "<#9edfff>Lirio del Valle de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/lily_of_the_valley
+  Mechanics:
+    noteblock:
+      custom_variation: 175
+      model: ice_lily_of_the_valley
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_lily_of_the_valley, probability: 1.0}
+
+ice_sunflower_front:
+  displayname: "<#9edfff>Girasol de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/sunflower_front
+  Mechanics:
+    noteblock:
+      custom_variation: 176
+      model: ice_sunflower_front
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_sunflower_front, probability: 1.0}
+
+ice_rose_bush_top:
+  displayname: "<#9edfff>Rosal de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/rose_bush_top
+  Mechanics:
+    noteblock:
+      custom_variation: 177
+      model: ice_rose_bush_top
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_rose_bush_top, probability: 1.0}
+
+ice_peony_top:
+  displayname: "<#9edfff>Peonia de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/peony_top
+  Mechanics:
+    noteblock:
+      custom_variation: 178
+      model: ice_peony_top
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_peony_top, probability: 1.0}
+
+ice_lilac_top:
+  displayname: "<#9edfff>Lila de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/lilac_top
+  Mechanics:
+    noteblock:
+      custom_variation: 179
+      model: ice_lilac_top
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_lilac_top, probability: 1.0}
+
+ice_torchflower:
+  displayname: "<#9edfff>Antorcha Floral de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/torchflower
+  Mechanics:
+    noteblock:
+      custom_variation: 180
+      model: ice_torchflower
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_torchflower, probability: 1.0}
+
+ice_wildflowers:
+  displayname: "<#9edfff>Flores Silvestres de Hielo"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/ice/wildflowers
+  Mechanics:
+    noteblock:
+      custom_variation: 181
+      model: ice_wildflowers
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: ice_wildflowers, probability: 1.0}
+
+fire_oak_log:
+  displayname: "<#df6f32>Tronco de Roble de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/oak/oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 182
+      model: fire_oak_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_oak_log, probability: 1.0}
+
+fire_oak_stripped_log:
+  displayname: "<#df6f32>Tronco Pelado de Roble de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/oak/stripped_oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 183
+      model: fire_oak_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_oak_stripped_log, probability: 1.0}
+
+fire_oak_planks:
+  displayname: "<#df6f32>Tablones de Roble de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/oak/oak_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 184
+      model: fire_oak_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_oak_planks, probability: 1.0}
+
+fire_oak_leaves:
+  displayname: "<#df6f32>Hojas de Roble de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/oak/oak_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 185
+      model: fire_oak_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: fire_oak_leaves, probability: 1.0}
+
+fire_oak_sapling:
+  displayname: "<#df6f32>Retoño de Roble de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/oak/oak_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 186
+      model: fire_oak_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_oak_sapling, probability: 1.0}
+
+fire_spruce_log:
+  displayname: "<#df6f32>Tronco de Abeto de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/spruce/spruce_log
+  Mechanics:
+    noteblock:
+      custom_variation: 187
+      model: fire_spruce_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_spruce_log, probability: 1.0}
+
+fire_spruce_stripped_log:
+  displayname: "<#df6f32>Tronco Pelado de Abeto de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/spruce/stripped_spruce_log
+  Mechanics:
+    noteblock:
+      custom_variation: 188
+      model: fire_spruce_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_spruce_stripped_log, probability: 1.0}
+
+fire_spruce_planks:
+  displayname: "<#df6f32>Tablones de Abeto de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/spruce/spruce_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 189
+      model: fire_spruce_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_spruce_planks, probability: 1.0}
+
+fire_spruce_leaves:
+  displayname: "<#df6f32>Hojas de Abeto de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/spruce/spruce_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 190
+      model: fire_spruce_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: fire_spruce_leaves, probability: 1.0}
+
+fire_spruce_sapling:
+  displayname: "<#df6f32>Retoño de Abeto de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/spruce/spruce_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 191
+      model: fire_spruce_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_spruce_sapling, probability: 1.0}
+
+fire_birch_log:
+  displayname: "<#df6f32>Tronco de Abedul de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/birch/birch_log
+  Mechanics:
+    noteblock:
+      custom_variation: 192
+      model: fire_birch_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_birch_log, probability: 1.0}
+
+fire_birch_stripped_log:
+  displayname: "<#df6f32>Tronco Pelado de Abedul de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/birch/stripped_birch_log
+  Mechanics:
+    noteblock:
+      custom_variation: 193
+      model: fire_birch_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_birch_stripped_log, probability: 1.0}
+
+fire_birch_planks:
+  displayname: "<#df6f32>Tablones de Abedul de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/birch/birch_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 194
+      model: fire_birch_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_birch_planks, probability: 1.0}
+
+fire_birch_leaves:
+  displayname: "<#df6f32>Hojas de Abedul de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/birch/birch_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 195
+      model: fire_birch_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: fire_birch_leaves, probability: 1.0}
+
+fire_birch_sapling:
+  displayname: "<#df6f32>Retoño de Abedul de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/birch/birch_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 196
+      model: fire_birch_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_birch_sapling, probability: 1.0}
+
+fire_jungle_log:
+  displayname: "<#df6f32>Tronco de Jungla de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/jungle/jungle_log
+  Mechanics:
+    noteblock:
+      custom_variation: 197
+      model: fire_jungle_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_jungle_log, probability: 1.0}
+
+fire_jungle_stripped_log:
+  displayname: "<#df6f32>Tronco Pelado de Jungla de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/jungle/stripped_jungle_log
+  Mechanics:
+    noteblock:
+      custom_variation: 198
+      model: fire_jungle_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_jungle_stripped_log, probability: 1.0}
+
+fire_jungle_planks:
+  displayname: "<#df6f32>Tablones de Jungla de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/jungle/jungle_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 199
+      model: fire_jungle_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_jungle_planks, probability: 1.0}
+
+fire_jungle_leaves:
+  displayname: "<#df6f32>Hojas de Jungla de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/jungle/jungle_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 200
+      model: fire_jungle_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: fire_jungle_leaves, probability: 1.0}
+
+fire_jungle_sapling:
+  displayname: "<#df6f32>Retoño de Jungla de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/jungle/jungle_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 201
+      model: fire_jungle_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_jungle_sapling, probability: 1.0}
+
+fire_acacia_log:
+  displayname: "<#df6f32>Tronco de Acacia de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/acacia/acacia_log
+  Mechanics:
+    noteblock:
+      custom_variation: 202
+      model: fire_acacia_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_acacia_log, probability: 1.0}
+
+fire_acacia_stripped_log:
+  displayname: "<#df6f32>Tronco Pelado de Acacia de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/acacia/stripped_acacia_log
+  Mechanics:
+    noteblock:
+      custom_variation: 203
+      model: fire_acacia_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_acacia_stripped_log, probability: 1.0}
+
+fire_acacia_planks:
+  displayname: "<#df6f32>Tablones de Acacia de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/acacia/acacia_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 204
+      model: fire_acacia_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_acacia_planks, probability: 1.0}
+
+fire_acacia_leaves:
+  displayname: "<#df6f32>Hojas de Acacia de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/acacia/acacia_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 205
+      model: fire_acacia_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: fire_acacia_leaves, probability: 1.0}
+
+fire_acacia_sapling:
+  displayname: "<#df6f32>Retoño de Acacia de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/acacia/acacia_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 206
+      model: fire_acacia_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_acacia_sapling, probability: 1.0}
+
+fire_dark_oak_log:
+  displayname: "<#df6f32>Tronco de Roble Oscuro de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/dark_oak/dark_oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 207
+      model: fire_dark_oak_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_dark_oak_log, probability: 1.0}
+
+fire_dark_oak_stripped_log:
+  displayname: "<#df6f32>Tronco Pelado de Roble Oscuro de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/dark_oak/stripped_dark_oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 208
+      model: fire_dark_oak_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_dark_oak_stripped_log, probability: 1.0}
+
+fire_dark_oak_planks:
+  displayname: "<#df6f32>Tablones de Roble Oscuro de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/dark_oak/dark_oak_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 209
+      model: fire_dark_oak_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_dark_oak_planks, probability: 1.0}
+
+fire_dark_oak_leaves:
+  displayname: "<#df6f32>Hojas de Roble Oscuro de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/dark_oak/dark_oak_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 210
+      model: fire_dark_oak_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: fire_dark_oak_leaves, probability: 1.0}
+
+fire_dark_oak_sapling:
+  displayname: "<#df6f32>Retoño de Roble Oscuro de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/dark_oak/dark_oak_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 211
+      model: fire_dark_oak_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_dark_oak_sapling, probability: 1.0}
+
+fire_mangrove_log:
+  displayname: "<#df6f32>Tronco de Mangle de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/mangrove/mangrove_log
+  Mechanics:
+    noteblock:
+      custom_variation: 212
+      model: fire_mangrove_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_mangrove_log, probability: 1.0}
+
+fire_mangrove_stripped_log:
+  displayname: "<#df6f32>Tronco Pelado de Mangle de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/mangrove/stripped_mangrove_log
+  Mechanics:
+    noteblock:
+      custom_variation: 213
+      model: fire_mangrove_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_mangrove_stripped_log, probability: 1.0}
+
+fire_mangrove_planks:
+  displayname: "<#df6f32>Tablones de Mangle de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/mangrove/mangrove_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 214
+      model: fire_mangrove_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_mangrove_planks, probability: 1.0}
+
+fire_mangrove_leaves:
+  displayname: "<#df6f32>Hojas de Mangle de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/mangrove/mangrove_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 215
+      model: fire_mangrove_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: fire_mangrove_leaves, probability: 1.0}
+
+fire_cherry_log:
+  displayname: "<#df6f32>Tronco de Cerezo de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/cherry/cherry_log
+  Mechanics:
+    noteblock:
+      custom_variation: 216
+      model: fire_cherry_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_cherry_log, probability: 1.0}
+
+fire_cherry_stripped_log:
+  displayname: "<#df6f32>Tronco Pelado de Cerezo de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/cherry/stripped_cherry_log
+  Mechanics:
+    noteblock:
+      custom_variation: 217
+      model: fire_cherry_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_cherry_stripped_log, probability: 1.0}
+
+fire_cherry_planks:
+  displayname: "<#df6f32>Tablones de Cerezo de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/cherry/cherry_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 218
+      model: fire_cherry_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_cherry_planks, probability: 1.0}
+
+fire_cherry_leaves:
+  displayname: "<#df6f32>Hojas de Cerezo de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/cherry/cherry_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 219
+      model: fire_cherry_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: fire_cherry_leaves, probability: 1.0}
+
+fire_cherry_sapling:
+  displayname: "<#df6f32>Retoño de Cerezo de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/cherry/cherry_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 220
+      model: fire_cherry_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_cherry_sapling, probability: 1.0}
+
+fire_pale_oak_log:
+  displayname: "<#df6f32>Tronco de Roble Palido de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/pale_oak/pale_oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 221
+      model: fire_pale_oak_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_pale_oak_log, probability: 1.0}
+
+fire_pale_oak_stripped_log:
+  displayname: "<#df6f32>Tronco Pelado de Roble Palido de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/pale_oak/stripped_pale_oak_log
+  Mechanics:
+    noteblock:
+      custom_variation: 222
+      model: fire_pale_oak_stripped_log
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_pale_oak_stripped_log, probability: 1.0}
+
+fire_pale_oak_planks:
+  displayname: "<#df6f32>Tablones de Roble Palido de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/pale_oak/pale_oak_planks
+  Mechanics:
+    noteblock:
+      custom_variation: 223
+      model: fire_pale_oak_planks
+      hardness: 2
+      block_sounds:
+        place_sound: block.wood.place
+        break_sound: block.wood.break
+        hit_sound: block.wood.hit
+        step_sound: block.wood.step
+        fall_sound: block.wood.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_pale_oak_planks, probability: 1.0}
+
+fire_pale_oak_leaves:
+  displayname: "<#df6f32>Hojas de Roble Palido de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/pale_oak/pale_oak_leaves
+  Mechanics:
+    noteblock:
+      custom_variation: 224
+      model: fire_pale_oak_leaves
+      hardness: 0.3
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: STONE
+        best_tools:
+          - HOE
+        loots:
+          - {oraxen_item: fire_pale_oak_leaves, probability: 1.0}
+
+fire_pale_oak_sapling:
+  displayname: "<#df6f32>Retoño de Roble Palido de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/trees/fire/pale_oak/pale_oak_sapling
+  Mechanics:
+    noteblock:
+      custom_variation: 225
+      model: fire_pale_oak_sapling
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - AXE
+        loots:
+          - {oraxen_item: fire_pale_oak_sapling, probability: 1.0}
+
+fire_dandelion:
+  displayname: "<#df6f32>Diente de Leon de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/dandelion
+  Mechanics:
+    noteblock:
+      custom_variation: 226
+      model: fire_dandelion
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_dandelion, probability: 1.0}
+
+fire_poppy:
+  displayname: "<#df6f32>Amapola de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/poppy
+  Mechanics:
+    noteblock:
+      custom_variation: 227
+      model: fire_poppy
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_poppy, probability: 1.0}
+
+fire_blue_orchid:
+  displayname: "<#df6f32>Orquidea Azul de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/blue_orchid
+  Mechanics:
+    noteblock:
+      custom_variation: 228
+      model: fire_blue_orchid
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_blue_orchid, probability: 1.0}
+
+fire_allium:
+  displayname: "<#df6f32>Allium de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/allium
+  Mechanics:
+    noteblock:
+      custom_variation: 229
+      model: fire_allium
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_allium, probability: 1.0}
+
+fire_azure_bluet:
+  displayname: "<#df6f32>Azure Bluet de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/azure_bluet
+  Mechanics:
+    noteblock:
+      custom_variation: 230
+      model: fire_azure_bluet
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_azure_bluet, probability: 1.0}
+
+fire_red_tulip:
+  displayname: "<#df6f32>Tulipan Rojo de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/red_tulip
+  Mechanics:
+    noteblock:
+      custom_variation: 231
+      model: fire_red_tulip
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_red_tulip, probability: 1.0}
+
+fire_orange_tulip:
+  displayname: "<#df6f32>Tulipan Naranja de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/orange_tulip
+  Mechanics:
+    noteblock:
+      custom_variation: 232
+      model: fire_orange_tulip
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_orange_tulip, probability: 1.0}
+
+fire_white_tulip:
+  displayname: "<#df6f32>Tulipan Blanco de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/white_tulip
+  Mechanics:
+    noteblock:
+      custom_variation: 233
+      model: fire_white_tulip
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_white_tulip, probability: 1.0}
+
+fire_pink_tulip:
+  displayname: "<#df6f32>Tulipan Rosa de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/pink_tulip
+  Mechanics:
+    noteblock:
+      custom_variation: 234
+      model: fire_pink_tulip
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_pink_tulip, probability: 1.0}
+
+fire_oxeye_daisy:
+  displayname: "<#df6f32>Margarita de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/oxeye_daisy
+  Mechanics:
+    noteblock:
+      custom_variation: 235
+      model: fire_oxeye_daisy
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_oxeye_daisy, probability: 1.0}
+
+fire_cornflower:
+  displayname: "<#df6f32>Aciano de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/cornflower
+  Mechanics:
+    noteblock:
+      custom_variation: 236
+      model: fire_cornflower
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_cornflower, probability: 1.0}
+
+fire_lily_of_the_valley:
+  displayname: "<#df6f32>Lirio del Valle de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/lily_of_the_valley
+  Mechanics:
+    noteblock:
+      custom_variation: 237
+      model: fire_lily_of_the_valley
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_lily_of_the_valley, probability: 1.0}
+
+fire_sunflower_front:
+  displayname: "<#df6f32>Girasol de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/sunflower_front
+  Mechanics:
+    noteblock:
+      custom_variation: 238
+      model: fire_sunflower_front
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_sunflower_front, probability: 1.0}
+
+fire_rose_bush_top:
+  displayname: "<#df6f32>Rosal de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/rose_bush_top
+  Mechanics:
+    noteblock:
+      custom_variation: 239
+      model: fire_rose_bush_top
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_rose_bush_top, probability: 1.0}
+
+fire_peony_top:
+  displayname: "<#df6f32>Peonia de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/peony_top
+  Mechanics:
+    noteblock:
+      custom_variation: 240
+      model: fire_peony_top
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_peony_top, probability: 1.0}
+
+fire_lilac_top:
+  displayname: "<#df6f32>Lila de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/lilac_top
+  Mechanics:
+    noteblock:
+      custom_variation: 241
+      model: fire_lilac_top
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_lilac_top, probability: 1.0}
+
+fire_torchflower:
+  displayname: "<#df6f32>Antorcha Floral de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/torchflower
+  Mechanics:
+    noteblock:
+      custom_variation: 242
+      model: fire_torchflower
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_torchflower, probability: 1.0}
+
+fire_wildflowers:
+  displayname: "<#df6f32>Flores Silvestres de Fuego"
+  material: NOTE_BLOCK
+  Pack:
+    generate_model: true
+    parent_model: "block/cube_all"
+    textures:
+      - servidorpg/flora/flowers/fire/wildflowers
+  Mechanics:
+    noteblock:
+      custom_variation: 243
+      model: fire_wildflowers
+      hardness: 0.1
+      block_sounds:
+        place_sound: block.grass.place
+        break_sound: block.grass.break
+        hit_sound: block.grass.hit
+        step_sound: block.grass.step
+        fall_sound: block.grass.fall
+        volume: 0.85
+        pitch: 1.0
+      drop:
+        silktouch: false
+        minimal_type: WOOD
+        best_tools:
+          - SHEARS
+        loots:
+          - {oraxen_item: fire_wildflowers, probability: 1.0}
