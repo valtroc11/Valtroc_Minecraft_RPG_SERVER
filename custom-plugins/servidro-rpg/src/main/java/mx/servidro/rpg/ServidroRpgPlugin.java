@@ -3204,7 +3204,13 @@ public final class ServidroRpgPlugin extends JavaPlugin implements Listener {
     }
 
     private void teleportToFrozenPoc(Player player) {
-        org.bukkit.World world = Bukkit.getWorld(NamespacedKey.fromString("servidro:poc_helado"));
+        org.bukkit.World world = Bukkit.getWorld(NamespacedKey.fromString("servidro:cordilleras_heladas"));
+        if (world == null) {
+            world = Bukkit.getWorld("world_servidro_cordilleras_heladas");
+        }
+        if (world == null) {
+            world = Bukkit.getWorld(NamespacedKey.fromString("servidro:poc_helado"));
+        }
         if (world == null) {
             world = Bukkit.getWorld("world_servidro_poc_helado");
         }
