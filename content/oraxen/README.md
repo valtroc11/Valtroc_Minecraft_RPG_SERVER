@@ -32,7 +32,7 @@ La logica de progresion sigue en `ServidroRpg`.
 - `items/`: definiciones de items Oraxen
 - `recipes/`: recipes custom
 - `pack/textures/`: texturas png
-- `pack/models/`: modelos json personalizados si hacen falta
+- `pack/models/`: evitar usarlo; preferimos retexturizar siluetas/modelos ya existentes de Excalibur o vanilla
 
 ## Flujo recomendado
 
@@ -46,3 +46,14 @@ La logica de progresion sigue en `ServidroRpg`.
 
 Oraxen debe estar instalado en el servidor para que estas carpetas se sincronicen
 contra `server/plugins/Oraxen/`.
+
+## Regla visual actual
+
+Salvo una excepcion muy justificada, no vamos a abrir una rama de geometria
+propia para armas o escudos.
+
+La estrategia del proyecto ahora es:
+
+- conservar la silueta o modelo base existente
+- retexturizar
+- ajustar color, lectura y ornamentacion por tier

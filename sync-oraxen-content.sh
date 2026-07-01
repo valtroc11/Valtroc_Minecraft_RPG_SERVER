@@ -16,6 +16,16 @@ cp -r "$SOURCE_DIR/items/." "$TARGET_DIR/items/"
 cp -r "$SOURCE_DIR/recipes/." "$TARGET_DIR/recipes/"
 cp -r "$SOURCE_DIR/pack/." "$TARGET_DIR/pack/"
 
+if [[ -d "$TARGET_DIR/pack/textures" ]]; then
+  mkdir -p "$TARGET_DIR/pack/assets/oraxen/textures"
+  cp -r "$TARGET_DIR/pack/textures/." "$TARGET_DIR/pack/assets/oraxen/textures/"
+fi
+
+if [[ -d "$TARGET_DIR/pack/models" ]]; then
+  mkdir -p "$TARGET_DIR/pack/assets/oraxen/models"
+  cp -r "$TARGET_DIR/pack/models/." "$TARGET_DIR/pack/assets/oraxen/models/"
+fi
+
 echo "Contenido Oraxen sincronizado en $TARGET_DIR"
 
 if [[ -f "$SERVER_DIR/plugins/Oraxen.jar" ]]; then

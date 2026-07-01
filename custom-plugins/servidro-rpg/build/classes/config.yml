@@ -688,9 +688,10 @@ class-identity:
       - sword
       - axe
       - shield
+      - greatsword
     future-weapon-families:
       - spear
-      - greatsword
+      - hammer
   explorador:
     primary-attribute: agilidad
     secondary-attribute: fuerza
@@ -699,9 +700,10 @@ class-identity:
       - bow
       - crossbow
       - sword
-    future-weapon-families:
       - dagger
+    future-weapon-families:
       - shortspear
+      - trap
   mago:
     primary-attribute: inteligencia
     secondary-attribute: agilidad
@@ -709,9 +711,10 @@ class-identity:
     current-weapon-families:
       - wand
       - staff
-    future-weapon-families:
       - spellbook
+    future-weapon-families:
       - orb
+      - scepter
   clerigo:
     primary-attribute: inteligencia
     secondary-attribute: fuerza
@@ -890,10 +893,28 @@ base-class-abilities:
   explorer-roll:
     velocity: 1.1
     cooldown-seconds: 6
+  mage-basic-bolt:
+    range: 16
+    cooldown-seconds: 2.5
+    base-damage: 2.2
+    tier-damage: 0.35
+    level-damage: 0.10
+  mage-arcane-burst:
+    range: 18
+    cooldown-seconds: 4
+    base-damage: 4.0
+    tier-damage: 0.60
+    level-damage: 0.16
   mage-barrier:
     absorption-hearts: 4
     duration-seconds: 8
     cooldown-seconds: 16
+  cleric-basic-bolt:
+    range: 16
+    cooldown-seconds: 2.5
+    base-damage: 2.0
+    tier-damage: 0.32
+    level-damage: 0.09
   cleric-blessing:
     range: 12
     duration-seconds: 10
@@ -939,6 +960,7 @@ profession-xp:
     emerald: 36
   agricultor:
     harvest: 4
+    forage: 2
   alquimista:
     brew: 18
   herrero:
@@ -955,6 +977,9 @@ profession-xp:
     legendary: 120
     netherite: 80
     heavy-piece-bonus: 10
+  explorador:
+    animal-harvest: 6
+    humanoid-salvage: 8
 
 class-xp-flasks:
   result-material: POTION
@@ -1082,6 +1107,66 @@ custom-materials:
       material: PRISMARINE_SHARD
       tier: mithril
       source: "Metal ligero y resistente del late game."
+    wood_hide:
+      display-name: "Cuero Ligero"
+      material: RABBIT_HIDE
+      tier: wood
+      source: "Piel comun obtenida de criaturas con cuchillo de madera."
+    stone_hide:
+      display-name: "Cuero Normal"
+      material: RABBIT_HIDE
+      tier: stone
+      source: "Piel curtida obtenida con cuchillo de piedra."
+    copper_hide:
+      display-name: "Cuero Grueso"
+      material: LEATHER
+      tier: copper
+      source: "Piel densa obtenida con cuchillo de cobre."
+    bronze_hide:
+      display-name: "Cuero Flexible"
+      material: LEATHER
+      tier: bronze
+      source: "Piel trabajada obtenida con cuchillo de bronce."
+    iron_hide:
+      display-name: "Cuero Resistente"
+      material: LEATHER
+      tier: iron
+      source: "Cuero reforzado obtenido con cuchillo de hierro."
+    silver_hide:
+      display-name: "Cuero Refinado"
+      material: LEATHER
+      tier: silver
+      source: "Cuero noble obtenido con cuchillo de plata."
+    wood_cloth:
+      display-name: "Tela Basta"
+      material: PAPER
+      tier: wood
+      source: "Retazo simple rescatado de humanoides caidos."
+    stone_cloth:
+      display-name: "Tela Comun"
+      material: PAPER
+      tier: stone
+      source: "Tela curtida rescatada con cuchillo de piedra."
+    copper_cloth:
+      display-name: "Tela Densa"
+      material: PAPER
+      tier: copper
+      source: "Tela resistente recuperada con cuchillo de cobre."
+    bronze_cloth:
+      display-name: "Tela Flexible"
+      material: PAPER
+      tier: bronze
+      source: "Tejido flexible recuperado con cuchillo de bronce."
+    iron_cloth:
+      display-name: "Tela Reforzada"
+      material: PAPER
+      tier: iron
+      source: "Tela reforzada recuperada con cuchillo de hierro."
+    silver_cloth:
+      display-name: "Tela Refinada"
+      material: PAPER
+      tier: silver
+      source: "Tela noble recuperada con cuchillo de plata."
     legendary_core:
       display-name: "Nucleo Legendario"
       material: NETHER_STAR

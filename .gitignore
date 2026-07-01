@@ -3,3 +3,15 @@ server/
 .deploy-stage/
 deploy-servidro-linux.tar.gz
 deploy-servidro-linux.zip
+
+# Local temp / review artifacts
+logs/
+tmp_*/
+tmp_*.png
+tmp_*.mp4
+tmp_*.zip
+tmp_*.json
+tmp_*.yml
+Excalibur_V*.zip
+javac.*.args
+tools/__pycache__/

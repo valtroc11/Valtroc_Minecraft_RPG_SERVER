@@ -1,0 +1,42 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "servidorpg/iron_wand"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        42
+      ],
+      "translation": [
+        0,
+        2.8,
+        0.5
+      ],
+      "scale": [
+        0.72,
+        1.08,
+        0.72
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        18
+      ],
+      "translation": [
+        0.96,
+        2.5,
+        1.08
+      ],
+      "scale": [
+        0.68,
+        1.02,
+        0.68
+      ]
+    }
+  }
+}

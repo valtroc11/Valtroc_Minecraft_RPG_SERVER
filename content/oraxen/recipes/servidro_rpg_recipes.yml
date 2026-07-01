@@ -62,7 +62,7 @@ wood_shield_recipe:
     A:
       minecraft_type: OAK_PLANKS
     B:
-      minecraft_type: LEATHER
+      oraxen_item: wood_hide
   shape:
     - "ABA"
     - "AAA"
@@ -76,7 +76,7 @@ stone_shield_recipe:
     A:
       minecraft_type: COBBLESTONE
     B:
-      minecraft_type: LEATHER
+      oraxen_item: stone_hide
   shape:
     - "ABA"
     - "AAA"
@@ -90,7 +90,7 @@ copper_shield_recipe:
     A:
       minecraft_type: COPPER_INGOT
     B:
-      minecraft_type: LEATHER
+      oraxen_item: copper_hide
   shape:
     - "ABA"
     - "AAA"
@@ -106,7 +106,7 @@ bronze_shield_recipe:
     B:
       minecraft_type: IRON_NUGGET
     C:
-      minecraft_type: LEATHER
+      oraxen_item: bronze_hide
   shape:
     - "ACA"
     - "ABA"
@@ -120,7 +120,7 @@ iron_shield_recipe:
     A:
       minecraft_type: IRON_INGOT
     B:
-      minecraft_type: LEATHER
+      oraxen_item: iron_hide
   shape:
     - "ABA"
     - "AAA"
@@ -137,9 +137,11 @@ wood_wand_recipe:
       minecraft_type: STICK
     C:
       minecraft_type: GLOWSTONE_DUST
+    D:
+      oraxen_item: wood_cloth
   shape:
     - "  C"
-    - " A "
+    - " DA"
     - "B  "
 
 stone_wand_recipe:
@@ -153,9 +155,11 @@ stone_wand_recipe:
       minecraft_type: STICK
     C:
       minecraft_type: AMETHYST_SHARD
+    D:
+      oraxen_item: stone_cloth
   shape:
     - "  C"
-    - " A "
+    - " DA"
     - "B  "
 
 copper_wand_recipe:
@@ -169,9 +173,11 @@ copper_wand_recipe:
       minecraft_type: STICK
     C:
       minecraft_type: AMETHYST_SHARD
+    D:
+      oraxen_item: copper_cloth
   shape:
     - "  C"
-    - " A "
+    - " DA"
     - "B  "
 
 wood_staff_recipe:
@@ -185,10 +191,12 @@ wood_staff_recipe:
       minecraft_type: STICK
     C:
       minecraft_type: GLOWSTONE_DUST
+    D:
+      oraxen_item: wood_cloth
   shape:
     - " C "
     - " A "
-    - " B "
+    - "DB "
 
 stone_staff_recipe:
   result:
@@ -201,10 +209,12 @@ stone_staff_recipe:
       minecraft_type: STICK
     C:
       minecraft_type: QUARTZ
+    D:
+      oraxen_item: stone_cloth
   shape:
     - " C "
     - " A "
-    - " B "
+    - "DB "
 
 copper_staff_recipe:
   result:
@@ -217,8 +227,54 @@ copper_staff_recipe:
       minecraft_type: STICK
     C:
       minecraft_type: AMETHYST_SHARD
+    D:
+      oraxen_item: copper_cloth
   shape:
     - " C "
+    - " A "
+    - "DB "
+
+copper_axe_recipe:
+  result:
+    oraxen_item: copper_axe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+  shape:
+    - "AA "
+    - "AB "
+    - " B "
+
+copper_bow_recipe:
+  result:
+    oraxen_item: copper_bow
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: STRING
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: COPPER_INGOT
+  shape:
+    - " AB"
+    - "C B"
+    - " AB"
+
+copper_sword_recipe:
+  result:
+    oraxen_item: copper_sword
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+  shape:
+    - " A "
     - " A "
     - " B "
 
@@ -269,6 +325,58 @@ bronze_bow_recipe:
     - " AB"
     - "C B"
     - " AB"
+
+iron_bow_recipe:
+  result:
+    oraxen_item: iron_bow
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: STRING
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: IRON_NUGGET
+  shape:
+    - " AB"
+    - "C B"
+    - " AB"
+
+iron_wand_recipe:
+  result:
+    oraxen_item: iron_wand
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: AMETHYST_SHARD
+    D:
+      oraxen_item: iron_cloth
+  shape:
+    - "  C"
+    - " DA"
+    - "B  "
+
+iron_staff_recipe:
+  result:
+    oraxen_item: iron_staff
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: AMETHYST_SHARD
+    D:
+      oraxen_item: iron_cloth
+  shape:
+    - " C "
+    - " A "
+    - "DB "
 
 silver_sword_recipe:
   result:
@@ -328,7 +436,7 @@ silver_shield_recipe:
     B:
       minecraft_type: QUARTZ
     C:
-      minecraft_type: LEATHER
+      oraxen_item: silver_hide
   shape:
     - "ACA"
     - "ABA"
@@ -340,17 +448,17 @@ bronze_wand_recipe:
     amount: 1
   ingredients:
     A:
-      minecraft_type: COPPER_INGOT
+      oraxen_item: bronze_ingot
     B:
       minecraft_type: STICK
     C:
       minecraft_type: AMETHYST_SHARD
     D:
-      minecraft_type: IRON_NUGGET
+      oraxen_item: bronze_cloth
   shape:
     - "  C"
-    - " D "
-    - "BA "
+    - " DA"
+    - "B  "
 
 silver_wand_recipe:
   result:
@@ -358,17 +466,17 @@ silver_wand_recipe:
     amount: 1
   ingredients:
     A:
-      minecraft_type: QUARTZ
+      oraxen_item: silver_ingot
     B:
       minecraft_type: STICK
     C:
       minecraft_type: AMETHYST_SHARD
     D:
-      minecraft_type: IRON_NUGGET
+      oraxen_item: silver_cloth
   shape:
     - "  C"
-    - " D "
-    - "BA "
+    - " DA"
+    - "B  "
 
 bronze_staff_recipe:
   result:
@@ -376,17 +484,17 @@ bronze_staff_recipe:
     amount: 1
   ingredients:
     A:
-      minecraft_type: COPPER_INGOT
+      oraxen_item: bronze_ingot
     B:
       minecraft_type: STICK
     C:
       minecraft_type: GLOWSTONE_DUST
     D:
-      minecraft_type: IRON_NUGGET
+      oraxen_item: bronze_cloth
   shape:
     - " C "
-    - " D "
-    - "BA "
+    - " A "
+    - "DB "
 
 silver_staff_recipe:
   result:
@@ -394,14 +502,1016 @@ silver_staff_recipe:
     amount: 1
   ingredients:
     A:
-      minecraft_type: QUARTZ
+      oraxen_item: silver_ingot
     B:
       minecraft_type: STICK
     C:
       minecraft_type: AMETHYST_SHARD
     D:
-      minecraft_type: IRON_NUGGET
+      oraxen_item: silver_cloth
   shape:
     - " C "
-    - " D "
-    - "BA "
+    - " A "
+    - "DB "
+
+wood_berserker_war_axe_recipe:
+  result:
+    oraxen_item: wood_berserker_war_axe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: OAK_PLANKS
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: RED_DYE
+  shape:
+    - "AAC"
+    - "AB "
+    - " B "
+
+stone_berserker_war_axe_recipe:
+  result:
+    oraxen_item: stone_berserker_war_axe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COBBLESTONE
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: RED_DYE
+  shape:
+    - "AAC"
+    - "AB "
+    - " B "
+
+copper_berserker_war_axe_recipe:
+  result:
+    oraxen_item: copper_berserker_war_axe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: RED_DYE
+  shape:
+    - "AAC"
+    - "AB "
+    - " B "
+
+bronze_berserker_war_axe_recipe:
+  result:
+    oraxen_item: bronze_berserker_war_axe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: IRON_NUGGET
+    C:
+      minecraft_type: STICK
+    D:
+      minecraft_type: RED_DYE
+  shape:
+    - "ABD"
+    - "AC "
+    - " C "
+
+iron_berserker_war_axe_recipe:
+  result:
+    oraxen_item: iron_berserker_war_axe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: RED_DYE
+  shape:
+    - "AAC"
+    - "AB "
+    - " B "
+
+silver_berserker_war_axe_recipe:
+  result:
+    oraxen_item: silver_berserker_war_axe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: QUARTZ
+    C:
+      minecraft_type: STICK
+    D:
+      minecraft_type: RED_DYE
+  shape:
+    - "ABD"
+    - "AC "
+    - " C "
+
+wood_hunter_bow_recipe:
+  result:
+    oraxen_item: wood_hunter_bow
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: STRING
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: FEATHER
+    D:
+      minecraft_type: OAK_PLANKS
+  shape:
+    - " AB"
+    - "DBC"
+    - " AB"
+
+stone_hunter_bow_recipe:
+  result:
+    oraxen_item: stone_hunter_bow
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: STRING
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: FEATHER
+    D:
+      minecraft_type: COBBLESTONE
+  shape:
+    - " AB"
+    - "DBC"
+    - " AB"
+
+copper_hunter_bow_recipe:
+  result:
+    oraxen_item: copper_hunter_bow
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: STRING
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: FEATHER
+    D:
+      minecraft_type: COPPER_INGOT
+  shape:
+    - " AB"
+    - "DBC"
+    - " AB"
+
+bronze_hunter_bow_recipe:
+  result:
+    oraxen_item: bronze_hunter_bow
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: STRING
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: FEATHER
+    D:
+      minecraft_type: COPPER_INGOT
+    E:
+      minecraft_type: IRON_NUGGET
+  shape:
+    - " AB"
+    - "DEC"
+    - " AB"
+
+iron_hunter_bow_recipe:
+  result:
+    oraxen_item: iron_hunter_bow
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: STRING
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: FEATHER
+    D:
+      minecraft_type: IRON_NUGGET
+  shape:
+    - " AB"
+    - "DBC"
+    - " AB"
+
+silver_hunter_bow_recipe:
+  result:
+    oraxen_item: silver_hunter_bow
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: STRING
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: FEATHER
+    D:
+      minecraft_type: QUARTZ
+  shape:
+    - " AB"
+    - "DBC"
+    - " AB"
+
+wood_mage_focus_recipe:
+  result:
+    oraxen_item: wood_mage_focus
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: AMETHYST_SHARD
+    B:
+      minecraft_type: OAK_PLANKS
+    C:
+      oraxen_item: wood_cloth
+  shape:
+    - " A "
+    - "CBC"
+    - " B "
+
+stone_mage_focus_recipe:
+  result:
+    oraxen_item: stone_mage_focus
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: AMETHYST_SHARD
+    B:
+      minecraft_type: COBBLESTONE
+    C:
+      oraxen_item: stone_cloth
+  shape:
+    - " A "
+    - "CBC"
+    - " B "
+
+copper_mage_focus_recipe:
+  result:
+    oraxen_item: copper_mage_focus
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: AMETHYST_SHARD
+    B:
+      minecraft_type: COPPER_INGOT
+    C:
+      oraxen_item: copper_cloth
+  shape:
+    - " A "
+    - "CBC"
+    - " B "
+
+bronze_mage_focus_recipe:
+  result:
+    oraxen_item: bronze_mage_focus
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: AMETHYST_SHARD
+    B:
+      oraxen_item: bronze_ingot
+    C:
+      oraxen_item: bronze_cloth
+  shape:
+    - " A "
+    - "CBC"
+    - " B "
+
+iron_mage_focus_recipe:
+  result:
+    oraxen_item: iron_mage_focus
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: AMETHYST_SHARD
+    B:
+      minecraft_type: IRON_INGOT
+    C:
+      oraxen_item: iron_cloth
+  shape:
+    - " A "
+    - "CBC"
+    - " B "
+
+silver_mage_focus_recipe:
+  result:
+    oraxen_item: silver_mage_focus
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: AMETHYST_SHARD
+    B:
+      oraxen_item: silver_ingot
+    C:
+      oraxen_item: silver_cloth
+  shape:
+    - " A "
+    - "CBC"
+    - " B "
+
+wood_cleric_relic_recipe:
+  result:
+    oraxen_item: wood_cleric_relic
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: GLOWSTONE_DUST
+    B:
+      minecraft_type: OAK_PLANKS
+    C:
+      minecraft_type: BLAZE_ROD
+    D:
+      oraxen_item: wood_cloth
+  shape:
+    - " A "
+    - "DBD"
+    - " C "
+
+stone_cleric_relic_recipe:
+  result:
+    oraxen_item: stone_cleric_relic
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: QUARTZ
+    B:
+      minecraft_type: COBBLESTONE
+    C:
+      minecraft_type: BLAZE_ROD
+    D:
+      oraxen_item: stone_cloth
+  shape:
+    - " A "
+    - "DBD"
+    - " C "
+
+copper_cleric_relic_recipe:
+  result:
+    oraxen_item: copper_cleric_relic
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: AMETHYST_SHARD
+    B:
+      minecraft_type: COPPER_INGOT
+    C:
+      minecraft_type: BLAZE_ROD
+    D:
+      oraxen_item: copper_cloth
+  shape:
+    - " A "
+    - "DBD"
+    - " C "
+
+bronze_cleric_relic_recipe:
+  result:
+    oraxen_item: bronze_cleric_relic
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: GLOWSTONE_DUST
+    B:
+      oraxen_item: bronze_ingot
+    C:
+      minecraft_type: BLAZE_ROD
+    D:
+      oraxen_item: bronze_cloth
+  shape:
+    - " A "
+    - "DBD"
+    - " C "
+
+iron_cleric_relic_recipe:
+  result:
+    oraxen_item: iron_cleric_relic
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: AMETHYST_SHARD
+    B:
+      minecraft_type: IRON_INGOT
+    C:
+      minecraft_type: BLAZE_ROD
+    D:
+      oraxen_item: iron_cloth
+  shape:
+    - " A "
+    - "DBD"
+    - " C "
+
+silver_cleric_relic_recipe:
+  result:
+    oraxen_item: silver_cleric_relic
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: AMETHYST_SHARD
+    B:
+      oraxen_item: silver_ingot
+    C:
+      minecraft_type: BLAZE_ROD
+    D:
+      oraxen_item: silver_cloth
+  shape:
+    - " A "
+    - "DBD"
+    - " C "
+
+wood_greatsword_recipe:
+  result:
+    oraxen_item: wood_greatsword
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: OAK_PLANKS
+    B:
+      minecraft_type: STICK
+    C:
+      oraxen_item: wood_hide
+  shape:
+    - " A "
+    - " A "
+    - "CAB"
+
+stone_greatsword_recipe:
+  result:
+    oraxen_item: stone_greatsword
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COBBLESTONE
+    B:
+      minecraft_type: STICK
+    C:
+      oraxen_item: stone_hide
+  shape:
+    - " A "
+    - " A "
+    - "CAB"
+
+copper_greatsword_recipe:
+  result:
+    oraxen_item: copper_greatsword
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      oraxen_item: copper_hide
+  shape:
+    - " A "
+    - " A "
+    - "CAB"
+
+bronze_greatsword_recipe:
+  result:
+    oraxen_item: bronze_greatsword
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: IRON_NUGGET
+    C:
+      minecraft_type: STICK
+    D:
+      oraxen_item: bronze_hide
+  shape:
+    - " A "
+    - " B "
+    - "DAC"
+
+iron_greatsword_recipe:
+  result:
+    oraxen_item: iron_greatsword
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      oraxen_item: iron_hide
+  shape:
+    - " A "
+    - " A "
+    - "CAB"
+
+silver_greatsword_recipe:
+  result:
+    oraxen_item: silver_greatsword
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: QUARTZ
+    B:
+      minecraft_type: IRON_INGOT
+    C:
+      minecraft_type: STICK
+    D:
+      oraxen_item: silver_hide
+  shape:
+    - " A "
+    - " B "
+    - "DAC"
+
+wood_dagger_recipe:
+  result:
+    oraxen_item: wood_dagger
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: OAK_PLANKS
+    B:
+      minecraft_type: STICK
+    C:
+      oraxen_item: wood_hide
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+stone_dagger_recipe:
+  result:
+    oraxen_item: stone_dagger
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COBBLESTONE
+    B:
+      minecraft_type: STICK
+    C:
+      oraxen_item: stone_hide
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+copper_dagger_recipe:
+  result:
+    oraxen_item: copper_dagger
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      oraxen_item: copper_hide
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+bronze_dagger_recipe:
+  result:
+    oraxen_item: bronze_dagger
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: IRON_NUGGET
+    C:
+      minecraft_type: STICK
+    D:
+      oraxen_item: bronze_hide
+  shape:
+    - " A "
+    - " B "
+    - "DC "
+
+iron_dagger_recipe:
+  result:
+    oraxen_item: iron_dagger
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      oraxen_item: iron_hide
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+silver_dagger_recipe:
+  result:
+    oraxen_item: silver_dagger
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: QUARTZ
+    B:
+      minecraft_type: IRON_NUGGET
+    C:
+      minecraft_type: STICK
+    D:
+      oraxen_item: silver_hide
+  shape:
+    - " A "
+    - " B "
+    - "DC "
+
+wood_knife_recipe:
+  result:
+    oraxen_item: wood_knife
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: FLINT
+    B:
+      minecraft_type: OAK_PLANKS
+    C:
+      minecraft_type: STICK
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+stone_knife_recipe:
+  result:
+    oraxen_item: stone_knife
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: FLINT
+    B:
+      minecraft_type: COBBLESTONE
+    C:
+      minecraft_type: STICK
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+copper_knife_recipe:
+  result:
+    oraxen_item: copper_knife
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: FLINT
+    B:
+      minecraft_type: COPPER_INGOT
+    C:
+      minecraft_type: STICK
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+bronze_knife_recipe:
+  result:
+    oraxen_item: bronze_knife
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: FLINT
+    B:
+      oraxen_item: bronze_ingot
+    C:
+      minecraft_type: STICK
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+iron_knife_recipe:
+  result:
+    oraxen_item: iron_knife
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: FLINT
+    B:
+      minecraft_type: IRON_INGOT
+    C:
+      minecraft_type: STICK
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+silver_knife_recipe:
+  result:
+    oraxen_item: silver_knife
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: FLINT
+    B:
+      oraxen_item: silver_ingot
+    C:
+      minecraft_type: STICK
+  shape:
+    - " A "
+    - " B "
+    - " C "
+
+wood_hoe_recipe:
+  result:
+    oraxen_item: wood_hoe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: OAK_PLANKS
+    B:
+      minecraft_type: STICK
+  shape:
+    - "AA "
+    - " B "
+    - " B "
+
+stone_hoe_recipe:
+  result:
+    oraxen_item: stone_hoe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COBBLESTONE
+    B:
+      minecraft_type: STICK
+  shape:
+    - "AA "
+    - " B "
+    - " B "
+
+copper_hoe_recipe:
+  result:
+    oraxen_item: copper_hoe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+  shape:
+    - "AA "
+    - " B "
+    - " B "
+
+bronze_hoe_recipe:
+  result:
+    oraxen_item: bronze_hoe
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: bronze_ingot
+    B:
+      minecraft_type: STICK
+  shape:
+    - "AA "
+    - " B "
+    - " B "
+
+iron_hoe_recipe:
+  result:
+    oraxen_item: iron_hoe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: STICK
+  shape:
+    - "AA "
+    - " B "
+    - " B "
+
+silver_hoe_recipe:
+  result:
+    oraxen_item: silver_hoe
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: silver_ingot
+    B:
+      minecraft_type: STICK
+  shape:
+    - "AA "
+    - " B "
+    - " B "
+
+wood_scythe_recipe:
+  result:
+    oraxen_item: wood_scythe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: OAK_PLANKS
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: STRING
+  shape:
+    - " AA"
+    - " C "
+    - "B  "
+
+stone_scythe_recipe:
+  result:
+    oraxen_item: stone_scythe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COBBLESTONE
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: STRING
+  shape:
+    - " AA"
+    - " C "
+    - "B  "
+
+copper_scythe_recipe:
+  result:
+    oraxen_item: copper_scythe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: COPPER_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: STRING
+  shape:
+    - " AA"
+    - " C "
+    - "B  "
+
+bronze_scythe_recipe:
+  result:
+    oraxen_item: bronze_scythe
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: bronze_ingot
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: STRING
+  shape:
+    - " AA"
+    - " C "
+    - "B  "
+
+iron_scythe_recipe:
+  result:
+    oraxen_item: iron_scythe
+    amount: 1
+  ingredients:
+    A:
+      minecraft_type: IRON_INGOT
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: STRING
+  shape:
+    - " AA"
+    - " C "
+    - "B  "
+
+silver_scythe_recipe:
+  result:
+    oraxen_item: silver_scythe
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: silver_ingot
+    B:
+      minecraft_type: STICK
+    C:
+      minecraft_type: STRING
+  shape:
+    - " AA"
+    - " C "
+    - "B  "
+
+wood_spellbook_recipe:
+  result:
+    oraxen_item: wood_spellbook
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: wood_cloth
+    B:
+      minecraft_type: OAK_PLANKS
+    C:
+      minecraft_type: BOOK
+    D:
+      minecraft_type: AMETHYST_SHARD
+  shape:
+    - " A "
+    - "BDB"
+    - " C "
+
+stone_spellbook_recipe:
+  result:
+    oraxen_item: stone_spellbook
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: stone_cloth
+    B:
+      minecraft_type: COBBLESTONE
+    C:
+      minecraft_type: BOOK
+    D:
+      minecraft_type: AMETHYST_SHARD
+  shape:
+    - " A "
+    - "BDB"
+    - " C "
+
+copper_spellbook_recipe:
+  result:
+    oraxen_item: copper_spellbook
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: copper_cloth
+    B:
+      minecraft_type: COPPER_INGOT
+    C:
+      minecraft_type: BOOK
+    D:
+      minecraft_type: AMETHYST_SHARD
+  shape:
+    - " A "
+    - "BDB"
+    - " C "
+
+bronze_spellbook_recipe:
+  result:
+    oraxen_item: bronze_spellbook
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: bronze_cloth
+    B:
+      oraxen_item: bronze_ingot
+    C:
+      minecraft_type: BOOK
+    D:
+      minecraft_type: AMETHYST_SHARD
+    E:
+      oraxen_item: bronze_cloth
+  shape:
+    - " A "
+    - "BDB"
+    - " CE"
+
+iron_spellbook_recipe:
+  result:
+    oraxen_item: iron_spellbook
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: iron_cloth
+    B:
+      minecraft_type: IRON_INGOT
+    C:
+      minecraft_type: BOOK
+    D:
+      minecraft_type: AMETHYST_SHARD
+  shape:
+    - " A "
+    - "BDB"
+    - " C "
+
+silver_spellbook_recipe:
+  result:
+    oraxen_item: silver_spellbook
+    amount: 1
+  ingredients:
+    A:
+      oraxen_item: silver_cloth
+    B:
+      oraxen_item: silver_ingot
+    C:
+      minecraft_type: BOOK
+    D:
+      minecraft_type: AMETHYST_SHARD
+    E:
+      oraxen_item: silver_cloth
+  shape:
+    - " A "
+    - "BDB"
+    - " CE"

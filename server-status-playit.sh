@@ -14,6 +14,25 @@ playit_running() {
   systemctl is-active --quiet playit
 }
 
+latest_boot_start_line() {
+  if [[ ! -f "$LATEST_LOG" ]]; then
+    return 1
+  fi
+
+  grep -n 'Starting minecraft server version' "$LATEST_LOG" | tail -n1 | cut -d: -f1
+}
+
+latest_boot_done_line() {
+  local start_line
+  start_line="$(latest_boot_start_line || true)"
+
+  if [[ -z "${start_line:-}" ]]; then
+    return 1
+  fi
+
+  tail -n +"$start_line" "$LATEST_LOG" | grep 'Done (' | tail -n1
+}
+
 if paper_running; then
   echo "Minecraft corriendo."
 else
@@ -27,7 +46,7 @@ else
 fi
 
 if paper_running && [[ -f "$LATEST_LOG" ]]; then
-  DONE_LINE="$(grep 'Done (' "$LATEST_LOG" | tail -n1 || true)"
+  DONE_LINE="$(latest_boot_done_line || true)"
   if [[ -n "${DONE_LINE:-}" ]]; then
     echo "Paper listo: $DONE_LINE"
   else

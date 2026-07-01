@@ -19,6 +19,25 @@ playit_running() {
   systemctl is-active --quiet playit
 }
 
+latest_boot_start_line() {
+  if [[ ! -f "$LATEST_LOG" ]]; then
+    return 1
+  fi
+
+  grep -n 'Starting minecraft server version' "$LATEST_LOG" | tail -n1 | cut -d: -f1
+}
+
+latest_boot_done_line() {
+  local start_line
+  start_line="$(latest_boot_start_line || true)"
+
+  if [[ -z "${start_line:-}" ]]; then
+    return 1
+  fi
+
+  tail -n +"$start_line" "$LATEST_LOG" | grep 'Done (' | tail -n1
+}
+
 wait_for_paper_ready() {
   local waited=0
 
@@ -28,7 +47,7 @@ wait_for_paper_ready() {
       return 1
     fi
 
-    if [[ -f "$LATEST_LOG" ]] && grep -q 'Done (' "$LATEST_LOG"; then
+    if DONE_LINE="$(latest_boot_done_line)"; then
       return 0
     fi
 
@@ -71,7 +90,7 @@ fi
 
 echo "Esperando a que Paper termine de cargar..."
 wait_for_paper_ready
-DONE_LINE="$(grep 'Done (' "$LATEST_LOG" | tail -n1 || true)"
+DONE_LINE="$(latest_boot_done_line || true)"
 
 if playit_running; then
   echo "Playit ya estaba corriendo."

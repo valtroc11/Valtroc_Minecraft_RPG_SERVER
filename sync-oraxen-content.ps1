@@ -19,6 +19,22 @@ foreach ($folder in $folders) {
     robocopy $src $dst /E /NFL /NDL /NJH /NJS /NC /NS | Out-Null
 }
 
+$packRoot = Join-Path $target "pack"
+$rootTextures = Join-Path $packRoot "textures"
+$rootModels = Join-Path $packRoot "models"
+$assetTextures = Join-Path $packRoot "assets\\oraxen\\textures"
+$assetModels = Join-Path $packRoot "assets\\oraxen\\models"
+
+if (Test-Path $rootTextures) {
+    New-Item -ItemType Directory -Path $assetTextures -Force | Out-Null
+    robocopy $rootTextures $assetTextures /E /NFL /NDL /NJH /NJS /NC /NS | Out-Null
+}
+
+if (Test-Path $rootModels) {
+    New-Item -ItemType Directory -Path $assetModels -Force | Out-Null
+    robocopy $rootModels $assetModels /E /NFL /NDL /NJH /NJS /NC /NS | Out-Null
+}
+
 Write-Host "Contenido Oraxen sincronizado en $target" -ForegroundColor Green
 
 $jar = Join-Path $ServerDir "plugins\\Oraxen.jar"

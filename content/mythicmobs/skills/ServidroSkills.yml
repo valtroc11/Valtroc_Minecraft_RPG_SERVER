@@ -4,3 +4,55 @@ LlamarRefuerzos:
   - message{m="&4El capitan llama refuerzos!"} @PlayersInRadius{r=18}
   - summon{type=BandidoCorrompido;amount=2;radius=4} @self
 
+RafagaHelada:
+  Cooldown: 8
+  Skills:
+  - effect:particles{p=snowflake;amount=24;hS=0.7;vS=0.4;speed=0.03} @self
+  - potion{type=SLOWNESS;duration=80;level=1} @target
+  - damage{a=4} @target
+
+MordidaHelada:
+  Cooldown: 5
+  Skills:
+  - effect:particles{p=snowflake;amount=14;hS=0.35;vS=0.35;speed=0.02} @target
+  - potion{type=SLOWNESS;duration=60;level=1} @target
+
+TelaranaEscarchada:
+  Cooldown: 7
+  Skills:
+  - effect:particles{p=snowflake;amount=18;hS=0.45;vS=0.25;speed=0.02} @target
+  - potion{type=SLOWNESS;duration=90;level=2} @target
+  - potion{type=WEAKNESS;duration=60;level=0} @target
+
+PisotonGlacial:
+  Cooldown: 12
+  Skills:
+  - effect:particles{p=snowflake;amount=60;hS=2.5;vS=0.3;speed=0.04} @self
+  - damage{a=8} @PlayersInRadius{r=6}
+  - potion{type=SLOWNESS;duration=100;level=2} @PlayersInRadius{r=6}
+
+GolpeCongelante:
+  Cooldown: 5
+  Skills:
+  - effect:particles{p=snowflake;amount=18;hS=0.45;vS=0.35;speed=0.02} @target
+  - potion{type=SLOWNESS;duration=80;level=1} @target
+  - damage{a=2} @target
+
+AuraCongelante:
+  Cooldown: 8
+  Skills:
+  - effect:particles{p=snowflake;amount=28;hS=0.8;vS=0.45;speed=0.025} @self
+  - potion{type=SLOWNESS;duration=60;level=0} @PlayersInRadius{r=4}
+
+GolpeIncendiario:
+  Cooldown: 5
+  Skills:
+  - effect:particles{p=flame;amount=18;hS=0.45;vS=0.35;speed=0.03} @target
+  - ignite{ticks=80} @target
+  - damage{a=2} @target
+
+AuraArdiente:
+  Cooldown: 8
+  Skills:
+  - effect:particles{p=flame;amount=24;hS=0.75;vS=0.45;speed=0.035} @self
+  - damage{a=2} @PlayersInRadius{r=3}

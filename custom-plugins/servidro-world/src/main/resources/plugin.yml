@@ -1,0 +1,16 @@
+name: ServidroWorld
+version: 0.1.0
+main: mx.servidro.world.ServidroWorldPlugin
+api-version: '1.21'
+authors: [ServidroMX]
+description: Generador de mundos custom para biomas de Servidro MX.
+softdepend: [Oraxen]
+commands:
+  mundohelado:
+    description: Teletransporta al mundo de cordilleras heladas generado por ServidroWorld.
+    usage: /mundohelado
+    permission: servidro.admin
+permissions:
+  servidro.admin:
+    description: Permite administrar prototipos de Servidro.
+    default: op

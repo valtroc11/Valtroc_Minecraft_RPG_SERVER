@@ -26,7 +26,7 @@ berserker_war_axe:
       - servidorpg/berserker_war_axe
 
 iron_hunter_bow:
-  displayname: "<#7ca55a>Arco del Cazador"
+  displayname: "<#cfd6de>Arco del Cazador de Hierro"
   material: BOW
   Pack:
     generate_model: true
@@ -38,19 +38,198 @@ mage_focus:
   displayname: "<#9d68d4>Foco Arcano"
   material: AMETHYST_SHARD
   Pack:
-    generate_model: true
-    parent_model: "item/generated"
-    textures:
-      - servidorpg/mage_focus
+    generate_model: false
+    model: servidorpg/mage_focus
 
 cleric_relic:
   displayname: "<#f0d77b>Reliquia del Clerigo"
   material: BLAZE_ROD
   Pack:
+    generate_model: false
+    model: servidorpg/cleric_relic
+
+wood_berserker_war_axe:
+  displayname: "<#b89363>Hacha Berserker de Madera"
+  material: WOODEN_AXE
+  Pack:
     generate_model: true
     parent_model: "item/handheld"
     textures:
-      - servidorpg/cleric_relic
+      - servidorpg/wood_berserker_war_axe
+
+stone_berserker_war_axe:
+  displayname: "<#b8c0c8>Hacha Berserker de Piedra"
+  material: STONE_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/stone_berserker_war_axe
+
+copper_berserker_war_axe:
+  displayname: "<#de8d4e>Hacha Berserker de Cobre"
+  material: STONE_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/copper_berserker_war_axe
+
+bronze_berserker_war_axe:
+  displayname: "<#b97835>Hacha Berserker de Bronce"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/bronze_berserker_war_axe
+
+iron_berserker_war_axe:
+  displayname: "<#cfd6de>Hacha Berserker de Hierro"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/iron_berserker_war_axe
+
+silver_berserker_war_axe:
+  displayname: "<#edf2f7>Hacha Berserker de Plata"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/silver_berserker_war_axe
+
+wood_hunter_bow:
+  displayname: "<#b89363>Arco del Cazador de Madera"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/wood_hunter_bow
+
+stone_hunter_bow:
+  displayname: "<#b8c0c8>Arco del Cazador de Piedra"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/stone_hunter_bow
+
+copper_hunter_bow:
+  displayname: "<#de8d4e>Arco del Cazador de Cobre"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/copper_hunter_bow
+
+bronze_hunter_bow:
+  displayname: "<#b97835>Arco del Cazador de Bronce"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/bronze_hunter_bow
+
+silver_hunter_bow:
+  displayname: "<#edf2f7>Arco del Cazador de Plata"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/silver_hunter_bow
+
+wood_mage_focus:
+  displayname: "<#b89363>Foco Arcano de Madera"
+  material: AMETHYST_SHARD
+  Pack:
+    generate_model: false
+    model: servidorpg/wood_mage_focus
+
+stone_mage_focus:
+  displayname: "<#b8c0c8>Foco Arcano de Piedra"
+  material: AMETHYST_SHARD
+  Pack:
+    generate_model: false
+    model: servidorpg/stone_mage_focus
+
+copper_mage_focus:
+  displayname: "<#de8d4e>Foco Arcano de Cobre"
+  material: AMETHYST_SHARD
+  Pack:
+    generate_model: false
+    model: servidorpg/copper_mage_focus
+
+bronze_mage_focus:
+  displayname: "<#b97835>Foco Arcano de Bronce"
+  material: AMETHYST_SHARD
+  Pack:
+    generate_model: false
+    model: servidorpg/bronze_mage_focus
+
+iron_mage_focus:
+  displayname: "<#cfd6de>Foco Arcano de Hierro"
+  material: AMETHYST_SHARD
+  Pack:
+    generate_model: false
+    model: servidorpg/iron_mage_focus
+
+silver_mage_focus:
+  displayname: "<#edf2f7>Foco Arcano de Plata"
+  material: AMETHYST_SHARD
+  Pack:
+    generate_model: false
+    model: servidorpg/silver_mage_focus
+
+wood_cleric_relic:
+  displayname: "<#b89363>Reliquia del Clerigo de Madera"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: false
+    model: servidorpg/wood_cleric_relic
+
+stone_cleric_relic:
+  displayname: "<#b8c0c8>Reliquia del Clerigo de Piedra"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: false
+    model: servidorpg/stone_cleric_relic
+
+copper_cleric_relic:
+  displayname: "<#de8d4e>Reliquia del Clerigo de Cobre"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: false
+    model: servidorpg/copper_cleric_relic
+
+bronze_cleric_relic:
+  displayname: "<#b97835>Reliquia del Clerigo de Bronce"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: false
+    model: servidorpg/bronze_cleric_relic
+
+iron_cleric_relic:
+  displayname: "<#cfd6de>Reliquia del Clerigo de Hierro"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: false
+    model: servidorpg/iron_cleric_relic
+
+silver_cleric_relic:
+  displayname: "<#edf2f7>Reliquia del Clerigo de Plata"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: false
+    model: servidorpg/silver_cleric_relic
 
 wood_shield:
   displayname: "<#9a6a3a>Escudo de Madera"
@@ -60,15 +239,6 @@ wood_shield:
     parent_model: "item/generated"
     textures:
       - servidorpg/wood_shield
-
-wood_shield_3d_test:
-  displayname: "<#d9b77d>Escudo de Madera [Prueba 3D]"
-  material: SHIELD
-  Pack:
-    generate_model: false
-    model: "servidorpg/wood_shield_3d_test"
-    blocking_model: "servidorpg/wood_shield_3d_test_blocking"
-    oversized_in_gui: true
 
 stone_shield:
   displayname: "<#8b8b93>Escudo de Piedra"
@@ -110,55 +280,138 @@ wood_wand:
   displayname: "<#b9864f>Varita de Madera"
   material: STICK
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/wood_wand
+    generate_model: false
+    model: servidorpg/wood_wand
 
 stone_wand:
   displayname: "<#b6bcc3>Varita de Piedra"
   material: STICK
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/stone_wand
+    generate_model: false
+    model: servidorpg/stone_wand
 
 copper_wand:
   displayname: "<#dd8b4d>Varita de Cobre"
   material: STICK
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/copper_wand
+    generate_model: false
+    model: servidorpg/copper_wand
 
 wood_staff:
   displayname: "<#c59c63>Staff de Madera"
   material: BLAZE_ROD
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/wood_staff
+    generate_model: false
+    model: servidorpg/wood_staff
 
 stone_staff:
   displayname: "<#c6cbd3>Staff de Piedra"
   material: BLAZE_ROD
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/stone_staff
+    generate_model: false
+    model: servidorpg/stone_staff
 
 copper_staff:
   displayname: "<#dc8b4b>Staff de Cobre"
   material: BLAZE_ROD
   Pack:
+    generate_model: false
+    model: servidorpg/copper_staff
+
+iron_wand:
+  displayname: "<#cfd6de>Varita de Hierro"
+  material: STICK
+  Pack:
+    generate_model: false
+    model: servidorpg/iron_wand
+
+iron_staff:
+  displayname: "<#cfd6de>Staff de Hierro"
+  material: BLAZE_ROD
+  Pack:
+    generate_model: false
+    model: servidorpg/iron_staff
+
+wood_sword:
+  displayname: "<#b89363>Espada de Madera"
+  material: WOODEN_SWORD
+  Pack:
     generate_model: true
     parent_model: "item/handheld"
     textures:
-      - servidorpg/copper_staff
+      - servidorpg/wood_sword
+
+stone_sword:
+  displayname: "<#b8c0c8>Espada de Piedra"
+  material: STONE_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/stone_sword
+
+copper_axe:
+  displayname: "<#de8d4e>Hacha de Cobre"
+  material: STONE_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/copper_axe
+
+copper_bow:
+  displayname: "<#de8d4e>Arco de Cobre"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/copper_bow
+
+copper_sword:
+  displayname: "<#de8d4e>Espada de Cobre"
+  material: STONE_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/copper_sword
+
+wood_axe:
+  displayname: "<#b89363>Hacha de Madera"
+  material: WOODEN_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/wood_axe
+
+stone_axe:
+  displayname: "<#b8c0c8>Hacha de Piedra"
+  material: STONE_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/stone_axe
+
+wood_bow:
+  displayname: "<#b89363>Arco de Madera"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/wood_bow
+
+stone_bow:
+  displayname: "<#b8c0c8>Arco de Piedra"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/stone_bow
 
 bronze_sword:
   displayname: "<#b97835>Espada de Bronce"
@@ -186,6 +439,33 @@ bronze_bow:
     parent_model: "item/generated"
     textures:
       - servidorpg/bronze_bow
+
+iron_sword:
+  displayname: "<#cdd3db>Espada de Hierro"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/iron_sword
+
+iron_axe:
+  displayname: "<#cfd6de>Hacha de Hierro"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/iron_axe
+
+iron_bow:
+  displayname: "<#cfd6de>Arco de Hierro"
+  material: BOW
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/iron_bow
 
 silver_sword:
   displayname: "<#edf2f7>Espada de Plata"
@@ -227,37 +507,449 @@ bronze_wand:
   displayname: "<#b97835>Varita de Bronce"
   material: STICK
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/bronze_wand
+    generate_model: false
+    model: servidorpg/bronze_wand
 
 silver_wand:
   displayname: "<#edf2f7>Varita de Plata"
   material: STICK
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/silver_wand
+    generate_model: false
+    model: servidorpg/silver_wand
 
 bronze_staff:
   displayname: "<#b97835>Staff de Bronce"
   material: BLAZE_ROD
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/bronze_staff
+    generate_model: false
+    model: servidorpg/bronze_staff
 
 silver_staff:
   displayname: "<#edf2f7>Staff de Plata"
   material: BLAZE_ROD
   Pack:
+    generate_model: false
+    model: servidorpg/silver_staff
+
+wood_greatsword:
+  displayname: "<#b89363>Espada Ancha de Madera"
+  material: WOODEN_AXE
+  Pack:
     generate_model: true
     parent_model: "item/handheld"
     textures:
-      - servidorpg/silver_staff
+      - servidorpg/wood_greatsword
+
+stone_greatsword:
+  displayname: "<#b8c0c8>Espada Ancha de Piedra"
+  material: STONE_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/stone_greatsword
+
+copper_greatsword:
+  displayname: "<#de8d4e>Espada Ancha de Cobre"
+  material: STONE_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/copper_greatsword
+
+bronze_greatsword:
+  displayname: "<#b97835>Espada Ancha de Bronce"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/bronze_greatsword
+
+iron_greatsword:
+  displayname: "<#cfd6de>Espada Ancha de Hierro"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/iron_greatsword
+
+silver_greatsword:
+  displayname: "<#edf2f7>Espada Ancha de Plata"
+  material: IRON_AXE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/silver_greatsword
+
+wood_dagger:
+  displayname: "<#b89363>Daga de Madera"
+  material: WOODEN_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/wood_dagger
+
+stone_dagger:
+  displayname: "<#b8c0c8>Daga de Piedra"
+  material: STONE_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/stone_dagger
+
+copper_dagger:
+  displayname: "<#de8d4e>Daga de Cobre"
+  material: STONE_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/copper_dagger
+
+bronze_dagger:
+  displayname: "<#b97835>Daga de Bronce"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/bronze_dagger
+
+iron_dagger:
+  displayname: "<#cfd6de>Daga de Hierro"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/iron_dagger
+
+silver_dagger:
+  displayname: "<#edf2f7>Daga de Plata"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/silver_dagger
+
+wood_knife:
+  displayname: "<#b89363>Cuchillo de Madera"
+  material: WOODEN_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/wood_knife
+
+stone_knife:
+  displayname: "<#b8c0c8>Cuchillo de Piedra"
+  material: STONE_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/stone_knife
+
+copper_knife:
+  displayname: "<#de8d4e>Cuchillo de Cobre"
+  material: STONE_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/copper_knife
+
+bronze_knife:
+  displayname: "<#b97835>Cuchillo de Bronce"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/bronze_knife
+
+iron_knife:
+  displayname: "<#cfd6de>Cuchillo de Hierro"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/iron_knife
+
+silver_knife:
+  displayname: "<#edf2f7>Cuchillo de Plata"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/silver_knife
+
+wood_hoe:
+  displayname: "<#b89363>Azada de Madera"
+  material: WOODEN_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/wood_hoe
+
+stone_hoe:
+  displayname: "<#b8c0c8>Azada de Piedra"
+  material: STONE_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/stone_hoe
+
+copper_hoe:
+  displayname: "<#de8d4e>Azada de Cobre"
+  material: STONE_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/copper_hoe
+
+bronze_hoe:
+  displayname: "<#b97835>Azada de Bronce"
+  material: IRON_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/bronze_hoe
+
+iron_hoe:
+  displayname: "<#cfd6de>Azada de Hierro"
+  material: IRON_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/iron_hoe
+
+silver_hoe:
+  displayname: "<#edf2f7>Azada de Plata"
+  material: IRON_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/silver_hoe
+
+wood_scythe:
+  displayname: "<#b89363>Hoz de Madera"
+  material: WOODEN_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/wood_scythe
+
+stone_scythe:
+  displayname: "<#b8c0c8>Hoz de Piedra"
+  material: STONE_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/stone_scythe
+
+copper_scythe:
+  displayname: "<#de8d4e>Hoz de Cobre"
+  material: STONE_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/copper_scythe
+
+bronze_scythe:
+  displayname: "<#b97835>Hoz de Bronce"
+  material: IRON_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/bronze_scythe
+
+iron_scythe:
+  displayname: "<#cfd6de>Hoz de Hierro"
+  material: IRON_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/iron_scythe
+
+silver_scythe:
+  displayname: "<#edf2f7>Hoz de Plata"
+  material: IRON_HOE
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/silver_scythe
+
+wood_spellbook:
+  displayname: "<#b89363>Grimorio de Madera"
+  material: BOOK
+  Pack:
+    generate_model: false
+    model: servidorpg/wood_spellbook
+
+stone_spellbook:
+  displayname: "<#b8c0c8>Grimorio de Piedra"
+  material: BOOK
+  Pack:
+    generate_model: false
+    model: servidorpg/stone_spellbook
+
+copper_spellbook:
+  displayname: "<#de8d4e>Grimorio de Cobre"
+  material: BOOK
+  Pack:
+    generate_model: false
+    model: servidorpg/copper_spellbook
+
+bronze_spellbook:
+  displayname: "<#b97835>Grimorio de Bronce"
+  material: BOOK
+  Pack:
+    generate_model: false
+    model: servidorpg/bronze_spellbook
+
+iron_spellbook:
+  displayname: "<#cfd6de>Grimorio de Hierro"
+  material: BOOK
+  Pack:
+    generate_model: false
+    model: servidorpg/iron_spellbook
+
+silver_spellbook:
+  displayname: "<#edf2f7>Grimorio de Plata"
+  material: BOOK
+  Pack:
+    generate_model: false
+    model: servidorpg/silver_spellbook
+
+wood_hide:
+  displayname: "<#b89363>Cuero Ligero"
+  material: RABBIT_HIDE
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/wood_hide
+
+stone_hide:
+  displayname: "<#b8c0c8>Cuero Normal"
+  material: RABBIT_HIDE
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/stone_hide
+
+copper_hide:
+  displayname: "<#de8d4e>Cuero Grueso"
+  material: LEATHER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/copper_hide
+
+bronze_hide:
+  displayname: "<#b97835>Cuero Flexible"
+  material: LEATHER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/bronze_hide
+
+iron_hide:
+  displayname: "<#cfd6de>Cuero Resistente"
+  material: LEATHER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/iron_hide
+
+silver_hide:
+  displayname: "<#edf2f7>Cuero Refinado"
+  material: LEATHER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/silver_hide
+
+wood_cloth:
+  displayname: "<#b89363>Tela Basta"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/wood_cloth
+
+stone_cloth:
+  displayname: "<#b8c0c8>Tela Comun"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/stone_cloth
+
+copper_cloth:
+  displayname: "<#de8d4e>Tela Densa"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/copper_cloth
+
+bronze_cloth:
+  displayname: "<#b97835>Tela Flexible"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/bronze_cloth
+
+iron_cloth:
+  displayname: "<#cfd6de>Tela Reforzada"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/iron_cloth
+
+silver_cloth:
+  displayname: "<#edf2f7>Tela Refinada"
+  material: PAPER
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/materials/silver_cloth
 
 tin_chunk:
   displayname: "<#d8d8d1>Trozo de Estano"
@@ -392,9 +1084,29 @@ bronze_block:
   material: CUT_COPPER
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "block/cube_all"
     textures:
       - servidorpg/blocks/bronze_block
+  Mechanics:
+    noteblock:
+      custom_variation: 104
+      model: bronze_block
+      hardness: 4
+      block_sounds:
+        place_sound: block.metal.place
+        break_sound: block.metal.break
+        hit_sound: block.metal.hit
+        step_sound: block.metal.step
+        fall_sound: block.metal.fall
+        volume: 0.9
+        pitch: 1.05
+      drop:
+        silktouch: true
+        minimal_type: STONE
+        best_tools:
+          - PICKAXE
+        loots:
+          - {oraxen_item: bronze_block, probability: 1.0}
 
 silver_block:
   displayname: "<#edf2f7>Bloque de Plata"
@@ -430,18 +1142,58 @@ oricalco_block:
   material: GLOWSTONE
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "block/cube_all"
     textures:
       - servidorpg/blocks/oricalco_block
+  Mechanics:
+    noteblock:
+      custom_variation: 105
+      model: oricalco_block
+      hardness: 6
+      block_sounds:
+        place_sound: block.metal.place
+        break_sound: block.metal.break
+        hit_sound: block.metal.hit
+        step_sound: block.metal.step
+        fall_sound: block.metal.fall
+        volume: 0.95
+        pitch: 1.2
+      drop:
+        silktouch: true
+        minimal_type: IRON
+        best_tools:
+          - PICKAXE
+        loots:
+          - {oraxen_item: oricalco_block, probability: 1.0}
 
 mithril_block:
   displayname: "<#7dcfff>Bloque de Mithril"
   material: DIAMOND_BLOCK
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "block/cube_all"
     textures:
       - servidorpg/blocks/mithril_block
+  Mechanics:
+    noteblock:
+      custom_variation: 106
+      model: mithril_block
+      hardness: 7
+      block_sounds:
+        place_sound: block.metal.place
+        break_sound: block.metal.break
+        hit_sound: block.metal.hit
+        step_sound: block.metal.step
+        fall_sound: block.metal.fall
+        volume: 0.95
+        pitch: 1.25
+      drop:
+        silktouch: true
+        minimal_type: IRON
+        best_tools:
+          - PICKAXE
+        loots:
+          - {oraxen_item: mithril_block, probability: 1.0}
 
 tin_ore:
   displayname: "<#d8d8d0>Mena de Estano"
@@ -510,18 +1262,62 @@ oricalco_ore:
   material: NETHER_GOLD_ORE
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "block/cube_all"
     textures:
       - servidorpg/ores/oricalco_ore
+  Mechanics:
+    noteblock:
+      custom_variation: 107
+      model: oricalco_ore
+      hardness: 6
+      block_sounds:
+        place_sound: block.stone.place
+        break_sound: block.stone.break
+        hit_sound: block.stone.hit
+        step_sound: block.stone.step
+        fall_sound: block.stone.fall
+        volume: 0.85
+        pitch: 0.9
+      drop:
+        silktouch: true
+        fortune: true
+        minimal_type: IRON
+        best_tools:
+          - PICKAXE
+        loots:
+          - oraxen_item: oricalco_fragment
+            probability: 1.0
 
 mithril_ore:
   displayname: "<#8cd6ff>Mena de Mithril"
   material: DIAMOND_ORE
   Pack:
     generate_model: true
-    parent_model: "item/generated"
+    parent_model: "block/cube_all"
     textures:
       - servidorpg/ores/mithril_ore
+  Mechanics:
+    noteblock:
+      custom_variation: 108
+      model: mithril_ore
+      hardness: 7
+      block_sounds:
+        place_sound: block.stone.place
+        break_sound: block.stone.break
+        hit_sound: block.stone.hit
+        step_sound: block.stone.step
+        fall_sound: block.stone.fall
+        volume: 0.9
+        pitch: 1.05
+      drop:
+        silktouch: true
+        fortune: true
+        minimal_type: IRON
+        best_tools:
+          - PICKAXE
+        loots:
+          - oraxen_item: mithril_shard
+            probability: 1.0
 
 summoner_hood:
   displayname: "<#9f68d7>Capucha del Invocador"
@@ -536,10 +1332,8 @@ summoner_staff:
   displayname: "<#b06ae0>Staff del Invocador"
   material: BLAZE_ROD
   Pack:
-    generate_model: true
-    parent_model: "item/handheld"
-    textures:
-      - servidorpg/mobs/summoner_staff
+    generate_model: false
+    model: servidorpg/summoner_staff
 
 brutal_helm:
   displayname: "<#c74e4e>Yelmo Brutal"
@@ -585,3 +1379,21 @@ blood_mask:
     parent_model: "item/generated"
     textures:
       - servidorpg/mobs/blood_mask
+
+swift_hood:
+  displayname: "<#7fda8d>Capucha Veloz"
+  material: LEATHER_HELMET
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - servidorpg/mobs/swift_hood
+
+swift_blade:
+  displayname: "<#69d6bb>Hoja Veloz"
+  material: IRON_SWORD
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - servidorpg/mobs/swift_blade

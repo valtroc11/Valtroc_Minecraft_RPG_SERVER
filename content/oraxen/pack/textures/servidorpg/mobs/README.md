@@ -20,6 +20,7 @@ Ruta sugerida de trabajo:
 
 Fase 1:
 - items/gear 2D para Oraxen
+- recolores por familia base con `tools/generate_mob_recolors.py`
 
 Fase 2:
 - modelos 3D y assets de ModelEngine para bosses clave

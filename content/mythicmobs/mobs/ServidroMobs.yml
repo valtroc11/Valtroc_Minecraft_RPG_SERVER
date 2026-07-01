@@ -33,3 +33,468 @@ CapitanCorrompido:
   - GOLD_INGOT 1-3 1
   - EMERALD 1 0.25
 
+CentinelaHelado:
+  Type: STRAY
+  Display: '&bCentinela Helado'
+  Health: 42
+  Damage: 7
+  Options:
+    MovementSpeed: 0.25
+    PreventOtherDrops: true
+    FollowRange: 30
+    AlwaysShowName: true
+  Equipment:
+  - BOW HAND
+  - LEATHER_HELMET HEAD
+  Skills:
+  - skill{s=RafagaHelada} @target ~onTimer:120 0.55
+  Drops:
+  - ARROW 2-6 1
+  - SNOWBALL 4-10 1
+  - AMETHYST_SHARD 1 0.08
+
+ZombieHelado:
+  Type: ZOMBIE
+  Display: '&bZombie Helado'
+  Health: 38
+  Damage: 6
+  Options:
+    MovementSpeed: 0.23
+    PreventOtherDrops: true
+    FollowRange: 26
+    AlwaysShowName: true
+  Skills:
+  - skill{s=MordidaHelada} @target ~onAttack 0.35
+  Drops:
+  - ROTTEN_FLESH 1-3 1
+  - SNOWBALL 2-5 0.8
+
+AranaHelada:
+  Type: SPIDER
+  Display: '&bArana Helada'
+  Health: 28
+  Damage: 5
+  Options:
+    MovementSpeed: 0.32
+    PreventOtherDrops: true
+    FollowRange: 24
+    AlwaysShowName: true
+  Skills:
+  - skill{s=TelaranaEscarchada} @target ~onAttack 0.35
+  Drops:
+  - STRING 1-4 1
+  - SNOWBALL 1-3 0.6
+
+GiganteDeHielo:
+  Type: GIANT
+  Display: '&3Gigante de Hielo'
+  Health: 180
+  Damage: 15
+  Options:
+    MovementSpeed: 0.22
+    PreventOtherDrops: true
+    FollowRange: 40
+    AlwaysShowName: true
+  Skills:
+  - skill{s=PisotonGlacial} @PlayersInRadius{r=6} ~onTimer:160 0.65
+  Drops:
+  - BLUE_ICE 1-2 0.35
+  - DIAMOND 1 0.05
+
+srv_ice_zombie:
+  Type: ZOMBIE
+  Display: '&bZombie de Hielo'
+  Health: 36
+  Damage: 6
+  Options:
+    MovementSpeed: 0.23
+    PreventOtherDrops: true
+    FollowRange: 26
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeCongelante} @target ~onAttack 0.35
+  - skill{s=AuraCongelante} @self ~onTimer:120 0.35
+  Drops:
+  - ROTTEN_FLESH 1-3 1
+  - SNOWBALL 2-5 0.75
+
+srv_fire_zombie:
+  Type: ZOMBIE
+  Display: '&6Zombie de Fuego'
+  Health: 34
+  Damage: 7
+  Options:
+    MovementSpeed: 0.26
+    PreventOtherDrops: true
+    FollowRange: 26
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeIncendiario} @target ~onAttack 0.35
+  - skill{s=AuraArdiente} @self ~onTimer:140 0.30
+  Drops:
+  - ROTTEN_FLESH 1-3 1
+  - BLAZE_POWDER 1 0.12
+
+srv_ice_skeleton:
+  Type: SKELETON
+  Display: '&bEsqueleto de Hielo'
+  Health: 32
+  Damage: 6
+  Options:
+    MovementSpeed: 0.24
+    PreventOtherDrops: true
+    FollowRange: 30
+    AlwaysShowName: true
+  Equipment:
+  - BOW HAND
+  Skills:
+  - skill{s=GolpeCongelante} @target ~onAttack 0.25
+  - skill{s=AuraCongelante} @self ~onTimer:140 0.30
+  Drops:
+  - ARROW 2-6 1
+  - SNOWBALL 2-4 0.75
+
+srv_fire_skeleton:
+  Type: SKELETON
+  Display: '&6Esqueleto de Fuego'
+  Health: 30
+  Damage: 7
+  Options:
+    MovementSpeed: 0.27
+    PreventOtherDrops: true
+    FollowRange: 30
+    AlwaysShowName: true
+  Equipment:
+  - BOW HAND
+  Skills:
+  - skill{s=GolpeIncendiario} @target ~onAttack 0.30
+  - skill{s=AuraArdiente} @self ~onTimer:150 0.28
+  Drops:
+  - ARROW 2-6 1
+  - BLAZE_POWDER 1 0.10
+
+srv_ice_spider:
+  Type: SPIDER
+  Display: '&bArana de Hielo'
+  Health: 28
+  Damage: 5
+  Options:
+    MovementSpeed: 0.31
+    PreventOtherDrops: true
+    FollowRange: 24
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeCongelante} @target ~onAttack 0.35
+  Drops:
+  - STRING 1-4 1
+  - SNOWBALL 1-4 0.65
+
+srv_fire_spider:
+  Type: SPIDER
+  Display: '&6Arana de Fuego'
+  Health: 28
+  Damage: 6
+  Options:
+    MovementSpeed: 0.34
+    PreventOtherDrops: true
+    FollowRange: 24
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeIncendiario} @target ~onAttack 0.35
+  Drops:
+  - STRING 1-4 1
+  - BLAZE_POWDER 1 0.08
+
+srv_ice_cave_spider:
+  Type: CAVE_SPIDER
+  Display: '&bArana de Cueva de Hielo'
+  Health: 24
+  Damage: 5
+  Options:
+    MovementSpeed: 0.34
+    PreventOtherDrops: true
+    FollowRange: 24
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeCongelante} @target ~onAttack 0.45
+  Drops:
+  - STRING 1-3 1
+  - SNOWBALL 1-4 0.65
+
+srv_fire_cave_spider:
+  Type: CAVE_SPIDER
+  Display: '&6Arana de Cueva de Fuego'
+  Health: 24
+  Damage: 6
+  Options:
+    MovementSpeed: 0.37
+    PreventOtherDrops: true
+    FollowRange: 24
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeIncendiario} @target ~onAttack 0.45
+  Drops:
+  - STRING 1-3 1
+  - BLAZE_POWDER 1 0.08
+
+srv_ice_creeper:
+  Type: CREEPER
+  Display: '&bCreeper de Hielo'
+  Health: 34
+  Damage: 0
+  Options:
+    MovementSpeed: 0.23
+    PreventOtherDrops: true
+    FollowRange: 24
+    AlwaysShowName: true
+  Skills:
+  - skill{s=AuraCongelante} @self ~onTimer:80 0.45
+  Drops:
+  - GUNPOWDER 1-3 1
+  - BLUE_ICE 1 0.08
+
+srv_fire_creeper:
+  Type: CREEPER
+  Display: '&6Creeper de Fuego'
+  Health: 32
+  Damage: 0
+  Options:
+    MovementSpeed: 0.26
+    PreventOtherDrops: true
+    FollowRange: 24
+    AlwaysShowName: true
+  Skills:
+  - skill{s=AuraArdiente} @self ~onTimer:80 0.45
+  Drops:
+  - GUNPOWDER 1-3 1
+  - BLAZE_POWDER 1 0.12
+
+srv_ice_enderman:
+  Type: ENDERMAN
+  Display: '&bEnderman de Hielo'
+  Health: 52
+  Damage: 8
+  Options:
+    MovementSpeed: 0.27
+    PreventOtherDrops: true
+    FollowRange: 32
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeCongelante} @target ~onAttack 0.35
+  Drops:
+  - ENDER_PEARL 1 0.45
+  - AMETHYST_SHARD 1 0.10
+
+srv_fire_enderman:
+  Type: ENDERMAN
+  Display: '&6Enderman de Fuego'
+  Health: 50
+  Damage: 9
+  Options:
+    MovementSpeed: 0.30
+    PreventOtherDrops: true
+    FollowRange: 32
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeIncendiario} @target ~onAttack 0.35
+  Drops:
+  - ENDER_PEARL 1 0.45
+  - BLAZE_POWDER 1 0.12
+
+srv_ice_witch:
+  Type: WITCH
+  Display: '&bBruja de Hielo'
+  Health: 38
+  Damage: 5
+  Options:
+    MovementSpeed: 0.25
+    PreventOtherDrops: true
+    FollowRange: 28
+    AlwaysShowName: true
+  Skills:
+  - skill{s=AuraCongelante} @self ~onTimer:120 0.45
+  Drops:
+  - GLASS_BOTTLE 1-2 0.55
+  - SNOWBALL 3-6 0.75
+
+srv_fire_witch:
+  Type: WITCH
+  Display: '&6Bruja de Fuego'
+  Health: 38
+  Damage: 6
+  Options:
+    MovementSpeed: 0.27
+    PreventOtherDrops: true
+    FollowRange: 28
+    AlwaysShowName: true
+  Skills:
+  - skill{s=AuraArdiente} @self ~onTimer:120 0.45
+  Drops:
+  - GLASS_BOTTLE 1-2 0.55
+  - BLAZE_POWDER 1-2 0.25
+
+srv_ice_piglin:
+  Type: PIGLIN
+  Display: '&bPiglin de Hielo'
+  Health: 36
+  Damage: 7
+  Options:
+    MovementSpeed: 0.26
+    PreventOtherDrops: true
+    FollowRange: 26
+    AlwaysShowName: true
+  Equipment:
+  - GOLDEN_SWORD HAND
+  Skills:
+  - skill{s=GolpeCongelante} @target ~onAttack 0.35
+  Drops:
+  - GOLD_NUGGET 2-5 1
+  - PACKED_ICE 1 0.10
+
+srv_fire_piglin:
+  Type: PIGLIN
+  Display: '&6Piglin de Fuego'
+  Health: 36
+  Damage: 8
+  Options:
+    MovementSpeed: 0.29
+    PreventOtherDrops: true
+    FollowRange: 26
+    AlwaysShowName: true
+  Equipment:
+  - GOLDEN_SWORD HAND
+  Skills:
+  - skill{s=GolpeIncendiario} @target ~onAttack 0.35
+  Drops:
+  - GOLD_NUGGET 2-5 1
+  - BLAZE_POWDER 1 0.18
+
+srv_ice_wolf:
+  Type: WOLF
+  Display: '&bLobo de Hielo'
+  Health: 26
+  Damage: 5
+  Options:
+    MovementSpeed: 0.34
+    PreventOtherDrops: true
+    FollowRange: 24
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeCongelante} @target ~onAttack 0.35
+  Drops:
+  - BONE 1-2 0.55
+  - SNOWBALL 1-3 0.75
+
+srv_fire_wolf:
+  Type: WOLF
+  Display: '&6Lobo de Fuego'
+  Health: 26
+  Damage: 6
+  Options:
+    MovementSpeed: 0.37
+    PreventOtherDrops: true
+    FollowRange: 24
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeIncendiario} @target ~onAttack 0.35
+  Drops:
+  - BONE 1-2 0.55
+  - BLAZE_POWDER 1 0.08
+
+srv_ice_bee:
+  Type: BEE
+  Display: '&bAbeja de Hielo'
+  Health: 18
+  Damage: 4
+  Options:
+    MovementSpeed: 0.30
+    PreventOtherDrops: true
+    FollowRange: 20
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeCongelante} @target ~onAttack 0.35
+  Drops:
+  - HONEYCOMB 1 0.35
+  - SNOWBALL 1-3 0.65
+
+srv_fire_bee:
+  Type: BEE
+  Display: '&6Abeja de Fuego'
+  Health: 18
+  Damage: 5
+  Options:
+    MovementSpeed: 0.33
+    PreventOtherDrops: true
+    FollowRange: 20
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeIncendiario} @target ~onAttack 0.35
+  Drops:
+  - HONEYCOMB 1 0.35
+  - BLAZE_POWDER 1 0.08
+
+srv_ice_iron_golem:
+  Type: IRON_GOLEM
+  Display: '&bGolem de Hierro de Hielo'
+  Health: 130
+  Damage: 13
+  Options:
+    MovementSpeed: 0.21
+    PreventOtherDrops: true
+    FollowRange: 32
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeCongelante} @target ~onAttack 0.45
+  - skill{s=AuraCongelante} @self ~onTimer:120 0.45
+  Drops:
+  - IRON_INGOT 2-5 1
+  - BLUE_ICE 1-2 0.25
+
+srv_fire_iron_golem:
+  Type: IRON_GOLEM
+  Display: '&6Golem de Hierro de Fuego'
+  Health: 125
+  Damage: 15
+  Options:
+    MovementSpeed: 0.23
+    PreventOtherDrops: true
+    FollowRange: 32
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeIncendiario} @target ~onAttack 0.45
+  - skill{s=AuraArdiente} @self ~onTimer:120 0.45
+  Drops:
+  - IRON_INGOT 2-5 1
+  - BLAZE_POWDER 1-2 0.25
+
+srv_ice_llama:
+  Type: LLAMA
+  Display: '&bLlama de Hielo'
+  Health: 32
+  Damage: 4
+  Options:
+    MovementSpeed: 0.25
+    PreventOtherDrops: true
+    FollowRange: 22
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeCongelante} @target ~onAttack 0.30
+  Drops:
+  - LEATHER 1-2 0.65
+  - SNOWBALL 1-4 0.65
+
+srv_fire_llama:
+  Type: LLAMA
+  Display: '&6Llama de Fuego'
+  Health: 32
+  Damage: 5
+  Options:
+    MovementSpeed: 0.28
+    PreventOtherDrops: true
+    FollowRange: 22
+    AlwaysShowName: true
+  Skills:
+  - skill{s=GolpeIncendiario} @target ~onAttack 0.30
+  Drops:
+  - LEATHER 1-2 0.65
+  - BLAZE_POWDER 1 0.08

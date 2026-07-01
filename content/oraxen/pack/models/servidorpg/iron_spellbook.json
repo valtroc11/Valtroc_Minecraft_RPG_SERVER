@@ -1,0 +1,93 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "servidorpg/iron_spellbook"
+  },
+  "display": {
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3.0,
+        0
+      ],
+      "scale": [
+        1.2,
+        1.2,
+        1.2
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        -110,
+        18
+      ],
+      "translation": [
+        0.0,
+        1.8,
+        -1.0
+      ],
+      "scale": [
+        1.1,
+        1.1,
+        1.1
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        110,
+        -18
+      ],
+      "translation": [
+        0.0,
+        1.8,
+        -1.0
+      ],
+      "scale": [
+        1.1,
+        1.1,
+        1.1
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -102,
+        8
+      ],
+      "translation": [
+        0.78,
+        1.9,
+        0.86
+      ],
+      "scale": [
+        1.28,
+        1.28,
+        1.28
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        102,
+        -8
+      ],
+      "translation": [
+        0.78,
+        1.9,
+        0.86
+      ],
+      "scale": [
+        1.28,
+        1.28,
+        1.28
+      ]
+    }
+  }
+}

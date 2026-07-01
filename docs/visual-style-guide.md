@@ -17,6 +17,9 @@ Cada item o bloque debe poder entenderse rapido:
 
 La silueta debe leerse bien incluso en inventario pequeno.
 
+Cuando Excalibur ya nos da una silueta buena, no debemos redibujar la
+geometria: retexturizar esa base casi siempre es la mejor decision.
+
 ### 2. Medieval sobrio
 
 Queremos:
@@ -43,6 +46,20 @@ Usamos Excalibur como referencia de:
 - peso visual
 
 Pero los assets deben seguir siendo propios de Servidro MX.
+
+## Regla de produccion
+
+Preferimos:
+
+- retexturizar siluetas existentes de Excalibur
+- retexturizar bases vanilla ya bien resueltas
+- cambiar materiales y lectura visual sin repintar geometria ni adornos nuevos
+
+Evitamos:
+
+- abrir modelos nuevos solo por capricho visual
+- tocar geometria si el problema real era de textura
+- duplicar familias de display cuando una sola base ya funciona
 
 ## Lenguaje de materiales
 
