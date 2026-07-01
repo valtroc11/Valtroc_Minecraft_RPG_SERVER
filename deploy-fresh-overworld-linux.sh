@@ -39,9 +39,17 @@ if [[ -f "$PROJECT_ROOT/configure-oraxen-pack-layer.sh" ]]; then
 fi
 
 echo "Regenerando Overworld desde cero: $WORLD_NAME"
+BASE_DATAPACK_BACKUP="$(mktemp -d)"
+if [[ -d "$SERVER_DIR/$WORLD_NAME/datapacks" ]]; then
+  find "$SERVER_DIR/$WORLD_NAME/datapacks" -maxdepth 1 -type f -name '*.zip' -exec cp -f {} "$BASE_DATAPACK_BACKUP"/ \;
+fi
 "$PROJECT_ROOT/reset-overworld-linux.sh" "$SERVER_DIR" "$WORLD_NAME"
 
 echo "Instalando datapacks en el Overworld nuevo..."
+if compgen -G "$BASE_DATAPACK_BACKUP/*.zip" >/dev/null; then
+  cp -f "$BASE_DATAPACK_BACKUP"/*.zip "$SERVER_DIR/$WORLD_NAME/datapacks"/
+fi
+rm -rf "$BASE_DATAPACK_BACKUP"
 "$PROJECT_ROOT/install-worldgen-poc.sh" "$SERVER_DIR" "$WORLD_NAME"
 "$PROJECT_ROOT/install-servidro-overworld-terralith.sh" "$SERVER_DIR" "$WORLD_NAME"
 "$PROJECT_ROOT/install-servidro-super-biomes.sh" "$SERVER_DIR" "$WORLD_NAME"
