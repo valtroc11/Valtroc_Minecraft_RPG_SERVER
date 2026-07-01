@@ -69,13 +69,18 @@ $entries = @($json.'lithostitched:biomes')
 
 $targetBiomes = @(
     "minecraft:snowy_slopes",
+    "minecraft:frozen_peaks",
+    "minecraft:jagged_peaks",
+    "minecraft:ice_spikes",
     "terralith:alpine_highlands",
-    "terralith:glacial_chasm"
+    "terralith:glacial_chasm",
+    "terralith:frozen_cliffs",
+    "terralith:snowy_badlands"
 )
 
 $changed = 0
 foreach ($entry in $entries) {
-    if ($changed -ge 18) {
+    if ($changed -ge 96) {
         break
     }
     if ($targetBiomes -notcontains $entry.biome) {
@@ -91,8 +96,8 @@ foreach ($entry in $entries) {
     $depthMax = [double]$p.depth[1]
 
     $isSurface = $depthMin -le 0 -and $depthMax -ge -0.005
-    $isCold = $tempMin -le -0.45 -or $tempMax -le -0.155
-    $isMountain = $contMax -ge 0.03 -and $erosionMax -le 0.4
+    $isCold = $tempMin -le -0.155 -or $tempMax -le 0.2
+    $isMountain = $contMax -ge -0.11 -and $erosionMax -le 0.4
 
     if ($isSurface -and $isCold -and $isMountain) {
         $entry.biome = "servidro:cordilleras_heladas"

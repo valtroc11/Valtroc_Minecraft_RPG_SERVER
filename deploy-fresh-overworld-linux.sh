@@ -44,6 +44,7 @@ echo "Regenerando Overworld desde cero: $WORLD_NAME"
 echo "Instalando datapacks en el Overworld nuevo..."
 "$PROJECT_ROOT/install-worldgen-poc.sh" "$SERVER_DIR" "$WORLD_NAME"
 "$PROJECT_ROOT/install-servidro-overworld-terralith.sh" "$SERVER_DIR" "$WORLD_NAME"
+"$PROJECT_ROOT/install-servidro-super-biomes.sh" "$SERVER_DIR" "$WORLD_NAME"
 
 echo "Arrancando servidor..."
 "$PROJECT_ROOT/start-server-playit.sh"

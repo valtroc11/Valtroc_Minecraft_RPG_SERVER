@@ -43,6 +43,11 @@ if [[ -d "$PROJECT_ROOT/content/worldgen/zz_servidro_overworld_terralith" ]]; th
   "$PROJECT_ROOT/install-servidro-overworld-terralith.sh" "$PROJECT_ROOT/server"
 fi
 
+if [[ -d "$PROJECT_ROOT/content/worldgen/zzz_servidro_super_biomes" ]]; then
+  echo "Instalando overlay super biomes para Overworld..."
+  "$PROJECT_ROOT/install-servidro-super-biomes.sh" "$PROJECT_ROOT/server"
+fi
+
 if [[ -d "$PROJECT_ROOT/content/oraxen" ]]; then
   echo "Sincronizando contenido Oraxen..."
   "$PROJECT_ROOT/sync-oraxen-content.sh" "$PROJECT_ROOT/server"
@@ -58,7 +63,8 @@ chmod +x start-server-playit.sh stop-server-playit.sh server-status-playit.sh ||
 chmod +x configure-server-base-pack.sh || true
 chmod +x configure-oraxen-pack-layer.sh || true
 chmod +x build-servidro-rpg.sh build-servidro-world.sh || true
-chmod +x install-worldgen-poc.sh install-servidro-overworld-terralith.sh reset-overworld-linux.sh || true
+chmod +x install-worldgen-poc.sh install-servidro-overworld-terralith.sh install-servidro-super-biomes.sh reset-overworld-linux.sh || true
+chmod +x build-servidro-overworld-terralith.sh build-servidro-super-biomes.sh || true
 chmod +x deploy-fresh-overworld-linux.sh || true
 
 echo "Listo."
