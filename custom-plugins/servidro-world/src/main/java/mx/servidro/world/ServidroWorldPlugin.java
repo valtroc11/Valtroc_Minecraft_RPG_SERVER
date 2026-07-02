@@ -1,6 +1,9 @@
 package mx.servidro.world;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -110,6 +113,9 @@ public final class ServidroWorldPlugin extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("buscarbiomahelado")) {
+            return handleFrozenBiomeSearch(sender, args);
+        }
         if (!command.getName().equalsIgnoreCase("mundohelado")) {
             return false;
         }
@@ -135,6 +141,107 @@ public final class ServidroWorldPlugin extends JavaPlugin implements Listener {
             player.sendMessage(Component.text("Entraste a las Cordilleras Heladas generadas por ServidroWorld.", NamedTextColor.AQUA));
         }));
         return true;
+    }
+
+    private boolean handleFrozenBiomeSearch(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("servidro.admin")) {
+            sender.sendMessage(Component.text("No tienes permiso.", NamedTextColor.RED));
+            return true;
+        }
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("Ejecuta este comando dentro del juego.");
+            return true;
+        }
+        if (!resolveFrozenBiomeTargets()) {
+            player.sendMessage(Component.text("El bioma servidro:cordilleras_heladas no esta registrado. Revisa datapacks.", NamedTextColor.RED));
+            return true;
+        }
+
+        int radius = 96;
+        boolean teleport = false;
+        if (args.length >= 1) {
+            try {
+                radius = Math.max(8, Math.min(384, Integer.parseInt(args[0])));
+            } catch (NumberFormatException ex) {
+                player.sendMessage(Component.text("Uso: /buscarbiomahelado [radioChunks] [tp]", NamedTextColor.YELLOW));
+                return true;
+            }
+        }
+        if (args.length >= 2) {
+            teleport = args[1].equalsIgnoreCase("tp") || args[1].equalsIgnoreCase("teleport");
+        }
+
+        World world = player.getWorld();
+        if (!isEligibleOverworld(world)) {
+            player.sendMessage(Component.text("Ejecuta este comando en el Overworld.", NamedTextColor.RED));
+            return true;
+        }
+
+        int centerChunkX = player.getLocation().getBlockX() >> 4;
+        int centerChunkZ = player.getLocation().getBlockZ() >> 4;
+        List<int[]> chunks = buildChunkSearchOrder(centerChunkX, centerChunkZ, radius);
+        player.sendMessage(Component.text("Buscando cordilleras heladas en " + chunks.size() + " chunks...", NamedTextColor.AQUA));
+        searchFrozenBiomeChunk(player, world, chunks, 0, teleport);
+        return true;
+    }
+
+    private List<int[]> buildChunkSearchOrder(int centerChunkX, int centerChunkZ, int radius) {
+        List<int[]> chunks = new ArrayList<>((radius * 2 + 1) * (radius * 2 + 1));
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                chunks.add(new int[] {centerChunkX + dx, centerChunkZ + dz, dx * dx + dz * dz});
+            }
+        }
+        chunks.sort(Comparator.comparingInt(value -> value[2]));
+        return chunks;
+    }
+
+    private void searchFrozenBiomeChunk(Player player, World world, List<int[]> chunks, int index, boolean teleport) {
+        if (!player.isOnline()) {
+            return;
+        }
+        if (index >= chunks.size()) {
+            player.sendMessage(Component.text("No encontre cordilleras heladas en ese radio. Prueba /buscarbiomahelado 192", NamedTextColor.YELLOW));
+            return;
+        }
+
+        int[] entry = chunks.get(index);
+        int chunkX = entry[0];
+        int chunkZ = entry[1];
+        world.getChunkAtAsync(chunkX, chunkZ).thenRun(() -> Bukkit.getScheduler().runTask(this, () -> {
+            Location found = findFrozenBiomeInChunk(world, chunkX, chunkZ);
+            if (found != null) {
+                player.sendMessage(Component.text("Cordilleras Heladas encontradas en X "
+                        + found.getBlockX() + " Y " + found.getBlockY() + " Z " + found.getBlockZ(), NamedTextColor.GREEN));
+                if (teleport) {
+                    player.teleport(found);
+                    player.sendMessage(Component.text("Teletransportado al bioma helado.", NamedTextColor.AQUA));
+                } else {
+                    player.sendMessage(Component.text("Para ir directo usa: /buscarbiomahelado "
+                            + Math.max(8, (int) Math.sqrt(entry[2]) + 2) + " tp", NamedTextColor.GRAY));
+                }
+                return;
+            }
+            if (index > 0 && index % 512 == 0) {
+                player.sendMessage(Component.text("Buscando... " + index + "/" + chunks.size() + " chunks revisados.", NamedTextColor.GRAY));
+            }
+            searchFrozenBiomeChunk(player, world, chunks, index + 1, teleport);
+        }));
+    }
+
+    private Location findFrozenBiomeInChunk(World world, int chunkX, int chunkZ) {
+        int baseX = chunkX << 4;
+        int baseZ = chunkZ << 4;
+        for (int x = baseX + 2; x < baseX + 16; x += 4) {
+            for (int z = baseZ + 2; z < baseZ + 16; z += 4) {
+                int surfaceY = world.getHighestBlockYAt(x, z);
+                if (world.getBiome(x, Math.min(surfaceY, world.getMaxHeight() - 1), z) == frozenRidgeBiome
+                        || world.getBiome(x, 160, z) == frozenRidgeBiome) {
+                    return world.getHighestBlockAt(x, z).getLocation().add(0.5, 2.0, 0.5);
+                }
+            }
+        }
+        return null;
     }
 
     private void tickFrozenFog() {

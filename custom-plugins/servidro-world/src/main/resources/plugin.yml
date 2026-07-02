@@ -10,6 +10,10 @@ commands:
     description: Teletransporta al mundo de cordilleras heladas generado por ServidroWorld.
     usage: /mundohelado
     permission: servidro.admin
+  buscarbiomahelado:
+    description: Busca cordilleras heladas de Servidro en el Overworld.
+    usage: /buscarbiomahelado [radioChunks] [tp]
+    permission: servidro.admin
 permissions:
   servidro.admin:
     description: Permite administrar prototipos de Servidro.
